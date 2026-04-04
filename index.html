@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+    <title>Frontend Mentor | Weather app</title>
+    <link rel="stylesheet" href="./assets/css/layout.css" />
+    <link rel="stylesheet" href="./assets/css/base.css" />
+    <link rel="stylesheet" href="./assets/css/components.css" />
+    <link rel="stylesheet" href="./assets/css/utilities.css" />
+    <link rel="stylesheet" href="./assets/css/media.css" />
+  </head>
+  <body>
+    <div class="preloader" data-preloader>
+      <div class="circle"></div>
+    </div>
+
+    <div class="overlay hide" data-overlay></div>
+    <div class="confraim hide" data-confraim>
+      <form action="" method="post">
+        <p class="confraim-title">Are you agree using your position ?</p>
+        <button class="btn confraim-btn1" type="button" data-confraim-choice>
+          Allow
+        </button>
+        <button class="btn confraim-btn2" type="button" data-confraim-choice>
+          Deny
+        </button>
+      </form>
+    </div>
+
+    <header class="header">
+      <form action="" method="post">
+        <div class="header__icon">
+          <img
+            src="./assets/images/logo.svg"
+            alt="header icon"
+            class="img-cover"
+          />
+        </div>
+
+        <div class="custom__select">
+          <button class="select__btn" type="button" data-select-btn-header>
+            <div class="icon__units">
+              <img
+                src="./assets/images/icon-units.svg"
+                alt="Units Icon"
+                class="img-cover"
+              />
+            </div>
+            <h2 class="select__text">Units</h2>
+            <div class="icon-units">
+              <img
+                src="./assets/images/icon-dropdown.svg"
+                alt="Units Icon"
+                class="img-cover"
+              />
+            </div>
+          </button>
+
+          <div class="select__options hide" data-select-header>
+            <p class="options-title">Switch to imperial</p>
+
+            <div class="option__group">
+              <p class="group__title">Temperature</p>
+              <ul class="list-items">
+                <li class="list-item" data-temp-select>Celsius (°C)</li>
+                <li class="list-item" data-temp-select>Fahrenheit (°F)</li>
+              </ul>
+            </div>
+
+            <div class="option__group">
+              <p class="group__title">Wind Speed</p>
+              <ul class="list-items">
+                <li class="list-item" data-wind-select>Km/h</li>
+                <li class="list-item" data-wind-select>mph</li>
+              </ul>
+            </div>
+
+            <div class="option__group">
+              <p class="group__title">Precipitation</p>
+              <ul class="list-items">
+                <li class="list-item" data-prec-select>Millimeters (mm)</li>
+                <li class="list-item" data-prec-select>Centimetres (cm)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="header__title">How's the sky looking today?</h1>
+
+        <div class="header__search">
+          <div class="search-box">
+            <img src="./assets/images/icon-search.svg" alt="icon-search" class="img-cover">
+            <input type="text" placeholder=" Search for a place..." />
+          </div>
+          <button type="submit">Search</button>
+        </div>
+
+      </form>
+    </header>
+
+    <main class="main">
+      <div class="containter">
+        <div class="card">
+          <p class="card__title">Berlin, Germany</p>
+          <p class="card__subtitle">Tuesday, Aug 5, 2025</p>
+          <p class="card__degree">68°</p>
+          <div class="card__icon">
+            <img
+              class="img-cover"
+              src="./assets/images/icon-sunny.webp"
+              alt="card icon"
+            />
+          </div>
+        </div>
+
+        <ul class="list-items">
+          <li class="list-item">
+            <p class="item__title">Feels Like</p>
+            <p class="item__content">64°</p>
+          </li>
+          <li class="list-item">
+            <p class="item__title">Humidity</p>
+            <p class="item__content">46%</p>
+          </li>
+          <li class="list-item">
+            <p class="item__title">Wind</p>
+            <p class="item__content">9 mph</p>
+          </li>
+          <li class="list-item">
+            <p class="item__title">Precipitation</p>
+            <p class="item__content">0 in</p>
+          </li>
+        </ul>
+
+        <h3 class="daily-title">Daily forecast</h3>
+
+        <ul class="daily__list">
+          <li class="list__item">
+            <h3 class="title">Tue</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-rain.webp"
+                alt="rain-icon"
+              />
+            </div>
+            <p class="degree high-degree">68°</p>
+            <p class="degree low-degree">57°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Wed</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-drizzle.webp"
+                alt="drizzle-icon"
+              />
+            </div>
+            <p class="degree high-degree">70°</p>
+            <p class="degree low-degree">59°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Thu</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-sunny.webp"
+                alt="sunny-icon"
+              />
+            </div>
+            <p class="degree high-degree">75°</p>
+            <p class="degree low-degree">57°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Fri</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-partly-cloudy.webp"
+                alt="partly-cloudy-icon"
+              />
+            </div>
+            <p class="degree high-degree">77°</p>
+            <p class="degree low-degree">55°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Sat</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-storm.webp"
+                alt="storm-icon"
+              />
+            </div>
+            <p class="degree high-degree">70°</p>
+            <p class="degree low-degree">59°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Sun</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-snow.webp"
+                alt="snow-icon"
+              />
+            </div>
+            <p class="degree high-degree">77°</p>
+            <p class="degree low-degree">61°</p>
+          </li>
+
+          <li class="list__item">
+            <h3 class="title">Mon</h3>
+            <div class="state-icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-fog.webp"
+                alt="fog-icon"
+              />
+            </div>
+            <p class="degree high-degree">75°</p>
+            <p class="degree low-degree">59°</p>
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <aside class="hourly-list">
+      <div class="container">
+        <h3 class="title">Hourly forecast</h3>
+
+        <div class="day__select">
+          <button class="btn__days" type="button" data-btn-days>
+            <h3 id="btn__text">Monday</h3>
+            <img src="./assets/images/icon-dropdown.svg" alt="icon-dropdown" />
+          </button>
+
+          <div class="select__options hide" data-select-daily>
+            <div class="options__group">
+              <ul class="day__options">
+                <li class="day__option" data-day-select>Monday</li>
+                <li class="day__option" data-day-select>Tuesday</li>
+                <li class="day__option" data-day-select>Wednesday</li>
+                <li class="day__option" data-day-select>Thursday</li>
+                <li class="day__option" data-day-select>Friday</li>
+                <li class="day__option" data-day-select>Saturday</li>
+                <li class="day__option" data-day-select>Sunday</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <ul class="list-items">
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-overcast.webp"
+                alt="cloud-icon"
+              />
+            </div>
+            <p class="item__hour">3 PM</p>
+            <p class="item__degree">68°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-partly-cloudy.webp"
+                alt="partly cloud icon"
+              />
+            </div>
+            <p class="item__hour">4 PM</p>
+            <p class="item__degree">68°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-sunny.webp"
+                alt="sun icon"
+              />
+            </div>
+            <p class="item__hour">5 PM</p>
+            <p class="item__degree">68°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-overcast.webp"
+                alt="cloud icon"
+              />
+            </div>
+            <p class="item__hour">6 PM</p>
+            <p class="item__degree">66°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-snow.webp"
+                alt="snow icon"
+              />
+            </div>
+            <p class="item__hour">7 PM</p>
+            <p class="item__degree">66°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-fog.webp"
+                alt="fog icon"
+              />
+            </div>
+            <p class="item__hour">8 PM</p>
+            <p class="item__degree">64°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-snow.webp"
+                alt="snow icon"
+              />
+            </div>
+            <p class="item__hour">9 PM</p>
+            <p class="item__degree">63°</p>
+          </li>
+          <li class="list-item">
+            <div class="icon">
+              <img
+                class="img-cover"
+                src="./assets/images/icon-overcast.webp"
+                alt="cloud icon"
+              />
+            </div>
+            <p class="item__hour">10 PM</p>
+            <p class="item__degree">63°</p>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <footer class="footer"></footer>
+
+    <script src="./assets/script/script.js"></script>
+    <!-- 
+  
+
+  Switch to Imperial/Metric
+
+  Temperature
+
+  Celsius (°C)
+  Fahrenheit (°F)
+
+  Wind Speed
+
+  km/h
+  mph
+
+  Precipitation
+
+  Millimeters (mm)
+  Inches (in)
+
+  
+
+  Search for a city, e.g., New York
+  Search
+
+  Feels like
+  <,!-- Insert temperature here -,->
+
+  Humidity
+  <.-- Insert humidity here -.->
+
+  Wind
+  <!-.- Insert wind here ---.>   
+  
+  Precipitation
+  <=!-- Insert precipitation here -[->
+
+  
+  <!=-- Insert daily forecast for the next 7 days here --p>
+
+  
+  Insert hourly forecast for the selected day here -->
+    <script src="./assets/script/script.js"></script>
+  </body>
+</html>
