@@ -17,12 +17,17 @@
     <link rel="stylesheet" href="./assets/css/media.css" />
   </head>
   <body>
+    <!-- preloader -->
+
     <div class="preloader" data-preloader>
       <div class="circle"></div>
     </div>
 
-    <div class="overlay" data-overlay></div>
-    <div class="confraim" data-confraim>
+    <!-- overlay -->
+    <div class="overlay hide" data-overlay></div>
+
+    <!-- confraim -->
+    <div class="confraim hide" data-confraim>
       <form action="" method="post">
         <p class="confraim-title">Are you agree using your position ?</p>
         <button class="btn confraim-btn1" type="button" data-confraim-choice>
@@ -33,6 +38,8 @@
         </button>
       </form>
     </div>
+
+    <!-- header -->
 
     <header class="header">
       <form action="" method="post">
@@ -96,14 +103,19 @@
 
         <div class="header__search">
           <div class="search-box">
-            <img src="./assets/images/icon-search.svg" alt="icon-search" class="img-cover">
+            <img
+              src="./assets/images/icon-search.svg"
+              alt="icon-search"
+              class="img-cover"
+            />
             <input type="text" placeholder=" Search for a place..." />
           </div>
           <button type="submit">Search</button>
         </div>
-
       </form>
     </header>
+
+    <!-- main -->
 
     <main class="main">
       <div class="containter">
@@ -138,6 +150,8 @@
             <p class="item__content">0 in</p>
           </li>
         </ul>
+
+        <!-- daily forecast -->
 
         <h3 class="daily-title">Daily forecast</h3>
 
@@ -235,6 +249,8 @@
         </ul>
       </div>
     </main>
+
+    <!-- hourly forecast -->
 
     <aside class="hourly-list">
       <div class="container">
@@ -354,51 +370,15 @@
       </div>
     </aside>
 
-    <footer class="footer"></footer>
+    <!-- footer -->
 
-    <script src="./assets/script/script.js"></script>
-    <!-- 
-  
+    <footer class="footer">
+      <h3 class="footer-text">&copy;&nbsp;CopyRight 2026 with</h3>
+      <a class="link" href="https://www.frontendmentor.io/profile/a-sayed123"
+        >Ahmed sayed</a
+      >
+    </footer>
 
-  Switch to Imperial/Metric
-
-  Temperature
-
-  Celsius (°C)
-  Fahrenheit (°F)
-
-  Wind Speed
-
-  km/h
-  mph
-
-  Precipitation
-
-  Millimeters (mm)
-  Inches (in)
-
-  
-
-  Search for a city, e.g., New York
-  Search
-
-  Feels like
-  <,!-- Insert temperature here -,->
-
-  Humidity
-  <.-- Insert humidity here -.->
-
-  Wind
-  <!-.- Insert wind here ---.>   
-  
-  Precipitation
-  <=!-- Insert precipitation here -[->
-
-  
-  <!=-- Insert daily forecast for the next 7 days here --p>
-
-  
-  Insert hourly forecast for the selected day here -->
     <script src="./assets/script/script.js"></script>
   </body>
 </html>
