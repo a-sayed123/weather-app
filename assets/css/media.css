@@ -1,0 +1,191 @@
+/* Media Queries */
+
+/*----- 768px (Tablet) -----*/
+
+@media (min-width: 768px) {
+
+    /* header  */
+    
+    .header__icon{
+        width: 200px;
+    }
+
+    .select__btn {
+    left: 83%;
+    width: 125px;
+    height: 46px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    gap: 8px;
+    left: 82%;
+    top: -20px;
+  }
+  .select__btn img{
+    width: 17px;
+  }
+  .select__options {
+    left: 75%;
+  }
+  .header__title {
+    margin-block: 20px;
+  }
+  .header__search {
+    flex-flow: row;
+    width: 600px;
+    height: 40px;
+  }
+  .search-box {
+    width: 385px;
+    height: 40px;
+  }
+  .header__search button {
+    width: 100px;
+    height: 40px;
+  }
+
+  /* Hero */
+
+  .card {
+    margin-block: 30px;
+    width: 450px;
+  }
+  .card__title {
+    font-size: 3rem;
+    top: 20px;
+  }
+  .card__subtitle {
+    font-size: 1.5rem;
+    top: 25px;
+  }
+  .card__degree {
+    font-size: 7.5rem;
+    top: 80px;
+    left: 120px;
+  }
+  .card__icon {
+    width: 130px;
+    left: 30px;
+    bottom: 20px;
+  }
+
+  /* main */
+
+  .main .list-items {
+    width: 600px;
+  }
+
+  .main .list-item {
+    width: 200px;
+    height: 110px;
+    font-size: 2rem;
+  }
+
+  /* daily */
+
+  .daily-forecast {
+    width: 400px;
+  }
+  .daily-title {
+    font-size: 3rem;
+  }
+  .daily__list {
+    width: 500px;
+    height: 600px;
+  }
+  .daily__list .list__item {
+    width: 130px;
+    height: 170px;
+  }
+  .daily__list .list__item .title {
+    font-size: 2.2rem;
+  }
+  .state-icon {
+    width: 100px;
+    height: 100px;
+    top: -5px;
+  }
+  .degree {
+    font-size: 2rem;
+  }
+  .high-degree {
+    bottom: 10px;
+    width: 30px;
+  }
+
+  .low-degree {
+    width: 30px;
+    bottom: 37px;
+    left: 70%;
+  }
+
+  /* hourly-list */
+
+  .hourly-list {
+    width: 450px;
+    height: 700px;
+  }
+  .hourly-list .title{
+    font-size: 2.4rem;
+  }
+  .btn__days{
+    width: 150px;
+    height: 50px;
+    font-size: 1.6rem;
+    left: 65%;
+    bottom: 18px;
+  }
+  .btn__days img{
+    width: 18px;
+  }
+  .select__options{
+    left: 58%;
+    top: 80px;
+  }
+  .hourly-list .list-item{
+    width: 400px;
+    height: 65px;
+  }
+  .hourly-list .list-item .icon {
+    width: 60px;
+  }
+  .hourly-list .list-item .item__hour{
+    font-size: 2.5rem;
+    left: 70px;
+    bottom: 34px;
+    width: 100px;
+  }
+  .hourly-list .list-item .item__degree{
+    width: 20px;
+    font-size: 2rem;
+    bottom: 63px;
+  }
+
+  /* footer */
+
+  .footer{
+    margin-block: 20px;
+  }
+
+  .footer-text{
+    font-size: 1.6rem;
+  }
+  .footer .link{
+    font-size: 1.7rem;
+  }
+}
+
+/*----- 1024px (Small Laptop) -----*/
+
+@media (min-width: 1024px) {
+
+}
+
+/*----- 1200px (Desktop) -----*/
+
+@media (min-width: 1200px) {
+}
+
+/*----- 1440px (Large Desktop) -----*/
+
+@media (min-width: 1440px) {
+}

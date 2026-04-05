@@ -62,7 +62,7 @@
   text-transform: uppercase;
   line-height: 1.6;
   letter-spacing: 4px;
-  font-size: 13pt;
+  font-size: 1.7rem;
   font-weight: 400;
   font-family: "Courier New", Courier, monospace;
   color: white;
@@ -76,7 +76,7 @@
   transform: translateX(-50%);
   top: 50px;
   width: 70%;
-  font-size: 12pt;
+  font-size: 1.6rem;
   letter-spacing: 1.05px;
   font-weight: 800;
   font-family: cursive;
@@ -119,7 +119,7 @@
   color: white;
   cursor: pointer;
   border-radius: 8px;
-  font-size: 8pt;
+  font-size: 1rem;
   padding-inline: auto;
   padding-inline-start: 10px;
   line-height: 1.6;
@@ -141,7 +141,7 @@
 .options-title {
   position: relative;
   margin-block: 10px;
-  font-size: 10pt;
+  font-size: 1.3rem;
 }
 
 .option__group {
@@ -151,7 +151,7 @@
 }
 
 .group__title {
-  font-size: 8pt;
+  font-size: 1rem;
   opacity: 0.4;
   margin-block-end: 9px;
 }
@@ -164,7 +164,7 @@
 
 .option__group .list-item {
   position: relative;
-  font-size: 10pt;
+  font-size: 1.33rem;
   cursor: pointer;
   width: 140px;
   left: -5px;
@@ -176,7 +176,7 @@
 
 .header__title {
   position: relative;
-  font-size: 30pt;
+  font-size: 4rem;
   text-align: center;
   padding-inline: 70px;
   overflow: hidden;
@@ -211,7 +211,7 @@
   color: white;
   background-color: transparent;
   margin-inline-start: 10px;
-  font-size: 12pt;
+  font-size: 1.6rem;
   line-height: 1.6;
 }
 
@@ -224,12 +224,13 @@
 }
 
 .header__search button {
+  position: relative;
   background-color: var(--Blue-500);
   font-family: cursive;
   height: 90px;
   border-radius: 10px;
   padding-block: 5px;
-  font-size: 14pt;
+  font-size: 1.68rem;
   color: white;
 }
 
@@ -254,7 +255,7 @@
 
 .card__title {
   position: relative;
-  font-size: 18pt;
+  font-size: 2.4rem;
   top: 40px;
   letter-spacing: 2px;
   line-height: 1.8;
@@ -262,7 +263,7 @@
 
 .card__subtitle {
   position: relative;
-  font-size: 10pt;
+  font-size: 1.33rem;
   line-height: 1.6;
   letter-spacing: 1px;
   top: 45px;
@@ -271,7 +272,7 @@
 
 .card__degree {
   position: relative;
-  font-size: 55pt;
+  font-size: 7.3rem;
   font-style: italic;
   font-weight: 500;
   top: 90px;
@@ -306,7 +307,7 @@
   width: 130px;
   height: 90px;
   border: 1px solid var(--Neutral-600);
-  font-size: 10pt;
+  font-size: 1.33rem;
   border-radius: 10px;
   padding-inline-start: 15px;
   padding-block-start: 10px;
@@ -322,7 +323,7 @@
 
 .item__content {
   position: relative;
-  font-size: 18pt;
+  font-size: 2.4rem;
   text-align: left;
 }
 
@@ -330,12 +331,16 @@
 -->  DAYILY
 \*------------*/
 
+.daily-forecast{
+  width: 300px;
+  margin-inline: auto;
+}
+
 .daily-title {
   position: relative;
   line-height: 1.6;
-  font-size: 18pt;
+  font-size: 2.4rem;
   text-align: left;
-  margin-inline-start: 4.5rem;
   letter-spacing: 1pt;
   margin-block: 15px;
 }
@@ -348,7 +353,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-inline: auto;
 }
 
 .daily__list .list__item {
@@ -361,6 +365,12 @@
   border: 1px solid var(--Neutral-600);
 }
 
+.daily__list .list__item .title {
+  position: relative;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  margin-block-start: 10px;
+}
 .state-icon {
   position: relative;
   top: 10px;
@@ -369,15 +379,9 @@
   margin-inline: auto;
 }
 
-.daily__list .list__item .title {
-  position: relative;
-  font-size: 12pt;
-  line-height: 1.5;
-  margin-block-start: 10px;
-}
 .degree {
   position: relative;
-  font-size: 12pt;
+  font-size: 1.6rem;
   font-weight: 600;
 }
 .high-degree {
@@ -393,7 +397,6 @@
 /*------------*\
 -->  ASIDE
 \*------------*/
-
 .hourly-list {
   position: relative;
   margin-block: 50px;
@@ -408,7 +411,7 @@
 .hourly-list .title {
   position: relative;
   width: 200px;
-  font-size: 13pt;
+  font-size: 1.73rem;
   letter-spacing: 1px;
   line-height: 1.6;
   text-align: left;
@@ -431,7 +434,7 @@
   gap: 10px;
   padding-inline-start: 10px;
   bottom: 10px;
-  font-size: 9pt;
+  font-size: 1.2rem;
 }
 
 .btn__days img {
@@ -457,7 +460,7 @@
 
 .day__option {
   position: relative;
-  font-size: 12pt;
+  font-size: 1.6rem;
   font-weight: 300;
   font-family: "DM_Sans";
   width: 145px;
@@ -469,6 +472,7 @@
   border-radius: 6pt;
   cursor: pointer;
 }
+
 .hourly-list .list-items {
   display: flex;
   align-items: center;
@@ -498,7 +502,7 @@
   position: relative;
   width: 60px;
   left: 50px;
-  font-size: 14pt;
+  font-size: 1.86rem;
   bottom: 30px;
 }
 
@@ -506,7 +510,7 @@
   position: relative;
   width: 10px;
   left: 80%;
-  font-size: 12pt;
+  font-size: 1.6rem;
   bottom: 50px;
 }
 
@@ -525,12 +529,12 @@
 }
 
 .footer-text {
-  font-size: 10pt;
+  font-size: 1.33rem;
   color: var(--Neutral-300);
 }
 
 .footer .link {
-  font-size: 11pt;
+  font-size: 1.46rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: underline;
