@@ -29,6 +29,7 @@
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(1turn);
   }
@@ -95,15 +96,38 @@
 }
 
 /*------------*\
+-->  TOPBAR
+\*------------*/
+
+.topbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.topbar .container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+/*------------*\
 -->  HEADER
 \*------------*/
 
 .header__icon {
   position: relative;
-  width: 160px;
-  overflow: hidden;
-  left: 20px;
-  top: 20px;
+  width: 150px;
+  text-align: left;
+}
+
+.custom__select {
+  position: relative;
+  display: flex;
+  max-width: max-content;
+  flex-flow: row;
 }
 
 .select__btn {
@@ -113,17 +137,14 @@
   align-items: center;
   width: 105px;
   height: 35px;
-  left: 65%;
-  top: -10px;
   background-color: var(--Neutral-700);
   color: white;
   cursor: pointer;
   border-radius: 8px;
   font-size: 1rem;
-  padding-inline: auto;
   padding-inline-start: 10px;
-  line-height: 1.6;
   font-family: "Bricolage_Grotesque";
+  margin-block: 1.5vh;
 }
 
 .select__options {
@@ -131,11 +152,13 @@
   width: 160px;
   height: 310px;
   background-color: var(--Neutral-700);
+  border: 1px solid var(--Neutral-600);
   border-radius: 8px;
   text-align: left;
-  overflow: hidden;
   padding-inline-start: 10px;
-  z-index: 3;
+  left: -55px;
+  top: 100%;
+  z-index: 5;
 }
 
 .options-title {
@@ -203,13 +226,13 @@
   flex-flow: row;
   gap: 10px;
   border-radius: 8pt;
-  padding-inline-start: 10px;
   font-family: "DM_Sans";
 }
 
 .search-box input {
   color: white;
   background-color: transparent;
+  padding-inline: 0;
   margin-inline-start: 10px;
   font-size: 1.6rem;
   line-height: 1.6;
@@ -234,6 +257,42 @@
   color: white;
 }
 
+.suggestions {
+  position: absolute;
+  width: 150px;
+  height: 170px;
+  border-radius: 6px;
+  top: 50%;
+  background-color: var(--Neutral-800);
+  overflow: hidden;
+  z-index: 3;
+}
+
+.suggestions .list__items {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  text-align: left;
+  padding-inline-start: 5px;
+  margin-block-start: 10px;
+}
+
+.suggestions .list__item {
+  font-size: 1.6rem;
+  width: 135px;
+  border-radius: 5px;
+  height: 30px;
+  padding-block: 3px;
+  padding-inline-start: 5px;
+  cursor: pointer;
+}
+
+.suggestions .list__item.selected {
+  background-color: var(--Neutral-700);
+  border: 1px solid var(--Neutral-600);
+}
+
 /*------------*\
 -->  HERO
 \*------------*/
@@ -244,7 +303,8 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
   height: 280px;
   margin-inline: auto;
   border-radius: 25px;
@@ -259,6 +319,9 @@
   top: 40px;
   letter-spacing: 2px;
   line-height: 1.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card__subtitle {
@@ -290,6 +353,10 @@
 -->  MAIN
 \*------------*/
 
+.main{
+  flex: 1;
+}
+
 .main .list-items {
   position: relative;
   display: flex;
@@ -297,7 +364,8 @@
   align-items: center;
   margin-block: 20px;
   gap: 15px;
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
   flex-wrap: wrap;
   margin-inline: auto;
 }
@@ -331,7 +399,7 @@
 -->  DAYILY
 \*------------*/
 
-.daily-forecast{
+.daily-forecast {
   width: 300px;
   margin-inline: auto;
 }
@@ -371,6 +439,7 @@
   line-height: 1.5;
   margin-block-start: 10px;
 }
+
 .state-icon {
   position: relative;
   top: 10px;
@@ -384,6 +453,7 @@
   font-size: 1.6rem;
   font-weight: 600;
 }
+
 .high-degree {
   text-align: left;
   bottom: -22px;
@@ -397,12 +467,13 @@
 /*------------*\
 -->  ASIDE
 \*------------*/
+
 .hourly-list {
   position: relative;
   margin-block: 50px;
   background-color: var(--Neutral-800);
-  width: 300px;
-  overflow: hidden;
+  max-width: 300px;
+  width: 100%;
   height: 600px;
   margin-inline: auto;
   border-radius: 20px;
@@ -441,13 +512,10 @@
   position: absolute;
   right: 10px;
 }
-
-.select__options {
+.day__select .select__options{
   position: absolute;
-  left: 40%;
-  border: 1px solid var(--Neutral-600);
-  background-color: var(--Neutral-800);
-  height: 315px;
+  left: 45%;
+  top: 55px;
 }
 
 .day__options {

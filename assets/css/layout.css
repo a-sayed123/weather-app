@@ -1,0 +1,11 @@
+.Container{
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 1.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: wrap;
+    gap: 20px;
+}
