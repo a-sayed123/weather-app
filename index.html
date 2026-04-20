@@ -17,31 +17,31 @@
     <link rel="stylesheet" href="./assets/css/media.css" />
   </head>
   <body>
-    
-      <!-- preloader -->
+    <!-- preloader -->
 
-      <div class="preloader" data-preloader>
-        <div class="circle"></div>
-      </div>
+    <div class="preloader" data-preloader>
+      <div class="circle"></div>
+    </div>
 
-      <!-- overlay -->
-      <div class="overlay" data-overlay></div>
+    <!-- overlay -->
+    <div class="overlay" data-overlay></div>
 
-      <!-- confraim -->
-      <div class="confraim" data-confraim>
-        <form action="" method="post">
-          <p class="confraim-title">Are you agree using your position ?</p>
-          <button class="btn confraim-btn1" type="button" data-confraim-choice>
-            Allow
-          </button>
-          <button class="btn confraim-btn2" type="button" data-confraim-choice>
-            Deny
-          </button>
-        </form>
-      </div>
+    <!-- confraim -->
+    <div class="confraim" data-confraim>
+      <form action="" method="post">
+        <p class="confraim-title">Are you agree using your position ?</p>
+        <button class="btn confraim-btn1" type="button" data-choice="allow">
+          Allow
+        </button>
+        <button class="btn confraim-btn2" type="button" data-choice="deny">
+          Deny
+        </button>
+      </form>
+    </div>
 
+    <!-- main container -->
+    <div class="Container">
       <!-- header -->
-  <div class="Container">
       <header class="header">
         <form action="" method="post">
           <div class="topbar">
@@ -55,7 +55,11 @@
               </div>
 
               <div class="custom__select">
-                <button class="select__btn" type="button" data-select-btn-header>
+                <button
+                  class="select__btn select__btn--focus"
+                  type="button"
+                  data-select-btn-header
+                >
                   <div class="icon__units">
                     <img
                       src="./assets/images/icon-units.svg"
@@ -79,31 +83,51 @@
                   <div class="option__group">
                     <p class="group__title">Temperature</p>
                     <ul class="list-items">
-                      <li class="list-item" data-temp-select>Celsius (°C)</li>
-                      <li class="list-item" data-temp-select>Fahrenheit (°F)</li>
+                      <li class="list-item" id="celsius" data-option-select>
+                        Celsius (°C)
+                      </li>
+                      <li class="list-item" id="fahrenheit" data-option-select>
+                        Fahrenheit (°F)
+                      </li>
                     </ul>
                   </div>
 
                   <div class="option__group">
                     <p class="group__title">Wind Speed</p>
                     <ul class="list-items">
-                      <li class="list-item" data-wind-select>Km/h</li>
-                      <li class="list-item" data-wind-select>mph</li>
+                      <li
+                        class="list-item"
+                        id="kilometerPerHour"
+                        data-option-select
+                      >
+                        Km/h
+                      </li>
+                      <li
+                        class="list-item"
+                        id="milesPerHour"
+                        data-option-select
+                      >
+                        mph
+                      </li>
                     </ul>
                   </div>
 
                   <div class="option__group">
                     <p class="group__title">Precipitation</p>
                     <ul class="list-items">
-                      <li class="list-item" data-prec-select>Millimeters (mm)</li>
-                      <li class="list-item" data-prec-select>Centimetres (cm)</li>
+                      <li class="list-item" id="milliMeter" data-option-select>
+                        Millimeters (mm)
+                      </li>
+                      <li class="list-item" id="inch" data-option-select>
+                        Iunches (in)
+                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <h1 class="header__title">How's the sky looking today?</h1>
 
           <div class="header__search">
@@ -113,42 +137,90 @@
                 alt="icon-search"
                 class="img-cover"
               />
-              <input type="text" placeholder=" Search for a place..." data-search-input/>
+              <input
+                name="search-input"
+                type="text"
+                placeholder=" Search for a place..."
+                data-search-input
+              />
+
+              <!-- search in progress -->
+              <div class="search-progress hide">
+                <img
+                  src="./assets/images/icon-loading.svg"
+                  alt="progress icon"
+                  class="img-cover"
+                />
+                <h4 class="progrss-text">Search in progress</h4>
+              </div>
             </div>
 
-            <button type="submit">Search</button>
+            <button type="button" id="search-btn">
+              <span class="text text-1">Search</span>
 
+              <span class="text text-2">Search</span>
+            </button>
+            <!-- Suggestions section -->
             <div class="suggestions hide" data-suggestion-select>
-                <ul class="list__items">
-                  <li class="list__item selected" data-suggest-item>
-                    <p class="text-content">Alexandria</p>
-                  </li>
-                  <li class="list__item" data-suggest-item>
-                    <p class="text-content">Giza</p>
-                  </li>
-                  <li class="list__item" data-suggest-item>
-                    <p class="text-content">Minia</p>
-                  </li>
-                  <li class="list__item" data-suggest-item>
-                    <p class="text-content">Khartoum</p>
-                  </li>
-                </ul>
+              <ul class="list__items">
+                <li class="list__item selected" data-suggest-item>
+                  <p class="text-content">Alexandria</p>
+                </li>
+                <li class="list__item" data-suggest-item>
+                  <p class="text-content">Giza</p>
+                </li>
+                <li class="list__item" data-suggest-item>
+                  <p class="text-content">Minia</p>
+                </li>
+                <li class="list__item" data-suggest-item>
+                  <p class="text-content">Khartoum</p>
+                </li>
+              </ul>
             </div>
-
           </div>
         </form>
       </header>
 
-      <!-- main -->
+      <!-- API error -->
+      <div class="error hide">
+        <div class="error__icon" width>
+          <img
+            src="./assets/images/icon-error.svg"
+            alt="API error"
+            width="10"
+            class="img-cover"
+          />
+        </div>
+        <h3 class="error__title">Something went wrong</h3>
+        <p class="error__subtitle">
+          We could′nt connect to the server (API error). Please tray again in a
+          few moments.
+        </p>
+        <button type="button" class="error__btn error__btn--focus">
+          <img
+            src="./assets/images/icon-retry.svg"
+            alt="retry icon"
+            class="img-cover"
+          />
+          <span>Retry</span>
+        </button>
+      </div>
 
+      <!-- no result -->
+      <div class="no-result hide">
+        <p class="title">No search result found!</p>
+      </div>
+
+      <!-- main -->
       <main class="main">
         <div class="container">
           <div class="card">
-            <p class="card__title">Berlin, Germany</p>
-            <p class="card__subtitle">Tuesday, Aug 5, 2025</p>
-            <p class="card__degree">68°</p>
+            <p class="card__title" id="location">Berlin, Germany</p>
+            <p class="card__subtitle" id="date">Tuesday, Aug 5, 2025</p>
+            <p class="card__degree" id="temperature">68°</p>
             <div class="card__icon">
               <img
+                id="mainIcon"
                 class="img-cover"
                 src="./assets/images/icon-sunny.webp"
                 alt="card icon"
@@ -159,133 +231,143 @@
           <ul class="list-items">
             <li class="list-item">
               <p class="item__title">Feels Like</p>
-              <p class="item__content">64°</p>
+              <p class="item__content" id="feels-like-temp">64°</p>
             </li>
             <li class="list-item">
               <p class="item__title">Humidity</p>
-              <p class="item__content">46%</p>
+              <p class="item__content" id="humidity-precent">46%</p>
             </li>
             <li class="list-item">
               <p class="item__title">Wind</p>
-              <p class="item__content">9 mph</p>
+              <p class="item__content" id="wind">9 mph</p>
             </li>
             <li class="list-item">
               <p class="item__title">Precipitation</p>
-              <p class="item__content">0 in</p>
+              <p class="item__content" id="precipitation">0 in</p>
             </li>
           </ul>
 
           <!-- daily forecast -->
-          
+
           <div class="daily-forecast">
             <h3 class="daily-title">Daily forecast</h3>
 
             <ul class="daily__list">
               <li class="list__item">
-                <h3 class="title">Tue</h3>
+                <h3 class="title" data-day-title>Tue</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-rain.webp"
                     alt="rain-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">68°</p>
-                <p class="degree low-degree">57°</p>
+                <p class="degree high-degree" data-day-highDegree>68°</p>
+                <p class="degree low-degree" data-day-lowDegree>57°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Wed</h3>
+                <h3 class="title" data-day-title>Wed</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-drizzle.webp"
                     alt="drizzle-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">70°</p>
-                <p class="degree low-degree">59°</p>
+                <p class="degree high-degree" data-day-highDegree>70°</p>
+                <p class="degree low-degree" data-day-lowDegree>59°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Thu</h3>
+                <h3 class="title" data-day-title>Thu</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-sunny.webp"
                     alt="sunny-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">75°</p>
-                <p class="degree low-degree">57°</p>
+                <p class="degree high-degree" data-day-highDegree>75°</p>
+                <p class="degree low-degree" data-day-lowDegree>57°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Fri</h3>
+                <h3 class="title" data-day-title>Fri</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-partly-cloudy.webp"
                     alt="partly-cloudy-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">77°</p>
-                <p class="degree low-degree">55°</p>
+                <p class="degree high-degree" data-day-highDegree>77°</p>
+                <p class="degree low-degree" data-day-lowDegree>55°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Sat</h3>
+                <h3 class="title" data-day-title>Sat</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-storm.webp"
                     alt="storm-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">70°</p>
-                <p class="degree low-degree">59°</p>
+                <p class="degree high-degree" data-day-highDegree>70°</p>
+                <p class="degree low-degree" data-day-lowDegree>59°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Sun</h3>
+                <h3 class="title" data-day-title>Sun</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-snow.webp"
                     alt="snow-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">77°</p>
-                <p class="degree low-degree">61°</p>
+                <p class="degree high-degree" data-day-highDegree>77°</p>
+                <p class="degree low-degree" data-day-lowDegree>61°</p>
               </li>
 
               <li class="list__item">
-                <h3 class="title">Mon</h3>
+                <h3 class="title" data-day-title>Mon</h3>
                 <div class="state-icon">
                   <img
                     class="img-cover"
                     src="./assets/images/icon-fog.webp"
                     alt="fog-icon"
+                    data-day-icon
                   />
                 </div>
-                <p class="degree high-degree">75°</p>
-                <p class="degree low-degree">59°</p>
+                <p class="degree high-degree" data-day-highDegree>75°</p>
+                <p class="degree low-degree" data-day-lowDegree>59°</p>
               </li>
             </ul>
-          </div> 
+          </div>
         </div>
       </main>
 
       <!-- hourly forecast -->
-
       <aside class="hourly-list">
         <div class="container">
-          <h3 class="title">Hourly forecast</h3>
+          <h3 class="hourly-list__title">Hourly forecast</h3>
 
           <div class="day__select">
             <button class="btn__days" type="button" data-btn-days>
-              <h3 id="btn__text">Monday</h3>
-              <img src="./assets/images/icon-dropdown.svg" alt="icon-dropdown" />
+              <h3 id="btn__text">Sunday</h3>
+              <img
+                src="./assets/images/icon-dropdown.svg"
+                alt="icon-dropdown"
+                class="btn__icon"
+              />
             </button>
 
             <div class="select__options hide" data-select-daily>
@@ -302,102 +384,302 @@
               </div>
             </div>
           </div>
-
-          <ul class="list-items">
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-overcast.webp"
-                  alt="cloud-icon"
-                />
-              </div>
-              <p class="item__hour">3 PM</p>
-              <p class="item__degree">68°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-partly-cloudy.webp"
-                  alt="partly cloud icon"
-                />
-              </div>
-              <p class="item__hour">4 PM</p>
-              <p class="item__degree">68°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-sunny.webp"
-                  alt="sun icon"
-                />
-              </div>
-              <p class="item__hour">5 PM</p>
-              <p class="item__degree">68°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-overcast.webp"
-                  alt="cloud icon"
-                />
-              </div>
-              <p class="item__hour">6 PM</p>
-              <p class="item__degree">66°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-snow.webp"
-                  alt="snow icon"
-                />
-              </div>
-              <p class="item__hour">7 PM</p>
-              <p class="item__degree">66°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-fog.webp"
-                  alt="fog icon"
-                />
-              </div>
-              <p class="item__hour">8 PM</p>
-              <p class="item__degree">64°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-snow.webp"
-                  alt="snow icon"
-                />
-              </div>
-              <p class="item__hour">9 PM</p>
-              <p class="item__degree">63°</p>
-            </li>
-            <li class="list-item">
-              <div class="icon">
-                <img
-                  class="img-cover"
-                  src="./assets/images/icon-overcast.webp"
-                  alt="cloud icon"
-                />
-              </div>
-              <p class="item__hour">10 PM</p>
-              <p class="item__degree">63°</p>
-            </li>
-          </ul>
+          <div class="days__container">
+            <ul class="list-items">
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud-icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">0 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud-icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">1 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud-icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">2 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud-icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">3 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-partly-cloudy.webp"
+                    alt="partly cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">4 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-sunny.webp"
+                    alt="sun icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">5 AM</p>
+                <p class="item__degree" data-hour-degree>68°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">6 AM</p>
+                <p class="item__degree" data-hour-degree>66°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-snow.webp"
+                    alt="snow icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">7 AM</p>
+                <p class="item__degree" data-hour-degree>66°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-fog.webp"
+                    alt="fog icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">8 AM</p>
+                <p class="item__degree" data-hour-degree>64°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-snow.webp"
+                    alt="snow icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">9 AM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">10 AM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">11 AM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">12 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">1 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">2 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">3 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">4 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">5 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">6 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">7 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">8 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">9 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">10 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+              <li class="list-item">
+                <div class="icon">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-overcast.webp"
+                    alt="cloud icon"
+                    data-hour-icon
+                  />
+                </div>
+                <p class="item__hour">11 PM</p>
+                <p class="item__degree" data-hour-degree>63°</p>
+              </li>
+            </ul>
+          </div>
         </div>
       </aside>
 
       <!-- footer -->
-
       <footer class="footer">
         <h3 class="footer-text">&copy;&nbsp;CopyRight 2026 with</h3>
         <a class="link" href="https://www.frontendmentor.io/profile/a-sayed123"
@@ -405,6 +687,6 @@
         >
       </footer>
     </div>
-    <script src="./assets/script/script.js"></script>
+    <script type="module" src="./assets/script/main.js"></script>
   </body>
 </html>

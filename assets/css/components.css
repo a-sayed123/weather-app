@@ -50,7 +50,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 18px;
-  z-index: 3;
+  z-index: 100;
 }
 
 .btn {
@@ -68,6 +68,12 @@
   font-family: "Courier New", Courier, monospace;
   color: white;
 }
+
+.btn:focus {
+  outline: 3px solid var(--Blue-700);
+  outline-offset: 3px;
+}
+
 
 .confraim-title {
   position: absolute;
@@ -92,7 +98,104 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.65);
-  z-index: 1;
+  z-index: 100;
+}
+
+/*-------------*\
+-->  Error API
+\*-------------*/
+
+.error {
+  position: absolute;
+  display: flex;
+  top: 120px;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.error__icon {
+  position: relative;
+  width: 25px;
+}
+
+.error__title {
+  font-size: 2.5rem;
+}
+
+.error__subtitle {
+  font-size: 1.2rem;
+  width: 270px;
+  opacity: 0.5;
+}
+
+.error__btn {
+  display: flex;
+  flex-flow: row;
+  gap: 5px;
+  width: 85px;
+  padding-block: 5px;
+  background-color: var(--Neutral-700);
+  font-size: 1.3rem;
+  line-height: 1.6;
+  letter-spacing: 2px;
+  justify-content: center;
+  align-items: center;
+}
+
+.error__btn--focus:focus {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
+.error__icon{
+  width: 12px;
+  height: 12px;
+}
+
+/*------------*\
+-->  NO RESULT
+\*------------*/
+
+.no-result {
+  width: 100%;
+  font-size: 2rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+/*---------------------*\
+-->  SEARCH IN PROGRESS
+\*---------------------*/
+
+.search-progress {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  height: 35px;
+  background-color: var(--Neutral-700);
+  border-radius: 1rem;
+  margin-block-start: 3px;
+  display: none;
+  align-items: center;
+  gap: 20px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.search-progress img {
+  margin-block-end: 20px;
+  animation: rotate360 1.5s linear infinite;
+}
+
+.progrss-text {
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  line-height: 1.6;
 }
 
 /*------------*\
@@ -130,6 +233,7 @@
   flex-flow: row;
 }
 
+
 .select__btn {
   position: relative;
   display: flex;
@@ -146,6 +250,12 @@
   font-family: "Bricolage_Grotesque";
   margin-block: 1.5vh;
 }
+
+.select__btn--focus:focus{
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
 
 .select__options {
   position: absolute;
@@ -204,6 +314,7 @@
   padding-inline: 70px;
   overflow: hidden;
   margin-block: 40px 30px;
+  z-index: 2;
 }
 
 .header__search {
@@ -229,10 +340,14 @@
   font-family: "DM_Sans";
 }
 
+.search-box:has(input:focus) {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
 .search-box input {
   color: white;
   background-color: transparent;
-  padding-inline: 0;
   margin-inline-start: 10px;
   font-size: 1.6rem;
   line-height: 1.6;
@@ -255,7 +370,60 @@
   padding-block: 5px;
   font-size: 1.68rem;
   color: white;
+  overflow: hidden;
+  z-index: 1;
 }
+
+.header__search button:focus {
+  outline: 3px solid var(--Blue-700);
+  outline-offset: 3px;
+}
+
+
+.header__search button::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: 700ms ease;
+  border-radius: 50%;
+  background-color: var(--Blue-700);
+  z-index: -1;
+}
+
+.header__search button:is(:hover, :focus-visible)::before {
+  bottom: -50%;
+}
+
+.header__search button .text {
+  transition: 500ms ease;
+  white-space: nowrap;
+  display: block;
+}
+
+.header__search button .text.text-2 {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: transparent;
+  width: max-content;
+}
+
+.header__search button:is(:hover, :focus-visible) .text-1 {
+  transform: translateY(-40px);
+}
+
+.header__search button:is(:hover, :focus-visible) .text-2 {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
 
 .suggestions {
   position: absolute;
@@ -335,7 +503,7 @@
 
 .card__degree {
   position: relative;
-  font-size: 7.3rem;
+  font-size: 5rem;
   font-style: italic;
   font-weight: 500;
   top: 90px;
@@ -353,7 +521,7 @@
 -->  MAIN
 \*------------*/
 
-.main{
+.main {
   flex: 1;
 }
 
@@ -377,7 +545,7 @@
   border: 1px solid var(--Neutral-600);
   font-size: 1.33rem;
   border-radius: 10px;
-  padding-inline-start: 15px;
+  padding-inline-start: 10px;
   padding-block-start: 10px;
 }
 
@@ -393,6 +561,7 @@
   position: relative;
   font-size: 2.4rem;
   text-align: left;
+  width: max-content;
 }
 
 /*------------*\
@@ -428,7 +597,7 @@
   width: 90px;
   height: 150px;
   background-color: var(--Neutral-800);
-  border-radius: 18px;
+  border-radius: 1rem;
   padding-inline: 10px;
   border: 1px solid var(--Neutral-600);
 }
@@ -450,17 +619,19 @@
 
 .degree {
   position: relative;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
 .high-degree {
   text-align: left;
   bottom: -22px;
+  left: -5px;
 }
 
 .low-degree {
   text-align: right;
+  left: 5px;
   bottom: -5px;
 }
 
@@ -479,7 +650,9 @@
   border-radius: 20px;
 }
 
-.hourly-list .title {
+
+
+.hourly-list__title {
   position: relative;
   width: 200px;
   font-size: 1.73rem;
@@ -508,14 +681,22 @@
   font-size: 1.2rem;
 }
 
-.btn__days img {
+.btn__days:focus{
+  outline: 1px solid white;
+  outline-offset: 3px;
+}
+
+.btn__icon{
   position: absolute;
   right: 10px;
 }
-.day__select .select__options{
+
+.day__select .select__options {
   position: absolute;
   left: 45%;
   top: 55px;
+  background-color: var(--Neutral-800);
+  border: 1px solid var(--Neutral-600);
 }
 
 .day__options {
@@ -541,24 +722,39 @@
   cursor: pointer;
 }
 
+.day__option.selected{
+  background-color: var(--Neutral-600);
+  border: 1px solid var(--Neutral-700);
+}
+
+
 .hourly-list .list-items {
   display: flex;
   align-items: center;
   flex-flow: column;
   gap: 10px;
+}
+
+.days__container {
+  height: 530px;
   overflow: auto;
+}
+
+.days__container::-webkit-scrollbar {
+  width: 6px;
 }
 
 .hourly-list .list-item {
   width: 265px;
   background-color: var(--Neutral-700);
-  height: 55px;
+  height: 43px;
   border-radius: 8px;
   padding-inline-start: 10px;
-  padding-block: 10px;
   overflow: hidden;
   border: 1px solid var(--Neutral-600);
 }
+
+
 
 .hourly-list .list-item .icon {
   width: 45px;
@@ -608,4 +804,8 @@
   text-decoration: underline;
   line-height: 1.6;
   color: var(--gold-crayola);
+}
+
+.footer .link:hover {
+  color: var(--Blue-500);
 }
