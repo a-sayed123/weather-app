@@ -544,7 +544,7 @@ export const UIcontroller = {
         }
     },
 
-    // ,-------------------
+    // --------------------
     // ---> Events System
     // -------------------
     bindEvents() {
@@ -653,9 +653,9 @@ export const UIcontroller = {
         this.hideDaysOptionsList()
     },
 
-    // --------------------------------------
-    // ---> UI METHODS  ( ONLU DOM MANIPULATION  )
-    // --------------------------------------
+    // ------------------------------------------
+    // ---> UI METHODS  ( ONLU DOM MANIPULATION )
+    // ------------------------------------------
     toggleMenu(e) {
         e.stopPropagation()
         this.elements.menu.classList.toggle("hide")
@@ -686,4 +686,169 @@ export const UIcontroller = {
     toggleDailySelect() { this.elements.dailySelect.classList.toggle("hide") },
     hideDaysOptionsList() { this.elements.dailySelect.classList.add("hide") },
     changeBtnDayName(e) { this.elements.selectDaysBtnText.textContent = e },
+}
+
+export const UIcontroller = {
+    // --------------------
+    // ---> Glopal OBJECT
+    // --------------------
+    elements: {},
+    docClickHandlers: [],
+
+    // -------------------
+    // ---> INIT
+    // -------------------
+    init() {
+        this.casheDom()
+        this.bindEvents()
+    },
+
+    // -------------------
+    // ---> Dom cahe
+    // -------------------
+    casheDom() {
+        this.elements = {
+            Preloader: document.querySelector("[data-preloader]"),
+            confraim: document.querySelector("[data-confraim]"),
+            overlay: document.querySelector("[data-overlay]"),
+            unitsButton: document.querySelector("[data-select-btn-header]"),
+            unitsList: document.querySelector("[data-select-header]"),
+            unitsListGroubsItem: document.querySelectorAll(".custom__select .option__group"),
+            unitsListItems: document.querySelector("[data-option-select]"),
+            searchInput: document.querySelector("[data-search-input]"),
+            suggestionsList: document.querySelector("[data-suggestion-select]"),
+            suggestionListItems: document.querySelectorAll("[data-suggest-item]"),
+            hourlyDaysBtn: document.querySelector("[data-btn-days]"),
+            hourlyDaysBtnText: document.getElementById("btn__text"),
+            hourlyDaysList: document.querySelector("[data-select-daily]"),
+            hourlyDaysListItems: document.querySelectorAll("[data-day-select]"),
+        }
+    },
+
+    // --------------------
+    // ---> Events System
+    // -------------------
+    bindEvents() {
+        // preloader
+        window.addEventListener("load", this.handlePreloader.bind(this))
+        
+        // confraim
+        const actions = {
+            allow: () => this.handleAllow(),
+            deny: () => this.handleDeny(),
+        }
+        this.elements.confraim.addEventListener("click", (e) => {
+            const button = e.target.closest("[data-choice]")
+            if (!button) return
+            const choice = button?.dataset.choice
+            actions[choice]?.()
+        })
+
+        // Units
+        this.elements.unitsButton.addEventListener("click", this.handleUnitsBtn.bind(this))
+        this.elements.unitsList.addEventListener("click", this.handleUnitsListItems.bind(this))
+
+        // suggestions
+        this.elements.searchInput.addEventListener("click", this.handleSuggestions.bind(this))
+        this.elements.suggestionListItems.forEach(item => {
+            item.addEventListener("click", this.handleSuggestionsItems.bind(this))
+        })
+
+        // Hourly days
+        this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDaysBtn.bind(this))
+        this.elements.hourlyDaysListItems.forEach(item => { item.addEventListener("click", this.handlehourlyDaysListItems.bind(this)) })
+
+        // document outside click functions 
+        this.docClickHandlers = [
+            this.handleOutsideClickUnitsList.bind(this),
+            this.handleOutsideClickSuggestionList.bind(this),
+            this.handleOutsideClickHourlyDaysList.bind(this),
+        ]
+        document.addEventListener("click", this.handleMainOutsideClick.bind(this))
+    },
+
+    // --------------------------------------
+    // ---> HANDLERS ( LOGIC OF THE EVENTS )
+    // --------------------------------------
+    handlePreloader() { this.hidePreloader() },
+    handleAllow() {
+        this.hideConfraim()
+        this.hideOverlay()
+        console.log("underDevelop")
+    },
+    handleDeny() {
+        this.hideConfraim()
+        this.hideOverlay()
+    },
+    handleUnitsBtn() {
+        this.toggleUnitsBtn()
+    },
+    handleUnitsListItems(e) {
+        const option = e.target.closest("[data-option-select]")
+        if (!option) return
+        const group = option.closest(".option__group")
+        this.clearGroup(group)
+        this.setCheckedOnItem(option)
+        this.hideUnitsList()
+    },
+    handleSuggestions() {
+        this.toggleSuggestionsList()
+    },
+    handleSuggestionsItems(e) {
+        const suggestion = e.target.closest("[data-suggest-item]")
+        this.clearSuggestionsItems()
+        this.setSelectedOnsuggestion(suggestion)
+        this.hideSuggestionList()
+        this.getSuggestion(suggestion)
+    },
+    handleHourlyDaysBtn() { this.togglehourlyDaysBtn() },
+    handlehourlyDaysListItems(e) {
+        const item = e.target.closest("[data-day-select]")
+        this.clearHourlyDaysListItems()
+        this.setSelectedOnHourlyDayItem(item)
+        this.hideHourlyDaysList()
+        this.changeHourlyDaysBtnText(item)
+    },
+    handleMainOutsideClick(e){ this.docClickHandlers.forEach(fn => {fn(e)} ) },
+
+    // ------------------------------------------
+    // ---> UI METHODS  ( ONLU DOM MANIPULATION )
+    // ------------------------------------------
+    hidePreloader() { this.elements.Preloader.classList.add("hide") },
+    hideConfraim() { this.elements.confraim.classList.add("hide") },
+    hideOverlay() { this.elements.overlay.classList.add("hide") },
+    toggleUnitsBtn() { this.elements.unitsList.classList.toggle("hide") },
+    clearGroup(group) {
+        const items = group.querySelectorAll(".list-item")
+        items.forEach(item => {
+            item.classList.remove("checked")
+        })
+    },
+    setCheckedOnItem(option) { option.classList.add("checked") },
+    hideUnitsList() { this.elements.unitsList.classList.add("hide") },
+    toggleSuggestionsList() { this.elements.suggestionsList.classList.toggle("hide") },
+    clearSuggestionsItems() { this.elements.suggestionListItems.forEach(suggestion => { suggestion.classList.remove("selected") }) },
+    setSelectedOnsuggestion(suggestion) { suggestion.classList.add("selected") },
+    hideSuggestionList() { this.elements.suggestionsList.classList.add("hide") },
+    getSuggestion(suggestion) { this.elements.searchInput.value = suggestion.textContent.trim() },
+    togglehourlyDaysBtn() { this.elements.hourlyDaysList.classList.toggle("hide") },
+    clearHourlyDaysListItems() { this.elements.hourlyDaysListItems.forEach(item => { item.classList.remove("selected") }) },
+    setSelectedOnHourlyDayItem(item){ item.classList.add("selected")},
+    hideHourlyDaysList(){ this.elements.hourlyDaysList.classList.add("hide")},
+    changeHourlyDaysBtnText(dayName){ this.elements.hourlyDaysBtnText.textContent = dayName.textContent},
+    handleOutsideClickUnitsList(e){
+        if(this.elements.unitsButton.contains(e.target)) return
+        if(this.elements.unitsListItems.contains(e.target)) return
+        this.hideUnitsList()
+    },
+    handleOutsideClickSuggestionList(e){
+        if(this.elements.suggestionsList.contains(e.target)) return
+        if(this.elements.searchInput.contains(e.target)) return
+        this.hideSuggestionList()
+    },
+    handleOutsideClickHourlyDaysList(e){
+        if(this.elements.hourlyDaysBtn.contains(e.target)) return
+        if(this.elements.hourlyDaysList.contains(e.target)) return
+        this.hideHourlyDaysList()
+    },
 }
