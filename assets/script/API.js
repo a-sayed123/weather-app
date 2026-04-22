@@ -5,7 +5,13 @@
 // -------------------------------- \\
 
 
-// import { dateThisDay } from "./script.js"
+//--------------------------------------\\
+//---- API SECTIONS SLICING REQUEST ----\\
+//--------------------------------------\\
+
+const HOURLY = "temperature_2m,weathercode,apparent_temperature,relative_humidity_2m,precipitation,wind_direction_10m"
+const DAILY = "temperature_2m_max,temperature_2m_min,weathercode"
+
 
 // get Place and put it in html
 export async function getPlaceName(lat, long) {
@@ -15,8 +21,8 @@ export async function getPlaceName(lat, long) {
 }
 
 // get weather and put it in html
-export async function getweather(lat, long) {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true&hourly=temperature_2m,weathercode,apparent_temperature,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,weathercode`)
+export async function getWeather(lat, long) {
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true&hourly=${HOURLY}&daily=${DAILY}`)
     const data = await res.json()
     return data
 }

@@ -79,7 +79,8 @@ const conversions = {
 }
 
 export function unitsConverter(from, value, to) {
-  if (from === to)return
+  if(value == null)return null
+  if (from === to)return value
   return conversions[from]?.[to]?.(value)
 }
 
@@ -98,6 +99,15 @@ export function getDayName(date, type = "long") {
 export function getMonthName(date, type = "long") {
   const Month = date.toLocaleDateString("en-US", { month: type });
   return Month
+}
+
+export function getDayData(day){
+  return {
+      day: getDayName(day),
+      month: getMonthName(day),
+      year: day.getFullYear(),
+      date: day.getDate(),
+  }
 }
 
 export function getDayListNames(datesList, type = "long") {
@@ -164,68 +174,61 @@ export function orederDays(daysListElements, type = "long") {
 // get data app
 
 // hourly
-export function getHourlyByDay(data, selectedDay) {
+export function getHourlyByDay(data, selectedDay, units) {
   const selectedDayString = selectedDay.toISOString().slice(0, 10)
-  const times = []
-  const temps = []
-  const icons = []
-
-  data.hourly.time.forEach((time, index) => {
-    if (time.startsWith(selectedDayString)) {
-      times.push(time.slice(0, 13))
-      temps.push(data.hourly.temperature_2m?.[index])
-      icons.push(data.hourly.weathercode?.[index])
-    }
-  })
-  return { times, temps, icons }
+  return data.hourly.time.map((time, index) => {
+    if (!time.startsWith(selectedDayString)) return null
+    return {  time: time.slice(0, 13),
+              temp: unitsConverter("C", data.hourly.temperature_2m?.[index], units.temperature),
+              icon: data.hourly.weathercode?.[index],
+    }}).filter(Boolean)
 }
 // current
-export function getCurrentWeather(data){
-  const temp = Math.round(data.current_weather.temperature)
-  const iconCode = data.current_weather.weathercode
-  return {temp, iconCode}
+export function getCurrentWeather(data, units){
+  return {
+    time: data.current_weather.time,
+    temp: unitsConverter( "C", data.current_weather.temperature, units.temperature),
+    iconCode: data.current_weather.weathercode,
+  }
 }
 // main
-export function getMainTagData(data){
+export function getMainTagData(data, units){
   const hours = data.hourly.time
   const date = new Date()
   const index = findCurrentHourIndex(date, hours)
-  const wind = Math.round(data.current_weather.windspeed)
-  const temp = Math.round(data.hourly.apparent_temperature[index])
-  const prec = data.hourly.precipitation[index]
-  const humidit = data.hourly.relative_humidity_2m[index]
-  return {temp, prec, humidit, wind}
+  if(index === -1)return null
+  return {
+    temp: unitsConverter("C", data.hourly.apparent_temperature[index] ,units.temperature),
+    prec: unitsConverter("MM", data.hourly.precipitation[index] ,units.precipition), 
+    humidity: data.hourly.relative_humidity_2m[index], 
+    wind: unitsConverter("KMH", data.hourly.wind_direction_10m[index], units.wind),
+    units: { wind: units.wind, prec: units.precipition, },
+  }
 }
 // daily
-export function getDailyForecast(data){
-  const highTemp = []
-  const lowTemp = []
-  const iconCode = []
-  const days = []
-  data.daily.time.forEach((day, index) => {
-    highTemp.push(data.daily.temperature_2m_max[index])
-    lowTemp.push(data.daily.temperature_2m_min[index])
-    iconCode.push(data.daily.weathercode[index])
-    days.push(data.daily.time[index])
-  })
-  return {highTemp, lowTemp, iconCode, days}
+export function getDailyForecast(data, units){
+  return data.daily.time.map((day, index) => ({
+    day,
+    highTemp: unitsConverter("C", data.daily.temperature_2m_max[index], units.temperature),
+    lowTemp: unitsConverter("C", data.daily.temperature_2m_min[index], units.temperature),
+    iconCode: data.daily.weathercode[index],
+  }))
 }
 // place 
 export function getPlace(data){
-  const place = {
+  return {
     city: data.address.city || data.address.town || data.address.village || data.address.state,
     country: data.address.country,
   }
-  return place
 }
 // all pure data to view 
 
-export function getPureData(data, date){
+export function getPureData(data, selectedDate, units){
   const pureData = {
-    Hourly: getHourlyByDay(data, date),
-    Daily: getDailyForecast(data),
-    MainTag: getMainTagData(data),
-    cardData: getCurrentWeather(data),
+    hourly: getHourlyByDay(data, selectedDate, units),
+    daily: getDailyForecast(data, units),
+    mainTag: getMainTagData(data, units),
+    cardData: getCurrentWeather(data, units),
   }
   return pureData
 }

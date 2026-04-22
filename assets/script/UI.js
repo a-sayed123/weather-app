@@ -55,6 +55,8 @@ function noResult() {
 //----------------------------------\\
 
 //  this fun updates card section
+
+// this fun updates Card
 const cardElements = {
   cardLocation: document.getElementById("location"),
   cityTemp: document.getElementById("temperature"),
@@ -62,13 +64,12 @@ const cardElements = {
   thisDayDate: document.getElementById("date"),
 }
 
-// this fun updates Card
-export function UpdateCard(weatherData, placeData) {
+export function UpdateCard(weatherData, placeData, dateData) {
   const date = new Date()
   cardElements.cardLocation.textContent = `${placeData.city}, ${placeData.country}`
   cardElements.cityTemp.textContent = `${weatherData.temp}°`
   cardElements.cardIcon.src = `${ICON_SRC[ICON_CODES[weatherData.iconCode]]}`
-  cardElements.thisDayDate.textContent = `${getDayName(date)}, ${getMonthName(date)} ${date.getDate()}, ${date.getFullYear()}`
+  cardElements.thisDayDate.textContent = `${dateData.day}, ${dateData.month} ${dateData.date}, ${dateData.year}`
 }
 
 // this fun updates Main section 
@@ -78,11 +79,19 @@ const mainElement = {
   humiditly: document.getElementById("humidity-precent"),
   precipitation: document.getElementById("precipitation"),
 }
-export function updateMain(dataCurrentWeather) {
+const unitsToShow = {
+  KMH: "km/h",
+  MPH: "mph",
+  MM: "mm",
+  IN: "in",
+}
+
+export function updateMain(dataCurrentWeather, units) {
+
   mainElement.feelsLike.textContent = `${dataCurrentWeather.temp}°`
-  mainElement.humiditly.textContent = `${dataCurrentWeather.humidit}%`
-  mainElement.windSpeed.textContent = `${dataCurrentWeather.wind} km/h`
-  mainElement.precipitation.textContent = `${dataCurrentWeather.prec} mm`
+  mainElement.humiditly.textContent = `${dataCurrentWeather.humidity}%`
+  mainElement.windSpeed.textContent = `${dataCurrentWeather.wind} ${unitsToShow[units.wind]}`
+  mainElement.precipitation.textContent = `${dataCurrentWeather.prec} ${unitsToShow[units.precipition]}`
 }
 
 // this fun updates Daily section
@@ -94,18 +103,9 @@ const dailyElements = {
 }
 orederDays(dailyElements.dayTitle, "short")
 export function updateDaily(dailyData) {
-  
-  // pure data 
-  const highTemps = dailyData.highTemp
-  const lowTemps = dailyData.lowTemp
-  const iconCodes = dailyData.iconCode
-  const weekDays = dailyData.days
-  const stringDays = getDayListNames(weekDays, "short")
-
-  updateTextElement(dailyElements.dayTitle, stringDays)
-  updateTextElement(dailyElements.highDegree, highTemps)
-  updateTextElement(dailyElements.lowDegree, lowTemps)
-  updateSrcElements(dailyElements.icons, iconCodes)
+  dailyElements.lowDegree.forEach((degree, index) => { degree.textContent = dailyData[index].highTemp })
+  dailyElements.highDegree.forEach((degree, index) => { degree.textContent = dailyData[index].lowTemp })
+  dailyElements.icons.forEach((icon, index) => { icon.textContent = dailyData[index].iconCode })
 }
 
 // this fun updates Hourly section 
@@ -120,19 +120,15 @@ const hourElements = {
 hourElements.btnText.textContent = getDayName(dateThisDay)
 orederDays(hourElements.selectTagDays)
 export function updateHourly(dataHourly) {
-  // data
-  const dataTemp = dataHourly.temps
-  const dataIcon = dataHourly.icons
-
   // show in UI
-  updateTextElement(hourElements.hourDegree, dataTemp, "°")
-  updateSrcElements(hourElements.hourIcon, dataIcon)
+  hourElements.hourDegree.forEach((degree, index) => { degree.textContent = dataHourly[index].temp })
+  hourElements.hourIcon.forEach((icon, index) => { icon.textContent = dataHourly[index].icon })
 }
 
 // this fun updates UI completely section 
-export function updateUi(pureData, place, date) {
-  updateHourly(pureData.Hourly, date)
-  updateDaily(pureData.Daily)
-  updateMain(pureData.MainTag)
-  UpdateCard(pureData.cardData, place)
+export function updateUi(weatherData, placeData, date, units) {
+  updateHourly(weatherData.hourly, date)
+  updateDaily(weatherData.daily)
+  updateMain(weatherData.mainTag, units)
+  UpdateCard(weatherData.cardData, placeData, dateData)
 }

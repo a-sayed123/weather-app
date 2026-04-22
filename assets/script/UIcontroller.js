@@ -4,8 +4,6 @@
 // -------- EVENTS HERE -------- \\
 // ------------------------------ \\
 
-import { APPcontroller } from "./APPcontroller.js"
-
 export const UIcontroller = {
     // --------------------
     // ---> Glopal OBJECT
@@ -16,9 +14,10 @@ export const UIcontroller = {
     // -------------------
     // ---> INIT
     // -------------------
-    init() {
+    init(app) {
         this.casheDom()
         this.bindEvents()
+        this.app = app
     },
 
     // -------------------
@@ -35,7 +34,7 @@ export const UIcontroller = {
             // Units
             unitsBtn: document.querySelector("[data-units-btn]"),
             unitsList: document.querySelector("[data-units-list]"),
-            unitsListItem: document.querySelectorAll("[data-units-list-item]"),
+            unitsListItem: document.querySelectorAll("[data-unit]"),
             // suggestions
             searchInput: document.querySelector("[data-search-input]"),
             suggestionList: document.querySelector("[data-suggestion-select]"),
@@ -117,9 +116,12 @@ export const UIcontroller = {
     handleUnitsListItem(e) {
         const item = e.target.closest(".list-item")
         const group = item.closest(".option__group")
+        const unit = item?.dataset.unit
+        const type = item?.dataset.type
         this.clearGroup(group)
         this.setCheckedOnUnitsListItem(item)
         this.hideUnitsList()
+        this.app.onChangeUnit(type, unit)
     },
     // suggestions
     handleSuggestion() { this.toggleSuggestionList() },
