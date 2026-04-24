@@ -36,6 +36,7 @@ export const UIcontroller = {
             unitsList: document.querySelector("[data-units-list]"),
             unitsListItem: document.querySelectorAll("[data-unit]"),
             // suggestions
+            searchBtn: document.getElementById("search-btn"),
             searchInput: document.querySelector("[data-search-input]"),
             suggestionList: document.querySelector("[data-suggestion-select]"),
             suggestionListItem: document.querySelectorAll("[data-suggest-item]"),
@@ -87,6 +88,7 @@ export const UIcontroller = {
             suggestion.addEventListener("click", this.handleSuggestionListItem.bind(this, suggestion)
             )
         })
+        this.elements.searchBtn.addEventListener("click", this.handleSearchBtn.bind(this))
 
         // Hourl Days
         this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDaysBtn.bind(this))
@@ -105,13 +107,14 @@ export const UIcontroller = {
     handleAllow() {
         this.hideConfraim()
         this.hideOverlay()
-        console.log("underDevelop")
+        this.app.onLocationAllow()
+        console.log("allow clicked")
     },
     handleDeny() {
         this.hideConfraim()
         this.hideOverlay()
     },
-    // Units 
+    // Units
     handleUnitsBtn() { this.toggleUnitsBtn() },
     handleUnitsListItem(e) {
         const item = e.target.closest(".list-item")
@@ -131,6 +134,10 @@ export const UIcontroller = {
         this.hideSuggestionList()
         this.getSuggestion(item)
     },
+    handleSearchBtn(){
+        const cityName = this.elements.searchInput.value
+        this.app.onSearchBtnClick(cityName)
+    },
     // hourly forecast
     handleHourlyDaysBtn() { this.toggleHourlyList() },
     handleHourlyDaysListItem(item) {
@@ -138,6 +145,7 @@ export const UIcontroller = {
         this.setSelectedOnDaysListItem(item)
         this.hideHourlyDaysList()
         this.changeHourlyDaysBtnText(item)
+        this.app.onChangeDay(item)
     },
     // Dom events
     handleMainOutsideClick(e) { this.docHandlers.forEach(fn => { fn(e) }) },

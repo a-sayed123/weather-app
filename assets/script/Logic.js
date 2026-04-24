@@ -131,11 +131,8 @@ export function getWeatherType(code){
   return type
 }
 
-export function oldGetIcon(code){
-  return ICON_SRC[ICON_CODES[code]]
-}
 
-export function newGetIcon(code){
+export function getIcon(code){
   const type = getWeatherType(code)
   return ICON_SRC[type]
 }
@@ -151,7 +148,7 @@ export function updateSrcElements(iconElements, weatherCodes) {
   iconElements.forEach((icon, index) => {
     const code = weatherCodes?.[index]
     if (code === undefined) return
-    icon.src = newGetIcon(code)
+    icon.src = getIcon(code)
   })
 }
 

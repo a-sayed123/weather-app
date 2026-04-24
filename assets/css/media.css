@@ -291,14 +291,14 @@
   .card__degree {
     margin-block: auto;
     left: 70%;
-    top: 10px;
+    top: 70px;
     width: 120px;
     font-size: 6rem;
   }
 
   .card__icon {
     left: 55%;
-    bottom: 80px;
+    bottom: 25px;
     width: 90px;
   }
 

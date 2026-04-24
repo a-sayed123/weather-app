@@ -11,7 +11,7 @@
 import {
   getDayName, getMonthName, getDayListNames,
   updateTextElement, updateSrcElements, orederDays,
-  ICON_SRC,ICON_CODES,
+  ICON_SRC,ICON_CODES,getIcon
 } from "./Logic.js"
 
 
@@ -34,7 +34,7 @@ const units = {
 //-------UI STATES functions ------\\
 //----------------------------------\\
 
-function dataError() {
+export function dataError() {
   const headerTitle = document.querySelector(".header__title").classList.add("hide")
   const headerSearchContainer = document.querySelector(".header__search").classList.add("hide")
   const apiError = document.querySelector(".error-api").classList.remove("hide")
@@ -43,12 +43,21 @@ function dataError() {
   const footer = document.querySelector(".footer").classList.add("hide")
 }
 
-function noResult() {
+export function noResult() {
   const main = document.querySelector(".main").classList.add("hide")
   const hourlyList = document.querySelector(".hourly-list").classList.add("hide")
   const footer = document.querySelector(".footer").classList.add("hide")
   const noResultText = document.querySelector(".no-result").classList.remove("hide")
 }
+
+export function ResultFounded() {
+  const main = document.querySelector(".main").classList.remove("hide")
+  const hourlyList = document.querySelector(".hourly-list").classList.remove("hide")
+  const footer = document.querySelector(".footer").classList.remove("hide")
+  const noResultText = document.querySelector(".no-result").classList.add("hide")
+}
+
+
 
 //----------------------------------\\
 //------ UI updating functions -----\\
@@ -64,12 +73,12 @@ const cardElements = {
   thisDayDate: document.getElementById("date"),
 }
 
-export function UpdateCard(weatherData, placeData, dateData) {
+export function UpdateCard(weatherData, placeData) {
   const date = new Date()
   cardElements.cardLocation.textContent = `${placeData.city}, ${placeData.country}`
   cardElements.cityTemp.textContent = `${weatherData.temp}°`
-  cardElements.cardIcon.src = `${ICON_SRC[ICON_CODES[weatherData.iconCode]]}`
-  cardElements.thisDayDate.textContent = `${dateData.day}, ${dateData.month} ${dateData.date}, ${dateData.year}`
+  cardElements.cardIcon.src = `${getIcon(weatherData.iconCode)}`
+  cardElements.thisDayDate.textContent = `${getDayName(date)}, ${getMonthName(date)} ${date.getDate()}, ${date.getFullYear()}`
 }
 
 // this fun updates Main section 
@@ -87,7 +96,6 @@ const unitsToShow = {
 }
 
 export function updateMain(dataCurrentWeather, units) {
-
   mainElement.feelsLike.textContent = `${dataCurrentWeather.temp}°`
   mainElement.humiditly.textContent = `${dataCurrentWeather.humidity}%`
   mainElement.windSpeed.textContent = `${dataCurrentWeather.wind} ${unitsToShow[units.wind]}`
@@ -105,7 +113,7 @@ orederDays(dailyElements.dayTitle, "short")
 export function updateDaily(dailyData) {
   dailyElements.lowDegree.forEach((degree, index) => { degree.textContent = dailyData[index].highTemp })
   dailyElements.highDegree.forEach((degree, index) => { degree.textContent = dailyData[index].lowTemp })
-  dailyElements.icons.forEach((icon, index) => { icon.textContent = dailyData[index].iconCode })
+  dailyElements.icons.forEach((icon, index) => { icon.src = getIcon(dailyData[index].iconCode) })
 }
 
 // this fun updates Hourly section 
@@ -122,7 +130,7 @@ orederDays(hourElements.selectTagDays)
 export function updateHourly(dataHourly) {
   // show in UI
   hourElements.hourDegree.forEach((degree, index) => { degree.textContent = dataHourly[index].temp })
-  hourElements.hourIcon.forEach((icon, index) => { icon.textContent = dataHourly[index].icon })
+  hourElements.hourIcon.forEach((icon, index) => { icon.src = getIcon(dataHourly[index].icon) })
 }
 
 // this fun updates UI completely section 
@@ -130,5 +138,5 @@ export function updateUi(weatherData, placeData, date, units) {
   updateHourly(weatherData.hourly, date)
   updateDaily(weatherData.daily)
   updateMain(weatherData.mainTag, units)
-  UpdateCard(weatherData.cardData, placeData, dateData)
+  UpdateCard(weatherData.cardData, placeData)
 }
