@@ -106,15 +106,15 @@
 \*-------------*/
 
 .error {
-  position: absolute;
+  position: relative;
   display: flex;
-  top: 120px;
   flex-flow: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  width: 100%;
-  pointer-events: none;
+  width: max-content;
+  height: 30rem;
+  margin-inline: auto;
   z-index: 5;
 }
 
@@ -125,26 +125,31 @@
 
 .error__title {
   font-size: 2.5rem;
+  pointer-events: none;
 }
 
 .error__subtitle {
   font-size: 1.2rem;
   width: 270px;
   opacity: 0.5;
+  pointer-events: none;
 }
 
 .error__btn {
   display: flex;
   flex-flow: row;
-  gap: 5px;
-  width: 85px;
+  gap: 10px;
+  width: 10rem;
+  color: white;
   padding-block: 5px;
   background-color: var(--Neutral-700);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   line-height: 1.6;
   letter-spacing: 2px;
   justify-content: center;
   align-items: center;
+  border-radius: 0.6rem;
+  cursor: pointer;
 }
 
 .error__btn--focus:focus {
@@ -152,9 +157,14 @@
   outline-offset: 3px;
 }
 
-.error__icon{
-  width: 12px;
-  height: 12px;
+.error__icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.error__icon .icon {
+  width: 5rem;
+  height: 5rem;
 }
 
 /*------------*\
@@ -237,6 +247,8 @@
 .select__btn {
   position: relative;
   display: flex;
+  flex-flow: row;
+  padding-inline: 1rem;
   gap: 7px;
   align-items: center;
   width: 105px;
@@ -250,8 +262,11 @@
   font-family: "Bricolage_Grotesque";
   margin-block: 1.5vh;
 }
+.select__btn.loading *{
+  pointer-events: none;
+}
 
-.select__btn--focus:focus{
+.select__btn--focus:focus {
   outline: 2px solid white;
   outline-offset: 3px;
 }
@@ -360,8 +375,7 @@
   width: 20px;
   height: 20px;
 }
-
-.header__search button {
+.header__search button{
   position: relative;
   background-color: var(--Blue-500);
   font-family: cursive;
@@ -422,9 +436,6 @@
   transform: translate(-50%, -50%);
 }
 
-
-
-
 .suggestions {
   position: absolute;
   width: 150px;
@@ -479,6 +490,11 @@
   margin-block: 50px 20px;
   overflow: hidden;
   text-align: center;
+  transition: opacity 250ms ease;
+}
+.card.loading{
+  background: none;
+  background-color: var(--Neutral-800);
 }
 
 .card__title {
@@ -517,6 +533,34 @@
   left: 15px;
 }
 
+.card .loading-card {
+  background-color: transparent;
+  color: white;
+  position: absolute;
+  width: max-content;
+  top: 40%;
+  left: 53%;
+  transform: translate(-50%);
+  transition: opacity 250ms ease;
+  font-size: 3rem;
+}
+
+.card.loading > :not(.loading-card){
+  visibility: hidden;
+}
+
+.card .loading-card .icon {
+  position: absolute;
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  top: 0;
+  left: -4.5rem;
+  animation: rotate360 2s linear infinite;
+}
+
+
+
 /*------------*\
 -->  MAIN
 \*------------*/
@@ -536,6 +580,7 @@
   width: 100%;
   flex-wrap: wrap;
   margin-inline: auto;
+  transition: opacity 250ms ease;
 }
 
 .main .list-item {
@@ -548,6 +593,17 @@
   padding-inline-start: 10px;
   padding-block-start: 10px;
 }
+
+.main .list-item .item__content.loading-card{
+  visibility: hidden;
+}
+.main .list-item .item__content.loading-card::after{
+  content: "-";
+  position: absolute;
+  visibility: visible;
+  left: 0;
+}
+
 
 .item__title {
   position: relative;
@@ -602,6 +658,11 @@
   border: 1px solid var(--Neutral-600);
 }
 
+.daily__list .list__item.loading * {
+  visibility: hidden;
+}
+
+
 .daily__list .list__item .title {
   position: relative;
   font-size: 1.6rem;
@@ -650,8 +711,6 @@
   border-radius: 20px;
 }
 
-
-
 .hourly-list__title {
   position: relative;
   width: 200px;
@@ -681,12 +740,27 @@
   font-size: 1.2rem;
 }
 
-.btn__days:focus{
+.btn__days:focus {
   outline: 1px solid white;
   outline-offset: 3px;
 }
 
-.btn__icon{
+.btn__days.loading-card{
+  width: 5rem;
+  left: 77%;
+}
+
+.btn__days.loading > :not(.btn__icon){
+  visibility: hidden;
+}
+
+.btn__days.loading-card::after{
+  content: "-";
+  position: absolute;
+  left: 1rem;
+}
+
+.btn__icon {
   position: absolute;
   right: 10px;
 }
@@ -722,7 +796,7 @@
   cursor: pointer;
 }
 
-.day__option.selected{
+.day__option.selected {
   background-color: var(--Neutral-600);
   border: 1px solid var(--Neutral-700);
 }
@@ -733,6 +807,13 @@
   align-items: center;
   flex-flow: column;
   gap: 10px;
+}
+.hourly-list .list-items.loading-card{
+  overflow: hidden;
+}
+
+.hourly-list .list-item.loading * {
+  visibility: hidden;
 }
 
 .days__container {
@@ -790,6 +871,10 @@
   align-items: center;
   gap: 8px;
   margin-block: 15px;
+}
+
+footer.loading * {
+  visibility: hidden;
 }
 
 .footer-text {

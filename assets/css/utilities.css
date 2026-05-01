@@ -7,7 +7,8 @@
 
 .hide {
   opacity: 0;
-  transition: 500ms ease;
+  position: absolute;
+  transition: linear 500ms ease;
   pointer-events: none;
 }
 
@@ -21,17 +22,20 @@
   top: 100px;
 }
 
-.checked{
+.checked {
   background-color: var(--Neutral-600);
 }
 
-.checked::after{
+.checked::after {
   content: "✔";
   position: absolute;
   right: 5px;
 }
 
-.selected{
+.selected {
   background-color: var(--Neutral-700);
 }
 
+.loading-card , .Error {
+  pointer-events: none;
+}

@@ -11,7 +11,8 @@
 import {
   getDayName, getMonthName, getDayListNames,
   updateTextElement, updateSrcElements, orederDays,
-  ICON_SRC,ICON_CODES,getIcon
+  ICON_SRC, ICON_CODES, getIcon,
+  getHourlyByDay
 } from "./Logic.js"
 
 
@@ -30,32 +31,6 @@ const units = {
   inch: document.getElementById("inch"),
 }
 
-//----------------------------------\\
-//-------UI STATES functions ------\\
-//----------------------------------\\
-
-export function dataError() {
-  const headerTitle = document.querySelector(".header__title").classList.add("hide")
-  const headerSearchContainer = document.querySelector(".header__search").classList.add("hide")
-  const apiError = document.querySelector(".error-api").classList.remove("hide")
-  const main = document.querySelector(".main").classList.add("hide")
-  const hourlyList = document.querySelector(".hourly-list").classList.add("hide")
-  const footer = document.querySelector(".footer").classList.add("hide")
-}
-
-export function noResult() {
-  const main = document.querySelector(".main").classList.add("hide")
-  const hourlyList = document.querySelector(".hourly-list").classList.add("hide")
-  const footer = document.querySelector(".footer").classList.add("hide")
-  const noResultText = document.querySelector(".no-result").classList.remove("hide")
-}
-
-export function ResultFounded() {
-  const main = document.querySelector(".main").classList.remove("hide")
-  const hourlyList = document.querySelector(".hourly-list").classList.remove("hide")
-  const footer = document.querySelector(".footer").classList.remove("hide")
-  const noResultText = document.querySelector(".no-result").classList.add("hide")
-}
 
 
 
@@ -140,3 +115,143 @@ export function updateUi(weatherData, placeData, date, units) {
   updateMain(weatherData.mainTag, units)
   UpdateCard(weatherData.cardData, placeData)
 }
+
+//----------------------------------\\
+//-------UI STATES functions -------\\
+//----------------------------------\\
+
+const states = { initial, loading, success, error, noResult }
+
+const stateElements = {
+  // header
+  headerTitle: document.querySelector(".header__title"),
+  searchBtn: document.getElementById("search-btn"),
+  headerSearchContainer: document.querySelector(".header__search"),
+  unitsBtn: document.querySelector("[data-units-btn]"),
+  unitsList: document.querySelector("[data-units-list]"),
+  headerSearchInput: document.querySelector("[data-search-input]"),
+  // progress search
+  searchInProgress: document.querySelector(".search-progress"),
+  // suggestion
+  suggestionList: document.querySelector("[data-suggestion-select]"),
+  // API error
+  apiError: document.querySelector(".error"),
+  // main
+  main: document.querySelector(".main"),
+  mainList: document.querySelectorAll(".main .list-item .item__content"),
+  // hourly
+  hourlyList: document.querySelector(".hourly-list"),
+  hourlyItems: document.querySelectorAll(".hourly-list .list-item"),
+  daysList: document.querySelector("[data-select-daily]"),
+  dayBtn: document.querySelector("[data-btn-days]"),
+  dayBtnText: document.querySelector("#btn__text"),
+  hourlyListItems: document.querySelector(".hourly-list .list-items"),
+  // no result
+  noResult: document.querySelector(".no-result"),
+  noResultText: document.querySelector(".no-result .title"),
+  // card
+  loadingCard: document.querySelector(".loading-card"),
+  card: document.querySelector(".card"),
+  // daily
+  dailyItems: document.querySelectorAll(".daily-forecast .list__item"),
+  // footer
+  footer: document.querySelector(".footer")
+}
+
+const baseVisibleElements = [
+  stateElements.headerTitle,
+  stateElements.headerSearchContainer,
+  stateElements.main,
+  stateElements.hourlyList,
+  stateElements.footer,
+]
+const baseHiddenElements = [
+  stateElements.apiError,
+  stateElements.noResult,
+  stateElements.loadingCard,
+]
+const loadingElements = [
+  stateElements.unitsBtn,
+  stateElements.searchBtn,
+  stateElements.headerSearchInput,
+  ...stateElements.mainList,
+  stateElements.card,
+  ...stateElements.dailyItems,
+  ...stateElements.hourlyItems,
+  stateElements.dayBtnText,
+  stateElements.dayBtn,
+  stateElements.hourlyListItems,
+  stateElements.hourlyList,
+]
+
+function resetStates() {
+  baseVisibleElements.forEach(item => { item.classList.remove("hide") })
+  baseHiddenElements.forEach(item => { item.classList.add("hide") })
+  loadingElements.forEach(item => { item.classList.remove("loading") })
+}
+
+// --> error state fuction
+function errorHeader() {
+  stateElements.headerTitle.classList.add("hide")
+  stateElements.headerSearchContainer.classList.add("hide")
+  stateElements.unitsBtn.classList.add("Error")
+}
+
+function errorMainHourlyFooter() {
+  stateElements.main.classList.add("hide")
+  stateElements.hourlyList.classList.add("hide")
+  stateElements.footer.classList.add("hide")
+}
+
+function showErrorElement() { stateElements.apiError.classList.remove("hide") }
+
+function error() {
+  errorHeader()
+  errorMainHourlyFooter()
+  showErrorElement()
+}
+
+// ---> no result state function
+function noResult() {
+  stateElements.main.classList.add("hide")
+  stateElements.hourlyList.classList.add("hide")
+  stateElements.unitsBtn.classList.add("loading")
+  stateElements.footer.classList.add("loading")
+  stateElements.noResult.classList.remove("hide")
+}
+
+// ---> Loading state functions
+// header
+function getLoadingHeader() {
+  stateElements.searchBtn.classList.add("loading")
+  stateElements.unitsBtn.classList.add("loading")
+  stateElements.headerSearchInput.classList.add("loading")
+}
+// main
+function getMainLoading() {
+  stateElements.mainList.forEach(item => { item.classList.add("loading") })
+  stateElements.card.classList.add("loading")
+  stateElements.loadingCard.classList.remove("hide")
+}
+// daily
+function getDailyLoading() {
+  stateElements.dailyItems.forEach(item => { item.classList.add("loading") })
+}
+// hourly
+function getHourlyLoading() {
+  stateElements.hourlyItems.forEach(item => { item.classList.add("loading") })
+  stateElements.dayBtnText.classList.add("loading")
+  stateElements.dayBtn.classList.add("loading")
+  stateElements.hourlyListItems.classList.add("loading")
+  stateElements.hourlyList.classList.add("loading")
+}
+function loading() {
+  getHourlyLoading()
+  getDailyLoading()
+  getMainLoading()
+  getLoadingHeader()
+}
+function success() { stateElements.noResult.textContent = "🚫 No search result found!"}
+function initial() {}
+export function notValidCityName() { noResult(); stateElements.noResultText.textContent = "🚫 This is not a valid city name !" }
+export function renderState(state) { resetStates(); states[state]() }
