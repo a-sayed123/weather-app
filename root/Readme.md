@@ -83,10 +83,10 @@ The app provides real-time weather data with a clean UI and smooth user experien
 ## Screenshots 📸
 
 ### Desktop View
-[![Desktop Preview](./design/desktop-design-metric.jpg)](https://weather-app-virid-six-92.vercel.app/)
+[![Desktop Preview](./assets/screenshots/desktop-design-metric.jpg)](https://weather-app-virid-six-92.vercel.app/)
 
 ### Mobile View
-[![Mobile Preview](./design/mobile-design-imperial.jpg)](https://weather-app-virid-six-92.vercel.app/)
+[![Mobile Preview](./assets/screenshots/mobile-design-imperial.jpg)](https://weather-app-virid-six-92.vercel.app/)
 
 ## What I Learned 🎯
 
