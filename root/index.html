@@ -9,12 +9,17 @@
       sizes="32x32"
       href="./assets/images/favicon-32x32.png"
     />
-    <title>Frontend Mentor | Weather app</title>
-    <link rel="stylesheet" href="./assets/css/layout.css" />
-    <link rel="stylesheet" href="./assets/css/base.css" />
-    <link rel="stylesheet" href="./assets/css/components.css" />
-    <link rel="stylesheet" href="./assets/css/utilities.css" />
-    <link rel="stylesheet" href="./assets/css/media.css" />
+    Embed code in the <head> of your html
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Kumbh+Sans:wght,YOPQ@100..900,211&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <title>Frontend Mentor | Weather app</title>
+  <link rel="stylesheet" href="./src/styles/layout.css" />
+  <link rel="stylesheet" href="./src/styles/base.css" />
+  <link rel="stylesheet" href="./src/styles/components.css" />
+  <link rel="stylesheet" href="./src/styles/utilities.css" />
+  <link rel="stylesheet" href="./src/styles/media.css" />
   </head>
   <body>
     <!-- preloader -->
@@ -24,10 +29,10 @@
     </div>
 
     <!-- overlay -->
-    <div class="overlay" data-overlay></div>
+    <div class="overlay hide" data-overlay></div>
 
     <!-- confraim -->
-    <div class="confraim" data-confraim>
+    <div class="confraim hide" data-confraim>
       <form action="" method="post">
         <p class="confraim-title">Are you agree using your position ?</p>
         <button class="btn confraim-btn1" type="button" data-choice="allow">
@@ -232,7 +237,7 @@
 
       <!-- no result -->
       <div class="no-result hide">
-        <p class="title">🚫 No search result found!</p>
+        <p class="title"> 🚫 No search result found!</p>
       </div>
 
       <!-- main -->
@@ -720,6 +725,6 @@
         >
       </footer>
     </div>
-    <script type="module" src="./assets/script/main.js"></script>
+    <script type="module" src="./src/Main.js"></script>
   </body>
 </html>

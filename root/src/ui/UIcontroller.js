@@ -102,7 +102,17 @@ export const UIcontroller = {
     // --------------------------------------
 
     // preloader
-    handlePreloader() { this.hidePreloader() },
+    async handlePreloader() { 
+        console.log("handlePreloader here")
+        try{
+            const isReady = await this.app.initializeApp()
+            console.log("isReady here : ", isReady)
+            if(!isReady) { this.hidePreloader(); return }
+            this.hidePreloader()
+            this.showOverlay()
+            this.showConfraim()
+        }catch (error){this.hidePreloader(); console.log("handlePreloader error...",error)}
+    },
     // confraim
     handleAllow() {
         this.hideConfraim()
@@ -172,8 +182,10 @@ export const UIcontroller = {
     // preloader 
     hidePreloader() { this.elements.Preloader.classList.add("hide") },
     // confraim
+    showConfraim(){this.elements.Confraim.classList.remove("hide") },
     hideConfraim() { this.elements.Confraim.classList.add("hide") },
     // overlay
+    showOverlay(){this.elements.Overlay.classList.remove("hide") },
     hideOverlay() { this.elements.Overlay.classList.add("hide") },
     // Units
     toggleUnitsBtn() { this.elements.unitsList.classList.toggle("hide") },

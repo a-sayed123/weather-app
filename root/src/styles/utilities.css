@@ -36,6 +36,6 @@
   background-color: var(--Neutral-700);
 }
 
-.loading-card , .Error {
+.loading-card, .loading, .Error {
   pointer-events: none;
 }

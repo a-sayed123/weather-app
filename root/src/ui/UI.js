@@ -8,12 +8,14 @@
 //----------------------------------\\
 //------ UI IMPORTING SECTION ------\\
 //----------------------------------\\
+
 import {
   getDayName, getMonthName, getDayListNames,
   updateTextElement, updateSrcElements, orederDays,
   ICON_SRC, ICON_CODES, getIcon,
   getHourlyByDay
-} from "./Logic.js"
+} from "../../src/logic/Logic.js"
+
 
 
 
@@ -194,7 +196,7 @@ function resetStates() {
 function errorHeader() {
   stateElements.headerTitle.classList.add("hide")
   stateElements.headerSearchContainer.classList.add("hide")
-  stateElements.unitsBtn.classList.add("Error")
+  stateElements.unitsBtn.classList.add("loading")
 }
 
 function errorMainHourlyFooter() {
@@ -229,7 +231,7 @@ function getLoadingHeader() {
 }
 // main
 function getMainLoading() {
-  stateElements.mainList.forEach(item => { item.classList.add("loading") })
+  stateElements.mainList.forEach( item => { item.classList.add("loading") })
   stateElements.card.classList.add("loading")
   stateElements.loadingCard.classList.remove("hide")
 }
@@ -251,7 +253,7 @@ function loading() {
   getMainLoading()
   getLoadingHeader()
 }
-function success() { stateElements.noResult.textContent = "🚫 No search result found!"}
+function success() { stateElements.noResult.textContent = "🚫 No search result found!" }
 function initial() {}
 export function notValidCityName() { noResult(); stateElements.noResultText.textContent = "🚫 This is not a valid city name !" }
 export function renderState(state) { resetStates(); states[state]() }

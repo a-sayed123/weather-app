@@ -5,7 +5,15 @@
 // ------------------------------------- \\
 
 export const validator = {
-    hasCoords(coords) { return coords?.lat && coords?.lon },
+    hasCoords(coords) { 
+        console.log(coords)
+        if(!Array.isArray(coords)) return false
+        if(coords.length !== 2) return false
+        const [lat, lon] = coords
+        console.log(typeof lat)
+        console.log((Number.isFinite(lat2) && Number.isFinite(lon2)))
+        return (Number.isFinite(lat) && Number.isFinite(lon))
+     },
     isReadyForRender(rawData) { return rawData?.weatherData && rawData?.placeData },
     isValidCityName(cityName) {
         if (typeof cityName !== "string") return false

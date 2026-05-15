@@ -10,6 +10,6 @@
 //------ UI IMPORTING SECTION ------\\
 //----------------------------------\\
 
-import APPcontroller from "./APPcontroller.js"
+import APPcontroller from "./controllers/APPcontroller.js"
 
 APPcontroller.init()
