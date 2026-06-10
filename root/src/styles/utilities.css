@@ -32,10 +32,12 @@
   right: 5px;
 }
 
+
 .selected {
   background-color: var(--Neutral-700);
 }
 
-.loading-card, .loading, .Error {
+.Error {
   pointer-events: none;
+  cursor: no-drop;
 }

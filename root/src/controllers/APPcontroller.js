@@ -53,20 +53,21 @@ export const APPcontroller = {
             precipition: "MM",
         },
         selectedDay: new Date(),
-        coords: { lat: null, lon: null },
+        coords: { lat: 21.42664, lon: 39.82563 },
         status: STATUS.INITIIAL,
     },
     rawData: {},
-    init() {this.bindEvents()},
+    init() { this.bindEvents() },
     async runAppFlow({ refresh = false } = {}) {
         // Validation
-        console.log(refresh)
         if (refresh) { await this.getRawData() }
         if (!validator.isReadyForRender(this.rawData)) { this.setState(STATUS.INITIIAL); this.handleInitialState() }
         // Extract data
         const pureData = Logic.getPureData(this.rawData.weatherData, this.state.selectedDay, this.state.units)
         const place = Logic.getPlace(this.rawData.placeData)
         // Render Data
+        console.log(pureData)
+        console.log(place)
         UI.updateUi(pureData, place, this.state.selectedDay, this.state.units)
     },
     async getRawData() {
@@ -81,11 +82,14 @@ export const APPcontroller = {
     },
     bindEvents() {
         UIcontroller.init({
+            loadHourly: this.handleLoadHourly.bind(this),
+            loadDaily: this.handleLoadDaily.bind(this),
             initializeApp: this.handleInitialState.bind(this),
             onChangeUnit: this.handleChangeUnits.bind(this),
             onChangeDay: this.handleChangeDay.bind(this),
             onLocationAllow: this.handleLocationAllow.bind(this),
             onSearchBtnClick: this.handleSearch.bind(this),
+            onClickRetry: this.handleRetry.bind(this),
         })
     },
     // ---> HANDLERS
@@ -127,22 +131,22 @@ export const APPcontroller = {
         await this.runAppFlow({ refresh: true })
         this.setState(STATUS.SUCCESS)
     },
-    getInitialCity(){
+    getInitialCity() {
         const lang = navigator.language.split("-")[0]
         return LANGUAGE_CITY_MAP[lang] || "Makkah Al Mukarramah"
     },
     async handleInitialState() {
         const initialCity = this.getInitialCity()
-        try{
-            const coords = Number(await API.searchByCityName(initialCity))
-            console.log(validator.hasCoords(coords))
-            if (!validator.hasCoords(coords)) { this.setState(STATUS.NO_RESULT); return false }
-            console.log(coords)
-            this.state.coords = { lat: Number(coords[0]), lon: Number(coords[1]) }
-            console.log(coords)
+        try {
+            const coords = await API.searchByCityName(initialCity)
+            if (!validator.hasCoords(coords)) { this.setState(STATUS.NO_RESULT); return false; }
+            if(!coords){UI.notValidCityName()}
+            this.state.coords = coords
+            this.handleLoadHourly()
+            this.handleLoadDaily()
             await this.runAppFlow({ refresh: true })
             return true
-        } catch (error) { this.setState(STATUS.ERROR); return false }
+        } catch (error) { console.log("error from try catch initial state", error); this.setState(STATUS.ERROR); return false; }
     },
     setState(newState) {
         const isValidState = newState && Object.values(STATUS).includes(newState)

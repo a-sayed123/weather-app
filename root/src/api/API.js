@@ -29,10 +29,11 @@ export async function getWeather(lat, long) {
 
 // get the lat and lon by city name
 export async function searchByCityName(cityName) {
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cityName}&limit=1&accept-language=en`)
+    const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${cityName}&limit=1&accept-language=en`
+    )
+    if (!response.ok) {throw new Error(`HTTP Error ${response.status}`) }
     const result = await response.json()
-    let lat = result[0].lat
-    let lon = result[0].lon
-    return [lat, lon]
+    if(result.length === 0) { throw new Error("City not found"); return;}
+    return {lat: Number(result[0].lat), lon: Number(result[0].lon)}
 }
-

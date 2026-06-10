@@ -35,8 +35,8 @@
 @font-face {
   font-family: "Bricolage_Grotesque";
   src: url("../../assets/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz\,wdth\,wght.ttf") format("truetype");
- font-weight: 100 900;
- font-style: normal;
+  font-weight: 100 900;
+  font-style: normal;
 }
 
 @font-face {
@@ -108,12 +108,18 @@ button {
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--Neutral-600);
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
 }
 
 html {
@@ -125,6 +131,12 @@ body {
   background-color: var(--Neutral-900);
   color: white;
   text-align: center;
-  font-family: "DM_Sans", "Bricolage_Grotesque" ,sans-serif;
+  font-family: "DM_Sans", "Bricolage_Grotesque", sans-serif;
   font-weight: 600;
+  min-height: 100vh;
+}
+
+body.loading {
+  cursor: wait;
+  pointer-events: none;
 }

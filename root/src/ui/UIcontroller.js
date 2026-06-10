@@ -1,5 +1,7 @@
 'use strict'
 
+import { getDayName } from "../logic/Logic.js"
+
 // // // ---------------- \\ \\ \\
 // -------- EVENTS HERE -------- \\
 // ------------------------------ \\
@@ -15,9 +17,9 @@ export const UIcontroller = {
     // ---> INIT
     // -------------------
     init(app) {
+        this.app = app
         this.casheDom()
         this.bindEvents()
-        this.app = app
     },
 
     // -------------------
@@ -44,10 +46,12 @@ export const UIcontroller = {
             hourlyDaysBtn: document.querySelector("[data-btn-days]"),
             hourlyDaysBtnText: document.getElementById("btn__text"),
             hourlyDaysList: document.querySelector("[data-select-daily]"),
-            hourlyDaysListItem: document.querySelectorAll("[data-day-select]"),
+            hourlyDaysListGroup: document.querySelector(".select__options .day__options"),
+            hourlyDaysListItem: document.querySelectorAll(".day__option"),
+            // Error
+            errorBtn: document.querySelector(".error__btn")
         }
     },
-
 
     // --------------------
     // ---> Events System
@@ -61,8 +65,8 @@ export const UIcontroller = {
         ]
         document.addEventListener("click", this.handleMainOutsideClick.bind(this))
 
-        // preloader
-        window.addEventListener("load", this.handlePreloader.bind(this))
+        // intial state
+        window.addEventListener("load", async () => { await this.handleInitialState() })
 
         // confraim 
         const actions = {
@@ -92,26 +96,31 @@ export const UIcontroller = {
 
         // Hourl Days
         this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDaysBtn.bind(this))
-        this.elements.hourlyDaysListItem.forEach(item => {
-            item.addEventListener("click", this.handleHourlyDaysListItem.bind(this, item))
+        this.elements.hourlyDaysListGroup.addEventListener("click", (e) => {
+            const item = e.target.closest("[data-day]")
+            if (!item) return
+            const items = document.querySelectorAll("[data-day]")
+            this.handleHourlyDaysListItem(item, items)
         })
+
+        // Error 
+        // this.elements.errorBtn.addEventListener("click", this.handleRetryBtn.bind(this))
     },
 
     // --------------------------------------
     // ---> HANDLERS ( LOGIC OF THE EVENTS )
     // --------------------------------------
 
-    // preloader
-    async handlePreloader() { 
-        console.log("handlePreloader here")
-        try{
+    // Inital state
+    async handleInitialState() {
+        try {
             const isReady = await this.app.initializeApp()
-            console.log("isReady here : ", isReady)
-            if(!isReady) { this.hidePreloader(); return }
-            this.hidePreloader()
+            if (!isReady) { this.hidePreloader(); return; }
             this.showOverlay()
             this.showConfraim()
-        }catch (error){this.hidePreloader(); console.log("handlePreloader error...",error)}
+            this.hidePreloader()
+            this.elements.hourlyDaysBtnText.textContent = getDayName(new Date())
+        } catch (error) { this.hidePreloader(); console.log("handlePreloader error...", error) }
     },
     // confraim
     handleAllow() {
@@ -144,17 +153,18 @@ export const UIcontroller = {
         this.hideSuggestionList()
         this.getSuggestion(item)
     },
-    handleSearchBtn(){
+    handleSearchBtn() {
         const cityName = this.elements.searchInput.value
+        this.elements.searchInput.value = ""
         this.app.onSearchBtnClick(cityName)
     },
     // hourly forecast
     handleHourlyDaysBtn() { this.toggleHourlyList() },
-    handleHourlyDaysListItem(item) {
-        this.clearHourlyDaysList()
+    handleHourlyDaysListItem(item, items) {
+        this.clearHourlyDaysList(items)
         this.setSelectedOnDaysListItem(item)
+        this.ChangeDayBtnText(item)
         this.hideHourlyDaysList()
-        this.changeHourlyDaysBtnText(item)
         this.app.onChangeDay(item)
     },
     // Dom events
@@ -174,6 +184,9 @@ export const UIcontroller = {
         if (this.elements.hourlyDaysList.contains(e.target)) return
         this.hideHourlyDaysList()
     },
+    handleRetryBtn() {
+        this.app.onClickRetry()
+    },
 
     // ------------------------------------------
     // ---> UI METHODS  ( ONLU DOM MANIPULATION )
@@ -182,10 +195,10 @@ export const UIcontroller = {
     // preloader 
     hidePreloader() { this.elements.Preloader.classList.add("hide") },
     // confraim
-    showConfraim(){this.elements.Confraim.classList.remove("hide") },
+    showConfraim() { this.elements.Confraim.classList.remove("hide") },
     hideConfraim() { this.elements.Confraim.classList.add("hide") },
     // overlay
-    showOverlay(){this.elements.Overlay.classList.remove("hide") },
+    showOverlay() { this.elements.Overlay.classList.remove("hide") },
     hideOverlay() { this.elements.Overlay.classList.add("hide") },
     // Units
     toggleUnitsBtn() { this.elements.unitsList.classList.toggle("hide") },
@@ -194,6 +207,7 @@ export const UIcontroller = {
         items.forEach(item => {
             item.classList.remove("checked")
         })
+        console.log(items)
     },
     setCheckedOnUnitsListItem(item) { item.classList.add("checked") },
     hideUnitsList() { this.elements.unitsList.classList.add("hide") },
@@ -205,8 +219,16 @@ export const UIcontroller = {
     getSuggestion(item) { this.elements.searchInput.value = item.textContent.trim() },
     // hourly forecast
     toggleHourlyList() { this.elements.hourlyDaysList.classList.toggle("hide") },
-    clearHourlyDaysList() { this.elements.hourlyDaysListItem.forEach(item => { item.classList.remove("selected") }) },
-    setSelectedOnDaysListItem(item) { item.classList.add("selected") },
+    clearHourlyDaysList(items) {
+        items.forEach(item => {
+            item.classList.remove("selected")
+        })
+    },
+    setSelectedOnDaysListItem(item) {
+        item.classList.add("selected")
+    },
     hideHourlyDaysList() { this.elements.hourlyDaysList.classList.add("hide") },
-    changeHourlyDaysBtnText(item) { this.elements.hourlyDaysBtnText.textContent = item.textContent },
+    ChangeDayBtnText(item) {
+        this.elements.hourlyDaysBtnText.textContent = item.textContent
+    },
 }

@@ -14,9 +14,7 @@ import {
   updateTextElement, updateSrcElements, orederDays,
   ICON_SRC, ICON_CODES, getIcon,
   getHourlyByDay
-} from "../../src/logic/Logic.js"
-
-
+} from "../logic/Logic.js"
 
 
 //----------------------------------\\
@@ -32,13 +30,66 @@ const units = {
   milliMete: document.getElementById("milliMeter"),
   inch: document.getElementById("inch"),
 }
+//----------------------------------\\
+//------ UI Rendering functions -----\\
+//----------------------------------\\
 
+export function renderHourly() {
+  console.log(stateElements.hourlyListItems)
+  for (let i = 0; i < 24; i++) {
+    const cell = `
+    <li class="list-item">
+      <div class="icon">
+        <img
+          class="img-cover"
+          src="./assets/images/icon-overcast.webp"
+          alt="cloud-icon"
+          data-hour-icon
+        />
+      </div>
+      <p class="item__hour">${i % 12 || 12} ${i < 12 ? "AM":"PM"}</p>
+      <p class="item__degree" data-hour-degree>${20 + i}°</p>
+    </li>
+    `
+    stateElements.hourlyListItems.insertAdjacentHTML("beforeend",cell)
+  }
+}
 
+const days = [
+  "Sat",
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+]
+
+export function renderDaily(){
+  for(let i = 0; i<7 ; i++){
+    const cell =  ` <li class="list__item">
+                <h3 class="title" data-day-title>${days[i]}</h3>
+                <div class="nstate-ico">
+                  <img
+                    class="img-cover"
+                    src="./assets/images/icon-rain.webp"
+                    alt="rain-icon"
+                    data-day-icon
+                  />
+                </div>
+                <p class="degree high-degree" data-day-highDegree>${25 + i}°</p>
+                <p class="degree low-degree" data-day-lowDegree>${30 + i}°</p>
+              </li>
+              `
+    stateElements.dailyListItems.insertAdjacentHTML("beforeend",cell)
+  }
+}
 
 
 //----------------------------------\\
 //------ UI updating functions -----\\
 //----------------------------------\\
+
 
 //  this fun updates card section
 
@@ -97,13 +148,13 @@ export function updateDaily(dailyData) {
 const hourElements = {
   hourDegree: document.querySelectorAll("[data-hour-degree]"),
   hourIcon: document.querySelectorAll("[data-hour-icon]"),
-  selectTagDays: document.querySelectorAll("[data-day-select]"),
+  hourItem: document.querySelectorAll("[data-day-select]"),
   btnText: document.getElementById("btn__text")
 }
 
 // select btn days oredering
 hourElements.btnText.textContent = getDayName(dateThisDay)
-orederDays(hourElements.selectTagDays)
+orederDays(hourElements.hourItem)
 export function updateHourly(dataHourly) {
   // show in UI
   hourElements.hourDegree.forEach((degree, index) => { degree.textContent = dataHourly[index].temp })
@@ -144,6 +195,7 @@ const stateElements = {
   // hourly
   hourlyList: document.querySelector(".hourly-list"),
   hourlyItems: document.querySelectorAll(".hourly-list .list-item"),
+  hourlyListItems: document.querySelectorAll(".hourly-list .list-items"),
   daysList: document.querySelector("[data-select-daily]"),
   dayBtn: document.querySelector("[data-btn-days]"),
   dayBtnText: document.querySelector("#btn__text"),
@@ -155,9 +207,10 @@ const stateElements = {
   loadingCard: document.querySelector(".loading-card"),
   card: document.querySelector(".card"),
   // daily
+  dailyListItems: document.querySelector(".daily-forecast .daily__list"),
   dailyItems: document.querySelectorAll(".daily-forecast .list__item"),
   // footer
-  footer: document.querySelector(".footer")
+  footer: document.querySelector(".footer"),
 }
 
 const baseVisibleElements = [
@@ -224,14 +277,14 @@ function noResult() {
 
 // ---> Loading state functions
 // header
-function getLoadingHeader() {
+function getHeaderLoadingr() {
   stateElements.searchBtn.classList.add("loading")
   stateElements.unitsBtn.classList.add("loading")
   stateElements.headerSearchInput.classList.add("loading")
 }
 // main
 function getMainLoading() {
-  stateElements.mainList.forEach( item => { item.classList.add("loading") })
+  stateElements.mainList.forEach(item => { item.classList.add("loading") })
   stateElements.card.classList.add("loading")
   stateElements.loadingCard.classList.remove("hide")
 }
@@ -247,13 +300,17 @@ function getHourlyLoading() {
   stateElements.hourlyListItems.classList.add("loading")
   stateElements.hourlyList.classList.add("loading")
 }
+
 function loading() {
   getHourlyLoading()
   getDailyLoading()
   getMainLoading()
-  getLoadingHeader()
+  getHeaderLoading()
 }
+
 function success() { stateElements.noResult.textContent = "🚫 No search result found!" }
-function initial() {}
+function initial() { }
 export function notValidCityName() { noResult(); stateElements.noResultText.textContent = "🚫 This is not a valid city name !" }
 export function renderState(state) { resetStates(); states[state]() }
+
+

@@ -4,9 +4,9 @@
 
 @media (min-width: 768px) {
 
-  /* base style */
+  /* Base style */
 
-  /* error api */
+  /* Error API */
   .error-api .icon {
     width: 25px;
   }
@@ -31,10 +31,13 @@
     height: 10px;
   }
 
-  /* header  */
-
+  /* Header  */
   .header__icon {
     width: 200px;
+  }
+
+  .header__title {
+    margin-block: 20px;
   }
 
   .select__btn {
@@ -49,23 +52,19 @@
     width: 16px;
   }
 
-  .header__title {
-    margin-block: 20px;
-  }
-
   .header__search {
     flex-flow: row;
     width: 600px;
     height: 40px;
   }
 
-  .search-box {
-    width: 385px;
+  .header__search button {
+    width: 100px;
     height: 40px;
   }
 
-  .header__search button {
-    width: 100px;
+  .search-box {
+    width: 385px;
     height: 40px;
   }
 
@@ -80,10 +79,7 @@
     width: 370px;
   }
 
-
-
-  /* Hero */
-
+  /* Card */
   .card {
     margin-block: 30px;
     max-width: 470px;
@@ -112,6 +108,9 @@
   }
 
   /* main */
+  .main .list-items {
+    max-width: 500px;
+  }
 
   .main .list-item {
     width: 200px;
@@ -119,12 +118,7 @@
     font-size: 2rem;
   }
 
-  .main .list-items {
-    max-width: 500px;
-  }
-
   /* daily */
-
   .daily-forecast {
     width: 400px;
   }
@@ -143,7 +137,7 @@
     height: 170px;
   }
 
-  .daily__list .list__item .title {
+  .title {
     font-size: 2.2rem;
   }
 
@@ -169,36 +163,35 @@
   }
 
   /* hourly-list */
-
   .hourly-list {
     max-width: 450px;
     height: 760px;
-  }
-
-  .days__container {
-    height: 650px;
   }
 
   .hourly-list .container {
     height: 100px;
   }
 
+  .hours__container {
+    height: 650px;
+  }
+
   .hourly-list__title {
     font-size: 2.4rem;
   }
 
-  .btn__days {
+  .hourly-list .btn__days {
     width: 150px;
     height: 50px;
     font-size: 1.6rem;
     left: 65%;
     bottom: 18px;
+
   }
 
   .btn__icon {
     width: 18px;
   }
-
 
   .hourly-list .list-item {
     width: 400px;
@@ -209,21 +202,20 @@
     width: 60px;
   }
 
-  .hourly-list .list-item .item__hour {
+  .item__hour {
     font-size: 2.5rem;
     left: 70px;
     bottom: 34px;
     width: 100px;
   }
 
-  .hourly-list .list-item .item__degree {
+  .item__degree {
     width: 55px;
     font-size: 2rem;
     bottom: 63px;
   }
 
   /* footer */
-
   .footer {
     margin-block: 20px;
   }
@@ -241,9 +233,13 @@
 
 @media (min-width: 1024px) {
 
-  .Container {
-    max-height: 1000px;
-    flex-wrap: nowrap;
+  body {
+    height: 105vh;
+  }
+
+  /* Topbar */
+  .topbar {
+    margin-inline: 4rem;
   }
 
   /* API error */
@@ -254,19 +250,16 @@
   }
 
   /* search in progress */
-
-  .search-progress{
+  .search-progress {
     display: flex;
   }
 
   /* Header */
-
   .select__text {
     font-size: 1.95rem;
   }
 
-  /* Hero */
-
+  /* Card */
   .card {
     max-width: 570px;
     margin-inline: 0;
@@ -303,28 +296,36 @@
   }
 
   /* main */
-
-  .main .container {
-    max-width: 600px;
+  .main {
+    padding: 1rem;
     width: 100%;
   }
 
-  .main .list-items {
+  .main .container {
+    max-width: none;
+    width: 100%;
+  }
+
+  .current-info .list-items {
     max-width: 600px;
     margin-inline: 0;
     margin-inline-start: 45px;
     flex-flow: row;
   }
 
-  .main .list-item {
+  .current-info .list-item {
     font-size: 1.33rem;
     width: 130px;
     height: 90px;
   }
 
+
+  /* Daily forecast */
   .daily-forecast {
     margin-inline: 0;
     margin-inline-start: 60px;
+    overflow: hidden;
+    width: 580px;
   }
 
   .daily-title {
@@ -332,8 +333,8 @@
   }
 
   .daily__list {
-    width: 630px;
     height: 150px;
+    width: 100%;
     gap: 5px;
   }
 
@@ -346,23 +347,23 @@
     font-size: 1.6rem;
   }
 
-  .state-icon {
+  .daily__list .list__item .state-icon {
     width: 60px;
     height: 60px;
   }
 
-  .degree {
+  .daily__list .list__item .degree {
     font-size: 1.12rem;
     margin-block-start: 5px;
   }
 
-  .high-degree {
+  .daily__list .list__item .high-degree {
     width: 30px;
     left: -6px;
     bottom: 5px;
   }
 
-  .low-degree {
+  .daily__list .list__item .low-degree {
     left: 56%;
     bottom: 23px;
   }
@@ -370,13 +371,19 @@
   /* hourly forecast */
   .hourly-list {
     max-width: 300px;
+    position: relative;
+    height: 600px;
+    width: 450px;
+    margin: 0;
+    bottom: 645px;
+    left: 670px;
   }
 
   .hourly-list .container {
     height: 600px;
   }
 
-  .days__container {
+  .hours__container {
     height: 530px;
   }
 
@@ -384,7 +391,7 @@
     font-size: 1.73rem;
   }
 
-  .btn__days {
+  .hourly-list .btn__days {
     width: 120px;
     height: 30px;
     font-size: 1.2rem;
@@ -396,16 +403,6 @@
     width: 13px;
   }
 
-  .hourly-list {
-    position: relative;
-    height: 600px;
-    width: 450px;
-    margin: 0;
-    bottom: 645px;
-    left: 670px;
-  }
-
-
   .hourly-list .list-item {
     width: 265px;
     height: 43px;
@@ -415,15 +412,15 @@
     width: 45px;
   }
 
-  .hourly-list .list-item .item__hour {
+  .item__hour {
     font-size: 1.86rem;
     left: 50px;
     bottom: 30px;
     width: 60px;
   }
 
-  .hourly-list .list-item .item__degree {
-    width:  45px;
+  .item__degree {
+    width: 45px;
     font-size: 1.6rem;
     bottom: 55px;
   }
@@ -434,15 +431,63 @@
 
 }
 
+
 /*----- 1200px (Desktop) -----*/
-
 @media (min-width: 1200px) {
-  /* base style */
 
+  /* base style */
+  body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 570px;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header"
+      "main   aside"
+      "footer footer";
+    min-height: 100vh;
+  }
+
+  .header {
+    grid-area: header;
+  }
+
+  .header .container {
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  .main {
+    grid-area: main;
+  }
+
+  .hourly-list {
+    grid-area: aside;
+    bottom: 0;
+    left: 0;
+    margin-block-start: 3.5rem;
+  }
+
+  .footer {
+    grid-area: footer;
+  }
+
+  .card,
+  .current-info .list-items,
+  .daily-forecast {
+    margin-inline: auto;
+    margin-inline-end: 7rem;
+  }
+
+  .card {
+    max-width: 570px;
+  }
+
+  .footer {
+    bottom: 0;
+  }
 }
 
 /*----- 1440px (Large Desktop) -----*/
-
 @media (min-width: 1440px) {
   /* base style */
 }

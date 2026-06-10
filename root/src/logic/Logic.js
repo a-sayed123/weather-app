@@ -3,16 +3,16 @@
 // // // ---------------- \\ \\ \\
 // ------- UTILITIES here ------- \\
 // -------------------------------- \\
-
+// ../../assets/images/icon-sunny.webp
 export const ICON_SRC = {
-  sunny: "./assets/images/icon-sunny.webp",
-  fog: "./assets/images/icon-fog.webp",
-  drizzle: "./assets/images/icon-drizzle.webp",
-  rain: "./assets/images/icon-rain.webp",
-  snow: "./assets/images/icon-snow.webp",
-  storm: "./assets/images/icon-storm.webp",
-  overcast: "./assets/images/icon-overcast.webp",
-  "partly-cloudy": "./assets/images/icon-partly-cloudy.webp",
+  sunny: "assets/images/icon-sunny.webp",
+  fog: "assets/images/icon-fog.webp",
+  drizzle: "assets/images/icon-drizzle.webp",
+  rain: "assets/images/icon-rain.webp",
+  snow: "assets/images/icon-snow.webp",
+  storm: "assets/images/icon-storm.webp",
+  overcast: "assets/images/icon-overcast.webp",
+  "partly-cloudy": "assets/images/icon-partly-cloudy.webp",
 }
 export const ICON_CODES = {
   0: "sunny",
@@ -81,6 +81,10 @@ const conversions = {
 export function unitsConverter(from, value, to) {
   if(value == null)return null
   if (from === to)return value
+  console.log(from)
+  console.log(value)
+  console.log(to)
+  console.log(conversions[from]?.[to]?.(value))
   return conversions[from]?.[to]?.(value)
 }
 
@@ -91,7 +95,8 @@ export function sortDays(daysList) {
   })
 }
 
-export function getDayName(date, type = "long") {
+export function getDayName(day, type = "long") {
+  const date = new Date(day)
   const Day = date.toLocaleDateString("en-US", { weekday: type })
   return Day
 }
@@ -158,7 +163,7 @@ export function findCurrentHourIndex(date, hoursArray) {
   return hourIndex
 }
 
-export function orederDays(daysListElements, type = "long") {
+export function orderDays(daysListElements, type = "long") {
   const baseDate = new Date()
   daysListElements.forEach((day, index) => {
     const newDate = new Date(baseDate)
@@ -180,6 +185,8 @@ export function getHourlyByDay(data, selectedDay, units) {
               icon: data.hourly.weathercode?.[index],
     }}).filter(Boolean)
 }
+
+
 // current
 export function getCurrentWeather(data, units){
   return {
