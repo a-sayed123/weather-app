@@ -106,7 +106,8 @@
 -->  Error API
 \*-------------*/
 
-.error {
+.error-view {
+  grid-area: error;
   position: relative;
   display: flex;
   flex-flow: column;
@@ -119,31 +120,39 @@
   z-index: 5;
 }
 
-.error__icon {
+body.error .error-view{
+  display: flex;
+}
+
+body .error-view {
+  display: none;
+}
+
+.error-view__icon {
   position: relative;
   width: 3rem;
   height: 3rem;
 
 }
 
-.error__icon .icon {
+.error-view__icon .icon {
   width: 5rem;
   height: 5rem;
 }
 
-.error__title {
+.error-view__title {
   font-size: 2.5rem;
   pointer-events: none;
 }
 
-.error__subtitle {
+.error-view__subtitle {
   font-size: 1.2rem;
   width: 270px;
   opacity: 0.5;
   pointer-events: none;
 }
 
-.error__btn {
+.error-view__btn {
   display: flex;
   flex-flow: row;
   gap: 10px;
@@ -160,10 +169,11 @@
   cursor: pointer;
 }
 
-.error__btn--focus:focus {
+.error-view__btn--focus:focus {
   outline: 2px solid white;
   outline-offset: 3px;
 }
+
 
 /*------------*\
 -->  NO RESULT
@@ -257,10 +267,6 @@
   padding-inline-start: 10px;
   font-family: "Bricolage_Grotesque";
   margin-block: 1.5vh;
-}
-
-.select__btn.loading * {
-  pointer-events: none;
 }
 
 .select__btn--focus:focus {
@@ -490,11 +496,6 @@
   transition: opacity 250ms ease;
 }
 
-.card:has(.loading) {
-  background: none;
-  background-color: var(--Neutral-800);
-}
-
 .card__title {
   position: relative;
   font-size: 2.4rem;
@@ -535,7 +536,14 @@
   pointer-events: none;
 }
 
-.card .loading {
+
+.card.loading {
+  background: none;
+  background-color: var(--Neutral-800);
+}
+
+.card.loading::after {
+  content: "Loading...";
   background-color: transparent;
   color: white;
   position: absolute;
@@ -547,17 +555,22 @@
   font-size: 3rem;
 }
 
+
 .card.loading> :not(.loading) {
   visibility: hidden;
 }
 
-.card .loading .icon {
+.card.loading::before {
+  content: "";
   position: absolute;
   display: block;
   width: 3.5rem;
   height: 3.5rem;
-  top: 0;
-  left: -4.5rem;
+  background-image: url("../../assets/images/icon-loading.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 40%;
+  left: 34%;
   animation: rotate360 2s linear infinite;
 }
 
@@ -754,7 +767,7 @@
   bottom: 50px;
 }
 
-.hours__container  .list-item.loading * {
+.hours__container .list-item.loading * {
   visibility: hidden;
 }
 
@@ -887,4 +900,19 @@
 
 .footer .link:hover {
   color: var(--Blue-500);
+}
+
+body.error .main,
+body.error .footer,
+body.error .hourly-list,
+body.error .header__title,
+body.error .header__search {
+  pointer-events: none;
+  transition: ease 500ms;
+  visibility: hidden;
+  position: absolute;
+}
+
+body.error .header{
+  pointer-events: none;
 }

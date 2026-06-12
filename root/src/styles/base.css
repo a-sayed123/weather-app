@@ -140,3 +140,7 @@ body.loading {
   cursor: wait;
   pointer-events: none;
 }
+
+img{
+  pointer-events: none;
+}

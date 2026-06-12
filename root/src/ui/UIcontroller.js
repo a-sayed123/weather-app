@@ -49,7 +49,8 @@ export const UIcontroller = {
             hourlyDaysListGroup: document.querySelector(".select__options .day__options"),
             hourlyDaysListItem: document.querySelectorAll(".day__option"),
             // Error
-            errorBtn: document.querySelector(".error__btn")
+            // error: document.querySelector(".error-view"),
+            // errorBtn: document.querySelector(".error-view__btn"),
         }
     },
 
@@ -104,7 +105,7 @@ export const UIcontroller = {
         })
 
         // Error 
-        // this.elements.errorBtn.addEventListener("click", this.handleRetryBtn.bind(this))
+        this.elements.errorBtn.addEventListener("click", this.handleRetryBtn.bind(this))
     },
 
     // --------------------------------------
@@ -185,14 +186,15 @@ export const UIcontroller = {
         this.hideHourlyDaysList()
     },
     handleRetryBtn() {
-        this.app.onClickRetry()
+        const item = this.elements.error
+        this.app.onClickRetry(item)
     },
-
+    
     // ------------------------------------------
-    // ---> UI METHODS  ( ONLU DOM MANIPULATION )
+    // ---> UI METHODS  ( ONLy DOM MANIPULATION )
     // ------------------------------------------
 
-    // preloader 
+    // preloader
     hidePreloader() { this.elements.Preloader.classList.add("hide") },
     // confraim
     showConfraim() { this.elements.Confraim.classList.remove("hide") },
@@ -207,7 +209,6 @@ export const UIcontroller = {
         items.forEach(item => {
             item.classList.remove("checked")
         })
-        console.log(items)
     },
     setCheckedOnUnitsListItem(item) { item.classList.add("checked") },
     hideUnitsList() { this.elements.unitsList.classList.add("hide") },
@@ -232,3 +233,5 @@ export const UIcontroller = {
         this.elements.hourlyDaysBtnText.textContent = item.textContent
     },
 }
+
+console.log(document.body.children)

@@ -35,7 +35,6 @@ const units = {
 //----------------------------------\\
 
 export function renderHourly() {
-  console.log(stateElements.hourlyListItems)
   for (let i = 0; i < 24; i++) {
     const cell = `
     <li class="list-item">

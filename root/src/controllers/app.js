@@ -67,10 +67,11 @@ export const APPcontroller = {
     async runDataAppFlow({ refresh = false } = {}) {
         // Validation
         if (refresh) { await this.getRawData() }
-        if (!validator.isReadyForRender(this.rawData)) { this.stateManager(STATUS.INITIIAL); return; }
+        if (!validator.isReadyForRender(this.rawData)) { return false }
         // Extract data
         this.pureData.weatherData = Logic.getPureData(this.rawData.weatherData, this.state.selectedDay, this.state.units)
         this.pureData.placeData = Logic.getPlace(this.rawData.placeData)
+        return true
     },
     async getRawData() {
         if (!validator.hasCoords(this.state.coords)) { this.setState(STATUS.NO_RESULT); return }
@@ -80,8 +81,9 @@ export const APPcontroller = {
                 weatherData: await API.getWeather(latitude, longitude),
                 placeData: await API.getPlaceName(latitude, longitude),
             }
-        } catch (error) { this.setState(STATUS.ERROR); console.log(error); return; }
+        } catch (error) { this.stateManager(STATUS.ERROR); console.log(error); return; }
     },
+
     bindEvents() {
         UIcontroller.init({
             initializeApp: this.handleInitialState.bind(this),
@@ -89,10 +91,17 @@ export const APPcontroller = {
             onChangeDay: this.handleChangeDay.bind(this),
             onLocationAllow: this.handleLocationAllow.bind(this),
             onSearchBtnClick: this.handleSearch.bind(this),
-            // onClickRetry: this.handleRetry.bind(this),
+            onClickRetry: this.handleRetry.bind(this),
         })
     },
+
     // ---> HANDLERS
+    async handleRetry(item){
+        if(!item) return
+        item.remove()
+        await this.handleInitialState()
+    },
+    
     handleChangeUnits(type, newUnit) {
         const oldUnit = this.state.units[type]
         if (oldUnit === newUnit) return
@@ -103,12 +112,12 @@ export const APPcontroller = {
     handleChangeDay(day) {
         const dayDate = day.dataset.day
         this.state.selectedDay = new Date(dayDate)
-        this.runDataAppFlow({ refresh: true })
+        this.runDataAppFlow()
         this.renderUI()
     },
-    async handleLocationAllow() {
+    handleLocationAllow() {
         try {
-            navigator.geolocation.getCurrentPosition(await this.handleLocationSuccess.bind(this), await this.handleLocationError.bind(this))
+            navigator.geolocation.getCurrentPosition(this.handleLocationSuccess.bind(this), this.handleLocationError.bind(this))
         } catch { this.stateManager(STATUS.ERROR); return; }
     },
     async handleLocationSuccess(position) {
@@ -156,8 +165,6 @@ export const APPcontroller = {
         const isValidState = state && Object.values(STATUS).includes(state)
         if (!isValidState) { this.state.status = STATUS.INITIIAL; return; }
         this.state.status = state
-        console.log(this.state.status)
-        console.log(state)
     },
     renderUI() {
         UI.init({
@@ -168,15 +175,18 @@ export const APPcontroller = {
         })
     },
     async stateManager(state) {
+        console.log(state)
         const states = {
             initial: async () => {
                 this.setState(STATUS.INITIIAL)
-                await this.runDataAppFlow({ refresh: true })
+                const isready = await this.runDataAppFlow({ refresh: true })
+                if (!isready) this.stateManager(STATUS.ERROR)
                 this.renderUI()
             },
             success: async () => {
                 this.setState(STATUS.SUCCESS)
-                await this.runDataAppFlow({ refresh: true })
+                const isReady = await this.runDataAppFlow({ refresh: true })
+                if (!isReady) this.stateManager(STATUS.ERROR)
                 this.renderUI()
             },
             loading: () => {

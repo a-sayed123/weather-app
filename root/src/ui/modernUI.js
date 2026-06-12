@@ -11,6 +11,8 @@ import {
     getHourlyByDay
 } from "../logic/Logic.js"
 
+import { UIcontroller } from "./UIcontroller.js"
+
 const STATUS = {
     INITIIAL: "initial",
     LOADING: "loading",
@@ -52,6 +54,7 @@ const UI = {
 
         stateElements: {
             // header
+            header: document.querySelector(".header"),
             headerTitle: document.querySelector(".header__title"),
             searchBtn: document.getElementById("search-btn"),
             headerSearchContainer: document.querySelector(".header__search"),
@@ -78,6 +81,8 @@ const UI = {
             // no result
             noResult: document.querySelector(".no-result"),
             noResultText: document.querySelector(".no-result .title"),
+            // Error
+            error: document.querySelector(".error-view"),
             // card
             loadingCard: document.querySelector(".loading-card"),
             card: document.querySelector(".card"),
@@ -137,6 +142,7 @@ const UI = {
     // -----------------
 
     RenderSuccess(weatherData, placeData, units) {
+        this.cleanUI()
         this.RenderData(weatherData, placeData, units)
     },
 
@@ -156,7 +162,12 @@ const UI = {
     // --->  Error
     // -----------------
 
-    RenderError() { },
+    RenderError() {
+        this.cleanUI()
+        this.hideUIForError()
+        this.addErrorElements()
+        // this.bindErrorEvents()
+    },
 
     // -----------------
     // --->  No Result
@@ -169,6 +180,7 @@ const UI = {
     // /////////////////////// //
 
     RenderData(weatherData, placeData, units) {
+        this.cleanUI()
         const cardData = weatherData.cardData
         this.RenderCard(cardData, placeData)
 
@@ -203,12 +215,10 @@ const UI = {
         this.elements.mainElements.humiditly.textContent = `${weatherData.humidity}%`
         this.elements.mainElements.windSpeed.textContent = `${weatherData.wind} ${this.tools.unitsToShow[units.wind]}`
         this.elements.mainElements.precipitation.textContent = `${weatherData.prec} ${this.tools.unitsToShow[units.precipition]}`
-        console.log(weatherData)
     },
 
     // render daily
     RenderDaily(weatherData) {
-
         const html = weatherData.map(day => this.createDailyItem(day)).join("")
         this.elements.stateElements.dailyListItems.innerHTML = html
     },
@@ -283,29 +293,16 @@ const UI = {
     // Loading
     // ---------
 
+    // run loading state
     getBodyLoading() {
         document.body.classList.add("loading")
     },
 
     getCardLoading() {
-        const html = `
-            <div class="loading">
-                <p class="text">Loading...</p>
-                <div class="icon">
-                <img
-                    class="img-cover"
-                    src="./assets/images/icon-loading.svg"
-                    alt="Loading Icon"
-                />
-                </div>
-            </div>
-            `
-        this.elements.stateElements.card.innerHTML = html
         this.elements.stateElements.card.classList.add("loading")
     },
 
     getMainLoading() {
-        console.log(this.elements.stateElements.mainListItems)
         this.elements.stateElements.mainListItems.forEach(item => {
             item.classList.add("loading")
         })
@@ -321,6 +318,74 @@ const UI = {
         this.elements.stateElements.hourlyListItems.classList.add("loading")
     },
 
+    // reset loading
+    resetLoading(){
+        document.body.classList.remove("loading")
+        this.elements.stateElements.dayBtn.classList.remove("loading")
+        this.elements.stateElements.card.classList.remove("loading")
+        this.elements.stateElements.mainListItems.forEach(item => {
+            item.classList.remove("loading")
+        })
+    },
+
+
+    // ---------
+    // Error
+    // ---------
+
+    // run error state
+    hideUIForError() {
+        document.body.classList.add("error")
+    },
+
+    addErrorElements() {
+        const html = `
+            <div class="error-view">
+            <div class="error-view__icon"><img src="./assets/images/icon-error.svg" alt="Error Icon" class="icon"></div>
+            <h3 class="error-view__title">something went wrong</h3>
+            <p class="error-view__subtitle">We couldn´t connect to the server (API error). Please try again in a few moment.</p>
+            <button type="button" class="error-view__btn" id="retryBtn">
+                <div class="icon"><img src="./assets/images/icon-retry.svg" alt="Retry Icon" class="img-cover"></div>
+                <p>Retry</p>
+            </button>
+            </div>
+        `
+        document.body.insertAdjacentHTML("beforeend", html)
+    },
+
+    resetError(){
+        document.body.classList.remove("error")
+    },
+
+    // bindErrorEvents(){
+    //     const btn = document.getElementById("retryBtn")
+    //     UIcontroller.init({},{btn: btn})
+    // },
+
+    // /////////////// //
+    // Cleaning Engain //
+    // /////////////// //
+
+    cleanUI() {
+        // reset loading
+        this.resetLoading()
+
+        // reset error
+        this.resetError()
+
+        // reset no result
+
+        // this.elements.noResult.classList.add("remove")
+    },
+
+
+    // //////// //
+    // Handlers //
+    // //////// //
+
 }
+
+// UI.cleanUI()
+// UI.RenderError()
 
 export default UI 

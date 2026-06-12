@@ -441,9 +441,10 @@
     grid-template-columns: minmax(0, 1fr) 570px;
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
-      "header header"
-      "main   aside"
-      "footer footer";
+    "header header"
+    "error  error"
+    "main   aside"
+    "footer footer";
     min-height: 100vh;
   }
 

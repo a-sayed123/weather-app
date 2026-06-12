@@ -81,10 +81,6 @@ const conversions = {
 export function unitsConverter(from, value, to) {
   if(value == null)return null
   if (from === to)return value
-  console.log(from)
-  console.log(value)
-  console.log(to)
-  console.log(conversions[from]?.[to]?.(value))
   return conversions[from]?.[to]?.(value)
 }
 

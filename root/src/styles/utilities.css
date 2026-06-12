@@ -37,7 +37,6 @@
   background-color: var(--Neutral-700);
 }
 
-.Error {
-  pointer-events: none;
-  cursor: no-drop;
+.remove{
+  display: none;
 }
