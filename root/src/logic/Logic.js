@@ -3,7 +3,8 @@
 // // // ---------------- \\ \\ \\
 // ------- UTILITIES here ------- \\
 // -------------------------------- \\
-// ../../assets/images/icon-sunny.webp
+
+
 export const ICON_SRC = {
   sunny: "assets/images/icon-sunny.webp",
   fog: "assets/images/icon-fog.webp",
