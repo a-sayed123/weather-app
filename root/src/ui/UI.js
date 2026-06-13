@@ -9,9 +9,8 @@
 // -------------
 
 import {
-    getDayName, getMonthName, getDayListNames,
-    ICON_SRC, ICON_CODES, getIcon,
-    getHourlyByDay
+    getDayName, getMonthName,
+    ICON_SRC, ICON_CODES, getIcon
 } from "../logic/Logic.js"
 
 
