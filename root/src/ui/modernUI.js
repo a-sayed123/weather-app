@@ -11,7 +11,6 @@ import {
     getHourlyByDay
 } from "../logic/Logic.js"
 
-import { UIcontroller } from "./UIcontroller.js"
 
 const STATUS = {
     INITIIAL: "initial",
@@ -29,6 +28,7 @@ const UI = {
 
     init({ weatherData = null, placeData = null, state = STATUS.NO_RESULT, units } = {}) {
         this.RenderController({ weatherData, placeData, state, units })
+        console.log(state)
     },
 
     // //////////// //
@@ -134,6 +134,7 @@ const UI = {
     // ---------------
 
     RenderInitial(weatherData, placeData, units) {
+        this.clearBody()
         this.RenderData(weatherData, placeData, units)
     },
 
@@ -142,7 +143,7 @@ const UI = {
     // -----------------
 
     RenderSuccess(weatherData, placeData, units) {
-        this.cleanUI()
+        this.clearBody()
         this.RenderData(weatherData, placeData, units)
     },
 
@@ -151,11 +152,8 @@ const UI = {
     // -----------------
 
     RenderLoading() {
+        this.clearBody()
         this.getBodyLoading()
-        this.getCardLoading()
-        this.getMainLoading()
-        this.getDailyLoading()
-        this.getHourlyLoading()
     },
 
     // -----------------
@@ -163,24 +161,24 @@ const UI = {
     // -----------------
 
     RenderError() {
-        this.cleanUI()
-        this.hideUIForError()
-        this.addErrorElements()
-        // this.bindErrorEvents()
+        this.clearBody()
+        this.getBodyError()
     },
 
     // -----------------
     // --->  No Result
     // -----------------
 
-    RenderNoResult() { },
+    RenderNoResult() {
+        this.clearBody()
+        this.getBodyNoResult()
+    },
 
     // /////////////////////// //
     // Data Rendering Function //
     // /////////////////////// //
 
     RenderData(weatherData, placeData, units) {
-        this.cleanUI()
         const cardData = weatherData.cardData
         this.RenderCard(cardData, placeData)
 
@@ -245,11 +243,11 @@ const UI = {
                 </h3>
 
                 <div class="state-icon">
-                <img
-                    class="img-cover"
-                    src="${getIcon(day.iconCode)}"
-                    alt="weather-icon"
-                />
+                    <img
+                        class="img-cover"
+                        src="${getIcon(day.iconCode)}"
+                        alt="weather-icon"
+                    />
                 </div>
 
                 <p class="degree high-degree">
@@ -295,97 +293,37 @@ const UI = {
 
     // run loading state
     getBodyLoading() {
-        document.body.classList.add("loading")
+        document.body.setAttribute("data-state", "loading")
     },
-
-    getCardLoading() {
-        this.elements.stateElements.card.classList.add("loading")
-    },
-
-    getMainLoading() {
-        this.elements.stateElements.mainListItems.forEach(item => {
-            item.classList.add("loading")
-        })
-    },
-
-    getDailyLoading() {
-        this.elements.stateElements.dailyItems.forEach(item => { item.classList.add("loading") })
-    },
-
-    getHourlyLoading() {
-        this.elements.stateElements.dayBtn.classList.add("loading")
-        this.elements.stateElements.hourlyItems.forEach(item => { item.classList.add("loading") });
-        this.elements.stateElements.hourlyListItems.classList.add("loading")
-    },
-
-    // reset loading
-    resetLoading(){
-        document.body.classList.remove("loading")
-        this.elements.stateElements.dayBtn.classList.remove("loading")
-        this.elements.stateElements.card.classList.remove("loading")
-        this.elements.stateElements.mainListItems.forEach(item => {
-            item.classList.remove("loading")
-        })
-    },
-
 
     // ---------
     // Error
     // ---------
 
     // run error state
-    hideUIForError() {
-        document.body.classList.add("error")
+    getBodyError() {
+        document.body.setAttribute("data-state", "error")
     },
 
-    addErrorElements() {
-        const html = `
-            <div class="error-view">
-            <div class="error-view__icon"><img src="./assets/images/icon-error.svg" alt="Error Icon" class="icon"></div>
-            <h3 class="error-view__title">something went wrong</h3>
-            <p class="error-view__subtitle">We couldn´t connect to the server (API error). Please try again in a few moment.</p>
-            <button type="button" class="error-view__btn" id="retryBtn">
-                <div class="icon"><img src="./assets/images/icon-retry.svg" alt="Retry Icon" class="img-cover"></div>
-                <p>Retry</p>
-            </button>
-            </div>
-        `
-        document.body.insertAdjacentHTML("beforeend", html)
-    },
+    // -----------
+    // No Result
+    // ---------=-
 
-    resetError(){
-        document.body.classList.remove("error")
+    getBodyNoResult() {
+        document.body.setAttribute("data-state", "noResult")
     },
-
-    // bindErrorEvents(){
-    //     const btn = document.getElementById("retryBtn")
-    //     UIcontroller.init({},{btn: btn})
-    // },
 
     // /////////////// //
     // Cleaning Engain //
     // /////////////// //
 
-    cleanUI() {
-        // reset loading
-        this.resetLoading()
-
-        // reset error
-        this.resetError()
-
-        // reset no result
-
-        // this.elements.noResult.classList.add("remove")
+    clearBody() {
+        document.body.removeAttribute("data-state")
     },
-
-
-    // //////// //
-    // Handlers //
-    // //////// //
 
 }
 
-// UI.cleanUI()
-// UI.RenderError()
+
+
 
 export default UI 

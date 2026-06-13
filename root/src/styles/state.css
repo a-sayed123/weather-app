@@ -1,0 +1,406 @@
+/* States Styles */
+
+/* 
+    This Stylesheet is responsible for styling ths state elements and style the 
+    components to be prepared for activiate a specific state .
+*/
+
+/* //////////////// */
+/* ---- STATES --- */
+/* /////////////// */
+
+
+/* //////// */
+/*  NORMAL  */
+/* //////// */
+
+/* ------------ */
+/* -->Error API */
+/* ------------ */
+
+.error {
+    display: none;
+    justify-content: center;
+    pointer-events: none;
+    align-items: center;
+    margin-inline: auto;
+    width: max-content;
+    flex-flow: column;
+    height: 30rem;
+    z-index: 5;
+    gap: 20px;
+}
+
+.error__icon {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+}
+
+.error__icon .icon {
+    width: 5rem;
+    height: 5rem;
+}
+
+.error__title {
+    font-size: 2.5rem;
+    text-transform: capitalize;
+    margin-block: 2rem 0;
+    pointer-events: none;
+}
+
+.error__subtitle {
+    font-size: 1.2rem;
+    width: 270px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.error__btn {
+    display: flex;
+    flex-flow: row;
+    gap: 10px;
+    width: 10rem;
+    color: white;
+    padding-block: 5px;
+    background-color: var(--Neutral-700);
+    font-size: 1.5rem;
+    line-height: 1.6;
+    letter-spacing: 2px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.6rem;
+    cursor: pointer;
+}
+
+.error__btn--focus:focus {
+    outline: 2px solid white;
+    outline-offset: 3px;
+}
+
+
+/* ------------- */
+/* -->NO RESULT  */
+/* ------------- */
+
+.no-result {
+    display: none;
+    pointer-events: none;
+}
+
+.no-result__title {
+    font-size: 2rem;
+    margin-inline: auto;
+}
+
+/* ///////// */
+/*  LOADING  */
+/* ///////// */
+
+/* ----------- */
+/* -->HEADER   */
+/* ----------- */
+
+body[data-state="loading"] .header {
+    pointer-events: none;
+}
+
+/* ----------- */
+/* -->Card     */
+/* ----------- */
+
+body[data-state="loading"] .card> :not(.loading) {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+body[data-state="loading"] .card {
+    background: none;
+    background-color: var(--Neutral-800);
+}
+
+body[data-state="loading"] .card:before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-image: url("../../assets/images/icon-loading.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    top: 40%;
+    left: 15%;
+    animation: rotate360 2s linear infinite;
+}
+
+body[data-state="loading"] .card::after {
+    content: "Loading...";
+    background-color: transparent;
+    color: white;
+    position: absolute;
+    width: max-content;
+    top: 40%;
+    left: 53%;
+    transform: translate(-50%);
+    transition: opacity 250ms ease;
+    font-size: 3rem;
+}
+
+/* ----------- */
+/* -->MAIN     */
+/* ----------- */
+
+body[data-state="loading"] .current-info .list-item .item__content {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+body[data-state="loading"] .current-info .list-item .item__content::after {
+    content: "-";
+    position: absolute;
+    visibility: visible;
+    left: 0;
+}
+
+/* --------------------- */
+/* -->DAYILY FORECAST    */
+/* --------------------- */
+
+body[data-state="loading"] .daily__list .list__item * {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* -------------------- */
+/* -->HOURLY FORECAST   */
+/* -------------------- */
+
+body[data-state="loading"] .hours__container .list-item * {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+body[data-state="loading"] .hours__container .list-items {
+    overflow: hidden;
+}
+
+body[data-state="loading"] .btn__days {
+    width: 5rem;
+    left: 77%;
+}
+
+body[data-state="loading"] .btn__days::after {
+    content: "-";
+    position: absolute;
+    left: 1rem;
+}
+
+body[data-state="loading"] .btn__days> :not(.btn__icon) {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* ----------- */
+/* -->FOOTER   */
+/* ----------- */
+
+body[data-state="loading"] .footer {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+
+/* /////// */
+/*  ERROR  */
+/* /////// */
+
+
+/* ----------- */
+/* -->HEADER   */
+/* ----------- */
+
+body[data-state="error"] .header__title {
+    pointer-events: none;
+    display: none;
+}
+
+body[data-state="error"] .header__search {
+    pointer-events: none;
+    display: none;
+}
+
+body[data-state="error"] .header .topbar {
+    pointer-events: none;
+}
+
+/* ----------- */
+/* -->Card     */
+/* ----------- */
+
+body[data-state="error"] .card {
+    pointer-events: none;
+    display: none;
+}
+
+
+/* ----------- */
+/* -->MAIN     */
+/* ----------- */
+
+body[data-state="error"] .main {
+    pointer-events: none;
+    display: none;
+}
+
+/* --------------------- */
+/* -->DAYILY FORECAST    */
+/* --------------------- */
+
+body[data-state="error"] .daily-forecast {
+    pointer-events: none;
+    display: none;
+}
+
+
+/* -------------------- */
+/* -->HOURLY FORECAST   */
+/* -------------------- */
+
+body[data-state="error"] aside {
+    pointer-events: none;
+    display: none;
+}
+
+/* ----------- */
+/* -->FOOTER   */
+/* ----------- */
+
+body[data-state="error"] .footer {
+    pointer-events: none;
+    display: none;
+}
+
+/* ------------- */
+/* -->Error API  */
+/* ------------- */
+
+body[data-state="error"] .error {
+    pointer-events: auto;
+    display: flex;
+}
+
+@media (min-width: 768px) {
+
+  .error-api .icon {
+    width: 25px;
+  }
+
+  .error-api .title {
+    font-size: 3rem;
+  }
+
+  .error-api .subtitle {
+    font-size: 1.1rem;
+    width: 250px;
+  }
+
+  .error-api .btn {
+    width: 90px;
+    font-size: 1.3rem;
+    border-radius: 0.8rem;
+  }
+
+  .error-api .btn img {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+    .error-api {
+    max-width: 1440px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+
+/* /////////// */
+/*  NO RESULT  */
+/* /////////// */
+
+
+/* ----------- */
+/* -->HEADER   */
+/* ----------- */
+
+body[data-state="noResult"] .topbar {
+    pointer-events: none;
+}
+
+/* ----------- */
+/* -->Card     */
+/* ----------- */
+
+body[data-state="noResult"] .card {
+    pointer-events: none;
+    display: none;
+}
+
+/* ----------- */
+/* -->MAIN     */
+/* ----------- */
+
+body[data-state="noResult"] .main {
+    pointer-events: none;
+    display: none;
+}
+
+/* --------------------- */
+/* -->DAYILY FORECAST    */
+/* --------------------- */
+
+body[data-state="noResult"] .daily-forecast {
+    pointer-events: none;
+    display: none;
+}
+
+/* -------------------- */
+/* -->HOURLY FORECAST   */
+/* -------------------- */
+
+body[data-state="noResult"] aside {
+    pointer-events: none;
+    display: none;
+}
+
+/* ----------- */
+/* -->FOOTER   */
+/* ----------- */
+
+body[data-state="noResult"] .footer {
+    pointer-events: none;
+    display: none;
+}
+
+/* ------------- */
+/* -->NO RESULT  */
+/* ------------- */
+
+body[data-state="noResult"] .no-result {
+  pointer-events: auto;
+  display: block;
+  margin-block: 2rem;
+  height: max-content;
+}
+
+/*
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////

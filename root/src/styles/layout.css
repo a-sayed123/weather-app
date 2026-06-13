@@ -1,11 +1,203 @@
-.Container{
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
-    padding: 0 1.5rem;
-    overflow: hidden;
-    display: flex;
-    flex-flow: column;
-    flex-wrap: wrap;
-    gap: 20px;
+/*---------------------------*/
+/*------ LAYOUT SYSTEM ------*/
+/*---------------------------*/
+
+/* 
+    This stylesheet is responsible for the overall page layout,
+    grid structure, spacing, and responsive positioning of major UI regions . 
+*/
+
+/* //////////////// */
+/* Mobile & Tablet  */
+/* ////////// ///// */
+
+/* normal state*/
+body {
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "main"
+        "aside"
+        "footer";
+}
+
+/* error state */
+body[data-state="error"] {
+    grid-template-areas:
+        "header"
+        "error"
+    ;
+}
+
+/* no result */
+body[data-state="noResult"] {
+    grid-template-areas:
+        "header"
+        "noResult"
+    ;
+}
+
+
+/* /////// */
+/* Tablet  */
+/* /////// */
+
+@media (min-width: 768px) {
+
+    /* Card */
+    .card {
+        margin-block: 30px;
+    }
+
+    /* Footer */
+    .footer {
+        margin-block: 20px;
+    }
+}
+
+/* //////// */
+/* Desktop  */
+/* //////// */
+
+@media (min-width: 1024px) {
+
+    /* normal state */
+
+    /* Base */
+    body {
+        height: 105vh;
+        grid-template-rows: auto auto auto;
+        grid-template-columns:
+            minmax(0, 1fr) minmax(320px, 450px);
+        grid-template-areas:
+            "header header"
+            "main  aside"
+            "footer footer"
+        ;
+    }
+
+    /* error state */
+    body[data-state="error"] {
+        grid-template-areas:
+            "header header"
+            "error error"
+        ;
+    }
+
+    /* no result state */
+    body[data-state="noResult"] {
+        grid-template-areas:
+            "header header"
+            "noResult noResult"
+        ;
+    }
+
+    /* Card */
+    .card {
+        margin-inline: 0;
+        margin-inline-start: 60px;
+    }
+
+    .main {
+        margin-inline: 0;
+        margin-inline-start: 45px;
+    }
+
+    /* Daily Forecast */
+    .daily-forecast {
+        margin-inline: 0;
+        margin-inline-start: 60px;
+    }
+
+    /* Hourly Forecast */
+    .hourly-list {
+        margin: 0;
+    }
+
+}
+
+@media (min-width: 1200px) {
+
+    /* Base Style */
+    body {
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+        height: auto;
+    }
+
+    /* Header */
+    .header .container {
+        margin-inline: auto;
+    }
+
+    /* Card */
+    .card {
+        margin-inline: auto;
+        margin-inline-end: 7rem;
+    }
+
+    /* Main */
+    .main {
+        margin-inline-start: 15rem;
+    }
+
+    .current-info .list-items {
+        margin-inline: auto;
+        margin-inline-end: 7rem;
+    }
+
+    /* Daily Forecast */
+    .daily-forecast {
+        margin-inline: auto;
+        margin-inline-end: 7rem;
+    }
+
+    /* Hourly Forecast */
+    .hourly-list {
+        bottom: 0;
+        left: 0;
+        /* margin-block-start: 3.5rem; */
+    }
+
+    /* Footer */
+    .footer {
+        bottom: 0;
+    }
+}
+
+
+/* 
+---> specify area pices
+*/
+
+/* header */
+.header {
+    grid-area: header;
+}
+
+/* main */
+.main {
+    grid-area: main;
+}
+
+/* aside */
+.hourly-list {
+    grid-area: aside;
+}
+
+/* error */
+.error {
+    grid-area: error;
+}
+
+/* no result */
+.no-result {
+    grid-area: noResult;
+}
+
+/* footer */
+.footer {
+    grid-area: footer;
 }

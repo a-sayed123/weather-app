@@ -136,6 +136,7 @@ export const APPcontroller = {
         if (!validator.isValidCityName(cityName)) {
             console.log("This is not valid city name !?")
             this.stateManager(STATUS.NO_RESULT)
+            console.log("state is here NO_RESULT" )
             return
         }
         try {
@@ -143,7 +144,7 @@ export const APPcontroller = {
             const coords = await API.searchByCityName(cityName)
             if (!validator.hasCoords(coords)) { this.stateManager(STATUS.NO_RESULT); return; }
             this.state.coords = coords
-        } catch (error) { this.stateManager(STATUS.ERROR); return; }
+        } catch (error) {this.stateManager(STATUS.ERROR); return; }
         this.stateManager(STATUS.SUCCESS)
     },
     getInitialCity() {

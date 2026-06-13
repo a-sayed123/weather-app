@@ -49,8 +49,8 @@ export const UIcontroller = {
             hourlyDaysListGroup: document.querySelector(".select__options .day__options"),
             hourlyDaysListItem: document.querySelectorAll(".day__option"),
             // Error
-            // error: document.querySelector(".error-view"),
-            // errorBtn: document.querySelector(".error-view__btn"),
+            error: document.querySelector(".error"),
+            errorBtn: document.querySelector(".error__btn"),
         }
     },
 
@@ -105,7 +105,7 @@ export const UIcontroller = {
         })
 
         // Error 
-        this.elements.errorBtn.addEventListener("click", this.handleRetryBtn.bind(this))
+        this.elements.errorBtn.addEventListener("click", async (e) => { await this.handleRetryBtn(e) })
     },
 
     // --------------------------------------
@@ -185,11 +185,10 @@ export const UIcontroller = {
         if (this.elements.hourlyDaysList.contains(e.target)) return
         this.hideHourlyDaysList()
     },
-    handleRetryBtn() {
-        const item = this.elements.error
-        this.app.onClickRetry(item)
+    async handleRetryBtn(e) {
+        this.handleInitialState()
     },
-    
+
     // ------------------------------------------
     // ---> UI METHODS  ( ONLy DOM MANIPULATION )
     // ------------------------------------------

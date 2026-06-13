@@ -16,11 +16,11 @@
       rel="stylesheet"
     />
     <title>Frontend Mentor | Weather app</title>
-    <link rel="stylesheet" href="./src/styles/layout.css" />
     <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/styles/layout.css" />
     <link rel="stylesheet" href="./src/styles/components.css" />
     <link rel="stylesheet" href="./src/styles/utilities.css" />
-    <link rel="stylesheet" href="./src/styles/media.css" />
+    <link rel="stylesheet" href="./src/styles/state.css" />
   </head>
 
   <body>
@@ -45,7 +45,6 @@
       </form>
     </div>
 
-    <!-- { lat: 30.04, lon: 31.23 } -->
     <!-- header -->
     <header class="header">
       <form action="" method="post">
@@ -207,6 +206,36 @@
         </div>
       </form>
     </header>
+
+    <!-- special states elements -->
+    <div class="error">
+      <div class="error__icon">
+        <img
+          src="./assets/images/icon-error.svg"
+          alt="Error Icon"
+          class="icon"
+        />
+      </div>
+      <h3 class="error__title">something went wrong</h3>
+      <p class="error__subtitle">
+        We couldn´t connect to the server (API error). Please try again in a few
+        moment.
+      </p>
+      <button type="button" class="error__btn" id="retryBtn">
+        <div class="icon">
+          <img
+            src="./assets/images/icon-retry.svg"
+            alt="Retry Icon"
+            class="img-cover"
+          />
+        </div>
+        <p>Retry</p>
+      </button>
+    </div>
+
+    <section class="no-result">
+      <h3 class="no-result__title">No search result Found!</h3>
+    </section>
 
     <!-- main -->
     <main class="main">
