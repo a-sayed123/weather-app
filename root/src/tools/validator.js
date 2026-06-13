@@ -4,6 +4,10 @@
 // --------- VALIDATIONS here ---------- \\
 // ------------------------------------- \\
 
+// ------------------
+// --> This script is responsible for Validation System in My App .
+// ------------------
+
 export const validator = {
     hasCoords(coords) { 
         if (!coords || typeof coords !== "object") return false

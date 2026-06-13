@@ -1,9 +1,14 @@
 'use strict'
 
-// // // ---------------- \\ \\ \\
-// ------- UTILITIES here ------- \\
-// -------------------------------- \\
-// ../../assets/images/icon-sunny.webp
+// // // ------------- \\ \\ \\
+// ------- Logic here ------- \\
+// --------------------------- \\
+
+// -------------------
+// --> This script is resposible for app logic
+//      it ios the brain of this application .
+// -------------------
+
 export const ICON_SRC = {
   sunny: "assets/images/icon-sunny.webp",
   fog: "assets/images/icon-fog.webp",
@@ -14,6 +19,7 @@ export const ICON_SRC = {
   overcast: "assets/images/icon-overcast.webp",
   "partly-cloudy": "assets/images/icon-partly-cloudy.webp",
 }
+
 export const ICON_CODES = {
   0: "sunny",
   1: "sunny",
@@ -46,51 +52,35 @@ export const ICON_CODES = {
 }
 
 const WEATHER_RANGES = [
-  {min: 0, max: 1, type: "sunny"},
-  {min: 2, max: 2, type: "partly-cloudy"},
-  {min: 3, max: 3, type: "overcast"},
-  {min: 45, max: 48, type: "fog"},
-  {min: 51, max: 57, type: "drizzle"},
-  {min: 61, max: 67, type: "rain"},
-  {min: 71, max: 77, type: "snow"},
-  {min: 80, max: 82, type: "rain"},
-  {min: 85, max: 86, type: "snow"},
-  {min: 95, max: 99, type: "storm"},
+  { min: 0, max: 1, type: "sunny" },
+  { min: 2, max: 2, type: "partly-cloudy" },
+  { min: 3, max: 3, type: "overcast" },
+  { min: 45, max: 48, type: "fog" },
+  { min: 51, max: 57, type: "drizzle" },
+  { min: 61, max: 67, type: "rain" },
+  { min: 71, max: 77, type: "snow" },
+  { min: 80, max: 82, type: "rain" },
+  { min: 85, max: 86, type: "snow" },
+  { min: 95, max: 99, type: "storm" },
 ]
-
-
-export function getKeyByValue(object, value) {
-  for (let key in object) {
-    if (object.hasOwnProperty(key)) {
-      if (object[key] === value) return key;
-    }
-  }
-  return null;
-}
 
 // Units converting function
 const conversions = {
-  C:    { F:   (c) =>   Math.round((c * 9/5) + 32)  },
-  F:    { C:   (f) =>   Math.round((f - 32) * 5/9)  },
-  KMH:  { MPH: (kmh) => Math.round(kmh * 0.621371)  },
-  MPH:  { KMH: (mph) => Math.round(mph / 0.621371)  },
-  MM:   { IN:  (mm) =>  Math.round(mm / 25.4)       },
-  IN:   { MM:  (In) =>  Math.round(In * 25.4)       },
+  C: { F: (c) => Math.round((c * 9 / 5) + 32) },
+  F: { C: (f) => Math.round((f - 32) * 5 / 9) },
+  KMH: { MPH: (kmh) => Math.round(kmh * 0.621371) },
+  MPH: { KMH: (mph) => Math.round(mph / 0.621371) },
+  MM: { IN: (mm) => Math.round(mm / 25.4) },
+  IN: { MM: (In) => Math.round(In * 25.4) },
 }
 
 export function unitsConverter(from, value, to) {
-  if(value == null)return null
-  if (from === to)return value
+  if (value == null) return null
+  if (from === to) return value
   return conversions[from]?.[to]?.(value)
 }
 
 // function sorting days as this day
-export function sortDays(daysList) {
-  return daysList.sort((a, b) => {
-    return new Date(a) - Date(b)
-  })
-}
-
 export function getDayName(day, type = "long") {
   const date = new Date(day)
   const Day = date.toLocaleDateString("en-US", { weekday: type })
@@ -102,30 +92,18 @@ export function getMonthName(date, type = "long") {
   return Month
 }
 
-export function getDayData(day){
+export function getDayData(day) {
   return {
-      day: getDayName(day),
-      month: getMonthName(day),
-      year: day.getFullYear(),
-      date: day.getDate(),
+    day: getDayName(day),
+    month: getMonthName(day),
+    year: day.getFullYear(),
+    date: day.getDate(),
   }
 }
 
-export function getDayListNames(datesList, type = "long") {
-  const namesList = []
-  const baseDate = new Date()
-  const days = sortDays(datesList)
-  days.forEach((day, index) => {
-    const newDate = new Date(baseDate)
-    newDate.setDate(baseDate.getDate() + index)
-    namesList.push(getDayName(newDate, type))
-  })
-  return namesList
-}
-
 const cashe = {}
-export function getWeatherType(code){
-  if(cashe[code]) return cashe[code]
+export function getWeatherType(code) {
+  if (cashe[code]) return cashe[code]
   const range = WEATHER_RANGES.find(r => code >= r.min && code <= r.max)
   const type = range ? range.type : "unknown"
   cashe[code] = type
@@ -133,80 +111,52 @@ export function getWeatherType(code){
 }
 
 
-export function getIcon(code){
+export function getIcon(code) {
   const type = getWeatherType(code)
   return ICON_SRC[type]
-}
-
-export function updateTextElement(elements, dataArray, unit = "") {
-  elements.forEach((el, index) => {
-    if (!dataArray[index]) return
-    el.textContent = `${dataArray[index]} ${unit}`
-  })
-}
-
-export function updateSrcElements(iconElements, weatherCodes) {
-  iconElements.forEach((icon, index) => {
-    const code = weatherCodes?.[index]
-    if (code === undefined) return
-    icon.src = getIcon(code)
-  })
-}
-
-export function findCurrentHourIndex(date, hoursArray) {
-  const currentTime = date.toISOString().slice(0, 13)
-  const hourIndex = hoursArray.findIndex(t => t.startsWith(currentTime))
-  return hourIndex
-}
-
-export function orderDays(daysListElements, type = "long") {
-  const baseDate = new Date()
-  daysListElements.forEach((day, index) => {
-    const newDate = new Date(baseDate)
-    newDate.setDate(baseDate.getDate() + index)
-    day.textContent = getDayName(newDate, type)
-    day.dataset.date = newDate.toISOString().slice(0, 10)
-  })
 }
 
 // get data app
 
 // hourly
-export function getHourlyByDay(data, selectedDay, units) {
+function getHourlyByDay(data, selectedDay, units) {
   const selectedDayString = selectedDay.toISOString().slice(0, 10)
   return data.hourly.time.map((time, index) => {
     if (!time.startsWith(selectedDayString)) return null
-    return {  time: time.slice(0, 13),
-              temp: unitsConverter("C", data.hourly.temperature_2m?.[index], units.temperature),
-              icon: data.hourly.weathercode?.[index],
-    }}).filter(Boolean)
+    return {
+      time: time.slice(0, 13),
+      temp: unitsConverter("C", data.hourly.temperature_2m?.[index], units.temperature),
+      icon: data.hourly.weathercode?.[index],
+    }
+  }).filter(Boolean)
 }
 
-
 // current
-export function getCurrentWeather(data, units){
+function getCurrentWeather(data, units) {
   return {
     time: data.current_weather.time,
-    temp: unitsConverter( "C", data.current_weather.temperature, units.temperature),
+    temp: unitsConverter("C", data.current_weather.temperature, units.temperature),
     iconCode: data.current_weather.weathercode,
   }
 }
+
 // main
-export function getMainTagData(data, units){
+function getMainTagData(data, units) {
   const hours = data.hourly.time
   const date = new Date()
   const index = findCurrentHourIndex(date, hours)
-  if(index === -1)return null
+  if (index === -1) return null
   return {
-    temp: unitsConverter("C", data.hourly.apparent_temperature[index] ,units.temperature),
-    prec: unitsConverter("MM", data.hourly.precipitation[index] ,units.precipition), 
-    humidity: data.hourly.relative_humidity_2m[index], 
+    temp: unitsConverter("C", data.hourly.apparent_temperature[index], units.temperature),
+    prec: unitsConverter("MM", data.hourly.precipitation[index], units.precipition),
+    humidity: data.hourly.relative_humidity_2m[index],
     wind: unitsConverter("KMH", data.hourly.wind_direction_10m[index], units.wind),
     units: { wind: units.wind, prec: units.precipition, },
   }
 }
+
 // daily
-export function getDailyForecast(data, units){
+function getDailyForecast(data, units) {
   return data.daily.time.map((day, index) => ({
     day,
     highTemp: unitsConverter("C", data.daily.temperature_2m_max[index], units.temperature),
@@ -214,8 +164,9 @@ export function getDailyForecast(data, units){
     iconCode: data.daily.weathercode[index],
   }))
 }
+
 // place 
-export function getPlace(data){
+function getPlace(data) {
   return {
     city: data.address.city || data.address.town || data.address.village || data.address.state,
     country: data.address.country,
@@ -223,7 +174,7 @@ export function getPlace(data){
 }
 // all pure data to view 
 
-export function getPureData(data, selectedDate, units){
+export function getPureData(data, selectedDate, units) {
   const pureData = {
     hourly: getHourlyByDay(data, selectedDate, units),
     daily: getDailyForecast(data, units),

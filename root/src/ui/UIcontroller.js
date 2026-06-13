@@ -6,6 +6,12 @@ import { getDayName } from "../logic/Logic.js"
 // -------- EVENTS HERE -------- \\
 // ------------------------------ \\
 
+// --------------
+// --> This script is responsible every event on this app 
+//     every eventListener is only here .
+// --------------
+
+
 export const UIcontroller = {
     // --------------------
     // ---> Glopal OBJECT

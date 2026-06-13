@@ -10,7 +10,7 @@
 //------ UI IMPORTING SECTION ------\\
 //----------------------------------\\
 
-import *  as  UI from "../ui/UI.js"
+import UI from "../ui/UI.js"
 import * as Logic from "../logic/Logic.js"
 import * as API from "../api/API.js"
 import validator from "../tools/validator.js"
@@ -22,6 +22,11 @@ import { UIcontroller } from "../ui/UIcontroller.js"
 //------- APP MANAGE SECTION -------\\
 //----------------------------------\\
 
+// --------------
+// - This is the manager of my app its responsibility is to be the orchestrator of this app ,
+// - It is the state manager every desicion taken here only ,
+// - Another scripts is just have a specific role buit this script is the manager of them .
+// --------------
 
 const STATUS = {
     INITIIAL: "initial",
@@ -54,21 +59,22 @@ export const APPcontroller = {
         },
         selectedDay: new Date(),
         coords: { lat: 21.42664, lon: 39.82563 },
-        status: STATUS.INITIIAL,
+        status: STATUS.SUCCESS,
     },
     rawData: {},
+    pureData: {
+        weatherData: {},
+        placeData: {},
+    },
     init() { this.bindEvents() },
-    async runAppFlow({ refresh = false } = {}) {
+    async runDataAppFlow({ refresh = false } = {}) {
         // Validation
         if (refresh) { await this.getRawData() }
-        if (!validator.isReadyForRender(this.rawData)) { this.setState(STATUS.INITIIAL); this.handleInitialState() }
+        if (!validator.isReadyForRender(this.rawData)) { return false }
         // Extract data
-        const pureData = Logic.getPureData(this.rawData.weatherData, this.state.selectedDay, this.state.units)
-        const place = Logic.getPlace(this.rawData.placeData)
-        // Render Data
-        console.log(pureData)
-        console.log(place)
-        UI.updateUi(pureData, place, this.state.selectedDay, this.state.units)
+        this.pureData.weatherData = Logic.getPureData(this.rawData.weatherData, this.state.selectedDay, this.state.units)
+        this.pureData.placeData = Logic.getPlace(this.rawData.placeData)
+        return true
     },
     async getRawData() {
         if (!validator.hasCoords(this.state.coords)) { this.setState(STATUS.NO_RESULT); return }
@@ -78,12 +84,11 @@ export const APPcontroller = {
                 weatherData: await API.getWeather(latitude, longitude),
                 placeData: await API.getPlaceName(latitude, longitude),
             }
-        } catch (error) { this.setState(STATUS.ERROR); console.log(error) }
+        } catch (error) { this.stateManager(STATUS.ERROR); console.log(error); return; }
     },
+
     bindEvents() {
         UIcontroller.init({
-            loadHourly: this.handleLoadHourly.bind(this),
-            loadDaily: this.handleLoadDaily.bind(this),
             initializeApp: this.handleInitialState.bind(this),
             onChangeUnit: this.handleChangeUnits.bind(this),
             onChangeDay: this.handleChangeDay.bind(this),
@@ -92,44 +97,58 @@ export const APPcontroller = {
             onClickRetry: this.handleRetry.bind(this),
         })
     },
+
     // ---> HANDLERS
+    async handleRetry(item) {
+        if (!item) return
+        item.remove()
+        await this.handleInitialState()
+    },
+
     handleChangeUnits(type, newUnit) {
         const oldUnit = this.state.units[type]
         if (oldUnit === newUnit) return
         this.state.units[type] = newUnit
-        this.runAppFlow()
+        this.runDataAppFlow()
+        this.renderUI()
     },
     handleChangeDay(day) {
-        const dayDate = day.dataset.date
+        const dayDate = day.dataset.day
         this.state.selectedDay = new Date(dayDate)
-        this.runAppFlow()
+        this.runDataAppFlow()
+        this.renderUI()
     },
     handleLocationAllow() {
         try {
             navigator.geolocation.getCurrentPosition(this.handleLocationSuccess.bind(this), this.handleLocationError.bind(this))
-        } catch { this.setState(STATUS.ERROR) }
+        } catch { this.stateManager(STATUS.ERROR); return; }
     },
-    handleLocationSuccess(position) {
+    async handleLocationSuccess(position) {
+        if (this._isLocation) return;
+        this._isLocation = true
         const { latitude, longitude } = position.coords
         this.state.coords = { lat: latitude, lon: longitude }
-        if (!validator.hasCoords(this.state.coords)) this.setState(STATUS.NO_RESULT)
-        this.setState(STATUS.SUCCESS)
-        this.runAppFlow({ refresh: true })
+        if (!validator.hasCoords(this.state.coords)) { this.stateManager(STATUS.NO_RESULT); return; }
+        this.stateManager(STATUS.SUCCESS)
     },
-    handleLocationError() {
+    async handleLocationError() {
         console.log("User denied location")
-        this.runAppFlow()
+        this.stateManager(STATUS.INITIIAL)
     },
     async handleSearch(cityName) {
-        if (!validator.isValidCityName(cityName)) { console.log("This is not valid city name !?"); this.setState(STATUS.NO_RESULT); return }
+        if (!validator.isValidCityName(cityName)) {
+            console.log("This is not valid city name !?")
+            this.stateManager(STATUS.NO_RESULT)
+            console.log("state is here NO_RESULT")
+            return
+        }
         try {
-            this.setState(STATUS.LOADING)
+            this.stateManager(STATUS.LOADING)
             const coords = await API.searchByCityName(cityName)
-            if (!validator.hasCoords(coords)) { this.setState(STATUS.NO_RESULT); return }
-            this.state.coords = { lat: coords[0], lon: coords[1] }
-        } catch (error) { this.setState(STATUS.ERROR); return }
-        await this.runAppFlow({ refresh: true })
-        this.setState(STATUS.SUCCESS)
+            if (!validator.hasCoords(coords)) { this.stateManager(STATUS.NO_RESULT); return; }
+            this.state.coords = coords
+        } catch (error) { this.stateManager(STATUS.ERROR); return; }
+        this.stateManager(STATUS.SUCCESS)
     },
     getInitialCity() {
         const lang = navigator.language.split("-")[0]
@@ -137,27 +156,62 @@ export const APPcontroller = {
     },
     async handleInitialState() {
         const initialCity = this.getInitialCity()
+        if (!initialCity) { this.stateManager(STATUS.ERROR); return; }
         try {
             const coords = await API.searchByCityName(initialCity)
-            if (!validator.hasCoords(coords)) { this.setState(STATUS.NO_RESULT); return false; }
-            if(!coords){UI.notValidCityName()}
+            if (!validator.hasCoords(coords)) { this.stateManager(STATUS.NO_RESULT); return false; }
             this.state.coords = coords
-            this.handleLoadHourly()
-            this.handleLoadDaily()
-            await this.runAppFlow({ refresh: true })
+            this.stateManager(STATUS.INITIIAL)
             return true
-        } catch (error) { console.log("error from try catch initial state", error); this.setState(STATUS.ERROR); return false; }
+        } catch (error) { console.log("error from try catch initial state", error); this.stateManager(STATUS.ERROR); return false; }
     },
-    setState(newState) {
-        const isValidState = newState && Object.values(STATUS).includes(newState)
-        if (!isValidState) {
-            this.state.status = STATUS.INITIIAL
-            UI.renderState(STATUS.INITIIAL)
-            this.setState(STATUS.INITIIAL); this.handleInitialState()
-            return
+    setState(state) {
+        const isValidState = state && Object.values(STATUS).includes(state)
+        if (!isValidState) { this.state.status = STATUS.INITIIAL; return; }
+        this.state.status = state
+    },
+    renderUI() {
+        UI.init({
+            weatherData: this.pureData.weatherData,
+            placeData: this.pureData.placeData,
+            state: this.state.status,
+            units: this.state.units,
+        })
+    },
+    async stateManager(state) {
+        const states = {
+            initial: async () => {
+                this.setState(STATUS.INITIIAL)
+                const isready = await this.runDataAppFlow({ refresh: true })
+                if (!isready) this.stateManager(STATUS.ERROR)
+                this.renderUI()
+            },
+            success: async () => {
+                this.setState(STATUS.SUCCESS)
+                const isReady = await this.runDataAppFlow({ refresh: true })
+                if (!isReady) this.stateManager(STATUS.ERROR)
+                this.renderUI()
+            },
+            loading: () => {
+                this.setState(STATUS.LOADING)
+                this.renderUI()
+            },
+            error: () => {
+                this.setState(STATUS.ERROR)
+                this.renderUI()
+            },
+            noResult: () => {
+                this.setState(STATUS.NO_RESULT)
+                this.renderUI()
+            },
         }
-        this.state.status = newState
-        UI.renderState(newState)
+        const handler = states[state]
+
+        if (!handler) {
+            throw new Error(`unknown state : ${state}`)
+        }
+
+        await handler()
     },
 }
 
