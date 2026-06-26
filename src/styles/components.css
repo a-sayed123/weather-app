@@ -47,53 +47,54 @@
 /* --> CONFRAIM   */
 /* -------------- */
 
-.confraim {
+.confirm {
   position: fixed;
+  display: flex;
+  gap: 3.5rem;
+  justify-content: center;
+  flex-flow: column;
   width: 300px;
-  height: 200px;
-  max-width: 90%;
-  max-height: 90vh;
+  padding: 2.5rem;
   background-color: var(--Blue-500);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: "Bricolage_Grotesque";
   border-radius: 18px;
   z-index: 100;
 }
 
-.confraim .btn {
+.choices {
+  display: flex;
+  gap: 5rem;
+  justify-content: center;
+  margin-block-start: 1rem;
+}
+
+.confirm .btn {
   position: relative;
   background-color: var(--Blue-700);
   width: 100px;
   height: 40px;
   border-radius: 12px;
-  opacity: 0.7;
+  color: rgb(182, 179, 202);
   text-transform: uppercase;
   line-height: 1.6;
   letter-spacing: 4px;
   font-size: 1.7rem;
   font-weight: 400;
-  color: white;
-  font-family: "Bricolage_Grotesque";
 }
 
-.confraim .btn:focus {
+.confirm .btn:focus {
   outline: 3px solid var(--Blue-700);
   outline-offset: 3px;
 }
 
-.confraim-title {
-  position: absolute;
+.confirm-title {
   line-height: 1.6;
-  text-align: center;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 50px;
-  width: 70%;
   font-size: 1.6rem;
   letter-spacing: 1.05px;
   font-weight: 800;
-  font-family: "Bricolage_Grotesque";
 }
 
 /* ------------ */
@@ -176,6 +177,18 @@
   flex-flow: row;
 }
 
+.custom__select:has(button[aria-expanded="false"]) .select__options {
+  opacity: 0;
+  position: absolute;
+  transition: linear 500ms ease;
+  pointer-events: none;
+}
+
+.custom__select:has(button[aria-expanded="true"]) .select__options {
+  opacity: 1;
+  pointer-events: all;
+}
+
 .select__btn {
   position: relative;
   display: flex;
@@ -248,6 +261,17 @@
   height: 20px;
   line-height: 1.6;
   border-radius: 5px;
+}
+
+.option__group .list-item[aria-chech="true"] {
+  background-color: var(--Neutral-600);
+
+}
+
+.option__group .list-item[aria-selected="true"]::after {
+  content: "✔";
+  position: absolute;
+  right: 5px;
 }
 
 .header__title {
@@ -396,7 +420,7 @@
   cursor: pointer;
 }
 
-.suggestions .list__item.selected {
+.suggestions .list__item[aria-selected="true"] {
   background-color: var(--Neutral-700);
   border: 1px solid var(--Neutral-600);
 }
@@ -605,20 +629,17 @@
   }
 }
 
-/* desctop */
-/* @media (min-width: 1200px) {
-  .card {
-    margin-inline: auto;
-    margin-inline-end: 7rem;
-  }
-  
-  } */
+
 /* ----------- */
 /* -->MAIN     */
 /* ----------- */
 
 .main {
   display: block;
+}
+
+.current-info .container{
+  /* margin-inline: auto; */
 }
 
 .current-info .list-items {
@@ -661,6 +682,12 @@
   width: max-content;
 }
 
+.weather-panel{
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
 /* responsive */
 
 @media (min-width: 768px) {
@@ -678,12 +705,14 @@
 }
 
 @media (min-width: 1024px) {
-  .main {
+  .main > .container{
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr) minmax(320px, 450px);
+    grid-template-areas:
+      "current  hourly"
+      "daily   daily";
     padding: 1rem;
-    width: 100%;
-  }
-
-  .main .container {
     max-width: none;
     width: 100%;
   }
@@ -701,13 +730,6 @@
     height: 90px;
   }
 }
-
-/* @media (min-width: 1200px) {
-  .current-info .list-items {
-    margin-inline: auto;
-    margin-inline-end: 7rem;
-  }
-} */
 
 /* --------------------- */
 /* -->DAYILY FORECAST    */
@@ -873,14 +895,6 @@
 
 }
 
-/* @media (min-width: 1200px) {
-  .daily-forecast {
-    margin-inline: auto;
-    margin-inline-end: 7rem;
-  }
-} */
-
-
 /* -------------------- */
 /* -->HOURLY FORECAST   */
 /* -------------------- */
@@ -1015,7 +1029,7 @@
   cursor: pointer;
 }
 
-.day__option.selected {
+.day__option[aria-selected="true"] {
   background-color: var(--Neutral-600);
   border: 1px solid var(--Neutral-700);
 }
@@ -1081,10 +1095,6 @@
     max-width: 300px;
     position: relative;
     height: 600px;
-    /* width: 450px;
-    margin: 0;
-    bottom: 645px;
-    left: 670px; */
   }
 
   .hourly-list .container {
@@ -1133,14 +1143,6 @@
     bottom: 55px;
   }
 }
-
-/* @media (min-width: 1200px) {
-  .hourly-list {
-    bottom: 0;
-    left: 0;
-    margin-block-start: 3.5rem;
-  }
-} */
 
 /* ----------- */
 /* -->FOOTER   */
@@ -1191,18 +1193,6 @@
     font-size: 1.7rem;
   }
 }
-
-/* @media (min-width: 1024px) {
-  .footer {
-    bottom: 640px;
-  }
-} */
-
-/* @media (min-width: 1200px) {
-  .footer {
-    bottom: 0;
-  }
-} */
 
 /* search in progress 1024 px */
 /* search in progress */

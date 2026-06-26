@@ -10,7 +10,7 @@
 
 import {
     getDayName, getMonthName,
-    ICON_SRC, ICON_CODES, getIcon
+    getIcon
 } from "../logic/Logic.js"
 
 
@@ -28,9 +28,8 @@ const UI = {
     // Main Function //
     // ///////////// // 
 
-    init({ weatherData = null, placeData = null, state = STATUS.NO_RESULT, units } = {}) {
-        this.RenderController({ weatherData, placeData, state, units })
-        console.log(state)
+    init({ weatherData = null, placeData = null, state = STATUS.NO_RESULT, units, date } = {}) {
+        this.RenderController({ weatherData, placeData, state, units, date })
     },
 
     // //////////// //
@@ -55,13 +54,14 @@ const UI = {
         },
 
         stateElements: {
+            // topbar
+            topbar: document.querySelector(".topbar"),
             // header
             header: document.querySelector(".header"),
             headerTitle: document.querySelector(".header__title"),
             searchBtn: document.getElementById("search-btn"),
             headerSearchContainer: document.querySelector(".header__search"),
             unitsBtn: document.querySelector("[data-units-btn]"),
-            unitsList: document.querySelector("[data-units-list]"),
             headerSearchInput: document.querySelector("[data-search-input]"),
             // progress search
             searchInProgress: document.querySelector(".search-progress"),
@@ -101,7 +101,7 @@ const UI = {
     // UI Rendering Controller //
     // /////////////////////// //
 
-    RenderController({ weatherData, placeData, state, units }) {
+    RenderController({ weatherData, placeData, state, units, date }) {
         const Renderers = {
             initial: this.RenderInitial,
             success: this.RenderSuccess,
@@ -109,9 +109,9 @@ const UI = {
             error: this.RenderError,
             noResult: this.RenderNoResult,
         }
-
+        this.tools.selectedDay = date
         if (weatherData === null || placeData === null) { Renderers[state](); return; }
-        Renderers[state]?.call(this, weatherData, placeData, units)
+        Renderers[state]?.call(this, weatherData, placeData, units, date)
     },
 
     // ////////////////////// //
@@ -125,6 +125,7 @@ const UI = {
             MM: "mm",
             IN: "in",
         },
+        selectedDay: null,
     },
 
     // /////////////////// //
@@ -137,7 +138,7 @@ const UI = {
 
     RenderInitial(weatherData, placeData, units) {
         this.clearBody()
-        this.RenderData(weatherData, placeData, units)
+        this.RenderData(weatherData, placeData, units, date)
     },
 
     // -----------------
@@ -146,7 +147,7 @@ const UI = {
 
     RenderSuccess(weatherData, placeData, units) {
         this.clearBody()
-        this.RenderData(weatherData, placeData, units)
+        this.RenderData(weatherData, placeData, units, date)
     },
 
     // -----------------
@@ -180,7 +181,7 @@ const UI = {
     // Data Rendering Function //
     // /////////////////////// //
 
-    RenderData(weatherData, placeData, units) {
+    RenderData(weatherData, placeData, units, date) {
         const cardData = weatherData.cardData
         this.RenderCard(cardData, placeData)
 
@@ -191,7 +192,7 @@ const UI = {
         this.RenderDaily(dailyData)
 
         const hourlyItemWeatherData = weatherData.hourly
-        const hourlyDayWeatherData = weatherData.daily
+        const hourlyDayWeatherData = { daily: weatherData.daily, selectedDay: date }
         const hourlyData = { hourlyItemWeatherData, hourlyDayWeatherData }
         this.RenderHourly(hourlyData)
     },
@@ -205,7 +206,8 @@ const UI = {
         const date = new Date()
         this.elements.cardElements.cardLocation.textContent = `${placeData.city}, ${placeData.country}`
         this.elements.cardElements.cityTemp.textContent = `${weatherData.temp}°`
-        this.elements.cardElements.cardIcon.src = `${getIcon(weatherData.iconCode)}`
+        this.elements.cardElements.cardIcon.src = `${weatherData.iconImg}`
+        this.elements.cardElements.cardIcon.setAttribute("alt", weatherData.iconState)
         this.elements.cardElements.thisDayDate.textContent = `${getDayName(date)}, ${getMonthName(date)} ${date.getDate()}, ${date.getFullYear()}`
     },
 
@@ -225,7 +227,7 @@ const UI = {
 
     // render hourly
     RenderHourly(hourlyData) {
-        const hourlyDaysSelectHtml = hourlyData.hourlyDayWeatherData.map(day => this.createHourlyDayItem(day)).join("")
+        const hourlyDaysSelectHtml = hourlyData.hourlyDayWeatherData.daily.map(day => this.createHourlyDayItem(day)).join("")
         this.elements.stateElements.BtnDaysList.innerHTML = hourlyDaysSelectHtml
         const hourlyHtml = hourlyData.hourlyItemWeatherData.map((hour, index) => this.createHourlyItem(hour, index)).join("")
         this.elements.stateElements.hourlyListItems.innerHTML = hourlyHtml
@@ -282,7 +284,10 @@ const UI = {
     },
 
     createHourlyDayItem(day) {
-        return `<li class="day__option" data-day=${day.day}>${getDayName(day.day)}</li> `
+        const today = this.tools.selectedDay.toISOString().slice(0,10)
+        let isSelected = false
+        if (day.day === today) isSelected = true
+        return `<li class="day__option" data-day=${day.day} role="option" aria-selected="${isSelected}">${getDayName(day.day)}</li> `
     },
 
     // /////////////////////// //
@@ -295,6 +300,7 @@ const UI = {
 
     // run loading state
     getBodyLoading() {
+        document.body.setAttribute("inert", "")
         document.body.setAttribute("data-state", "loading")
     },
 
@@ -305,6 +311,8 @@ const UI = {
     // run error state
     getBodyError() {
         document.body.setAttribute("data-state", "error")
+        this.elements.stateElements.unitsBtn.setAttribute("inert", "")
+        document.querySelectorAll(".hide").forEach(item => {item.setAttribute("inert", "") })
     },
 
     // -----------
@@ -313,6 +321,8 @@ const UI = {
 
     getBodyNoResult() {
         document.body.setAttribute("data-state", "noResult")
+        this.elements.unitsBtn.setAttribute("disabled")
+
     },
 
     // /////////////// //
@@ -321,11 +331,10 @@ const UI = {
 
     clearBody() {
         document.body.removeAttribute("data-state")
+        document.body.removeAttribute("inert")
     },
 
 }
-
-
 
 
 export default UI 

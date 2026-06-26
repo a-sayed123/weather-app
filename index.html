@@ -2,6 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; img-src 'self' data: https://*.tile.openstreetmap.org;"
+    /> -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+      default-src 'none'; 
+      script-src 'self'; 
+      style-src 'self' https://fonts.googleapis.com; 
+      font-src 'self' https://fonts.gstatic.com; 
+      connect-src 'self' https://nominatim.openstreetmap.org https://api.open-meteo.com/; 
+      img-src 'self';
+      "
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="icon"
@@ -25,35 +40,43 @@
 
   <body>
     <!-- preloader -->
-    <div class="preloader" data-preloader>
+    <div class="preloader" aria-hidden="true" data-preloader>
       <div class="circle"></div>
     </div>
 
     <!-- overlay -->
-    <div class="overlay hide" data-overlay></div>
+    <div class="overlay hide" aria-hidden="true" data-overlay></div>
 
-    <!-- confraim -->
-    <div class="confraim hide" data-confraim>
-      <form action="" method="post">
-        <p class="confraim-title">Are you agree using your position ?</p>
-        <button class="btn confraim-btn1" type="button" data-choice="allow">
+    <!-- confirm -->
+    <section
+      class="confirm hide"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm_title"
+      data-confirm
+    >
+      <h2 class="confirm-title" id="confirm_title">
+        Allow Weather App to access your location ?
+      </h2>
+      <div class="choices">
+        <button class="btn confirm-btn1" type="button" data-choice="allow">
           Allow
         </button>
-        <button class="btn confraim-btn2" type="button" data-choice="deny">
+        <button class="btn confirm-btn2" type="button" data-choice="deny">
           Deny
         </button>
-      </form>
-    </div>
+      </div>
+    </section>
 
     <!-- header -->
     <header class="header">
-      <form action="" method="post">
+      <form action="" method="post" role="search">
         <div class="topbar">
           <div class="container">
             <div class="header__icon">
               <img
                 src="./assets/images/logo.svg"
-                alt="header icon"
+                alt="Weather App logo"
                 class="img-cover"
               />
             </div>
@@ -62,35 +85,40 @@
               <button
                 class="select__btn select__btn--focus"
                 type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+                aria-controls="Units"
                 data-units-btn
               >
                 <div class="icon__units">
                   <img
                     src="./assets/images/icon-units.svg"
-                    alt="Units Icon"
+                    alt=""
                     class="img-cover"
                   />
                 </div>
-                <h2 class="select__text">Units</h2>
+                <span class="select__text">Units</span>
                 <div class="icon-units">
                   <img
                     src="./assets/images/icon-dropdown.svg"
-                    alt="Units Icon"
+                    alt=""
                     class="img-cover"
                   />
                 </div>
               </button>
 
-              <div class="select__options hide" data-units-list>
+              <div class="select__options" id="Units" data-units-list>
                 <p class="options-title">Switch to imperial</p>
 
                 <div class="option__group">
                   <p class="group__title">Temperature</p>
-                  <ul class="list-items">
+                  <ul class="list-items" role="listbox">
                     <li
                       class="list-item"
                       id="celsius"
+                      role="option"
                       data-unit="C"
+                      aria-selected="true"
                       data-type="temperature"
                     >
                       Celsius (°C)
@@ -98,6 +126,8 @@
                     <li
                       class="list-item"
                       id="fahrenheit"
+                      aria-selected="false"
+                      role="option"
                       data-unit="F"
                       data-type="temperature"
                     >
@@ -108,11 +138,13 @@
 
                 <div class="option__group">
                   <p class="group__title">Wind Speed</p>
-                  <ul class="list-items">
+                  <ul class="list-items" role="listbox">
                     <li
                       class="list-item"
                       id="kilometerPerHour"
+                      role="option"
                       data-unit="KMH"
+                      aria-selected="true"
                       data-type="wind"
                     >
                       Km/h
@@ -121,6 +153,8 @@
                       class="list-item"
                       id="milesPerHour"
                       data-unit="MPH"
+                      role="option"
+                      aria-selected="false"
                       data-type="wind"
                     >
                       mph
@@ -130,10 +164,12 @@
 
                 <div class="option__group">
                   <p class="group__title">Precipitation</p>
-                  <ul class="list-items">
+                  <ul class="list-items" role="listbox">
                     <li
                       class="list-item"
                       id="milliMeter"
+                      role="option"
+                      aria-selected="true"
                       data-unit="MM"
                       data-type="precipition"
                     >
@@ -143,6 +179,8 @@
                       class="list-item"
                       id="inch"
                       data-unit="IN"
+                      role="option"
+                      aria-selected="false"
                       data-type="precipition"
                     >
                       Iunches (in)
@@ -162,11 +200,13 @@
               src="./assets/images/icon-search.svg"
               alt="icon-search"
               class="img-cover"
+              aria-hidden="true"
             />
             <input
               name="search-input"
               type="text"
               placeholder=" Search for a place..."
+              aria-activedescendant=""
               data-search-input
             />
 
@@ -184,54 +224,88 @@
           <button type="button" id="search-btn">
             <span class="text text-1">Search</span>
 
-            <span class="text text-2">Search</span>
+            <span class="text text-2" aria-hidden="true">Search</span>
           </button>
           <!-- Suggestions section -->
-          <div class="suggestions hide" data-suggestion-select>
-            <ul class="list__items">
-              <li class="list__item selected" id="suggest1" data-suggest-item>
+          <section class="suggestions hide" data-suggestion-select>
+            <h2 class="sr-only" id="suggestions_title">Suggestions List</h2>
+            <ul
+              class="list__items"
+              role="listbox"
+              aria-labelledby="suggestions_title"
+            >
+              <li
+                class="list__item selected"
+                id="suggest1"
+                role="option"
+                data-suggest-item
+              >
                 <p class="text-content">Alexandria</p>
               </li>
-              <li class="list__item" id="suggest2" data-suggest-item>
+              <li
+                class="list__item"
+                id="suggest2"
+                role="option"
+                data-suggest-item
+              >
                 <p class="text-content">Giza</p>
               </li>
-              <li class="list__item" id="suggest3" data-suggest-item>
+              <li
+                class="list__item"
+                id="suggest3"
+                role="option"
+                data-suggest-item
+              >
                 <p class="text-content">Minia</p>
               </li>
-              <li class="list__item" id="suggest4" data-suggest-item>
+              <li
+                class="list__item"
+                id="suggest4"
+                role="option"
+                data-suggest-item
+              >
                 <p class="text-content">Khartoum</p>
               </li>
             </ul>
-          </div>
+          </section>
         </div>
       </form>
     </header>
 
     <!-- special states elements -->
-    <div class="error">
-      <div class="error__icon">
-        <img
-          src="./assets/images/icon-error.svg"
-          alt="Error Icon"
-          class="icon"
-        />
-      </div>
-      <h3 class="error__title">something went wrong</h3>
+    <section class="error">
+      <header>
+        <div class="error__icon">
+          <img
+            src="./assets/images/icon-error.svg"
+            alt="Error Icon"
+            class="icon"
+          />
+        </div>
+        <h2 class="error__title">something went wrong</h2>
+      </header>
       <p class="error__subtitle">
         We couldn´t connect to the server (API error). Please try again in a few
         moment.
       </p>
-      <button type="button" class="error__btn" id="retryBtn">
-        <div class="icon">
-          <img
-            src="./assets/images/icon-retry.svg"
-            alt="Retry Icon"
-            class="img-cover"
-          />
-        </div>
-        <p>Retry</p>
-      </button>
-    </div>
+      <footer>
+        <button
+          type="button"
+          class="error__btn"
+          id="retryBtn"
+          aria-pressed="false"
+        >
+          <div class="icon">
+            <img
+              src="./assets/images/icon-retry.svg"
+              alt=""
+              class="img-cover"
+            />
+          </div>
+          <span>Retry</span>
+        </button>
+      </footer>
+    </section>
 
     <section class="no-result">
       <h3 class="no-result__title">No search result Found!</h3>
@@ -240,96 +314,117 @@
     <!-- main -->
     <main class="main">
       <div class="container">
-        <section class="card">
-          <p class="card__title" id="location">Berlin, Germany</p>
-          <p class="card__subtitle" id="date">Tuesday, Aug 5, 2025</p>
-          <!-- <div class="loading-card hide">
-            <p class="text">Loading...</p>
-            <div class="icon">
+        <div class="weather-panel">
+          <!-- Card -->
+          <article class="card">
+            <header>
+              <h3 class="sr-only">location main weather details</h3>
+            </header>
+            <span class="card__title" id="location">Berlin, Germany</span>
+            <time class="card__subtitle" datetime="2025-06-05" id="date"
+              >Tuesday, Aug 5, 2025</time
+            >
+            <span
+              class="card__degree"
+              id="temperature"
+              aria-label="Main temperature in this day"
+              >68°</span
+            >
+            <div class="card__icon">
               <img
+                id="mainIcon"
                 class="img-cover"
-                src="./assets/images/icon-loading.svg"
-                alt="Loading Icon"
+                src="./assets/images/icon-sunny.webp"
+                alt=""
               />
             </div>
-          </div> -->
-          <p class="card__degree" id="temperature">68°</p>
-          <div class="card__icon">
-            <img
-              id="mainIcon"
-              class="img-cover"
-              src="./assets/images/icon-sunny.webp"
-              alt="card icon"
-            />
-          </div>
-        </section>
+          </article>
 
-        <section class="current-info">
+          <!-- Current information -->
+          <section class="current-info">
+            <div class="container">
+              <h3 class="sr-only">Current weather information</h3>
+              <ul class="list-items">
+                <li class="list-item">
+                  <span class="item__title">Feels Like</span>
+                  <span class="item__content" id="feels-like-temp">64°</span>
+                </li>
+                <li class="list-item">
+                  <span class="item__title">Humidity</span>
+                  <span class="item__content" id="humidity-precent">46%</span>
+                </li>
+                <li class="list-item">
+                  <span class="item__title">Wind</span>
+                  <span class="item__content" id="wind">9 mph</span>
+                </li>
+                <li class="list-item">
+                  <span class="item__title">Precipitation</span>
+                  <span class="item__content" id="precipitation">0 in</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </div>
+        <!-- Hourly forecast -->
+        <section class="hourly-list">
           <div class="container">
-            <ul class="list-items">
-              <li class="list-item">
-                <p class="item__title">Feels Like</p>
-                <p class="item__content" id="feels-like-temp">64°</p>
-              </li>
-              <li class="list-item">
-                <p class="item__title">Humidity</p>
-                <p class="item__content" id="humidity-precent">46%</p>
-              </li>
-              <li class="list-item">
-                <p class="item__title">Wind</p>
-                <p class="item__content" id="wind">9 mph</p>
-              </li>
-              <li class="list-item">
-                <p class="item__title">Precipitation</p>
-                <p class="item__content" id="precipitation">0 in</p>
-              </li>
-            </ul>
+            <h2 class="hourly-list__title">Hourly forecast</h2>
+
+            <div class="day__select">
+              <button
+                class="btn__days"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="hours_day_option"
+                data-btn-days
+              >
+                <span id="btn__text">Sunday</span>
+                <img
+                  src="./assets/images/icon-dropdown.svg"
+                  alt=""
+                  class="btn__icon"
+                />
+              </button>
+
+              <div
+                class="select__options hide"
+                data-select-daily
+                id="hours_day_option"
+              >
+                <div class="options__group">
+                  <ul class="day__options" role="listbox"></ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="hours__container">
+              <ul class="list-items"></ul>
+            </div>
           </div>
         </section>
 
-        <!-- daily forecast -->
+        <!-- Daily forecast -->
         <section class="daily-forecast">
-          <h3 class="daily-title">Daily forecast</h3>
+          <h2 class="daily-title">Daily forecast</h2>
 
           <ul class="daily__list"></ul>
         </section>
       </div>
     </main>
 
-    <!-- hourly forecast -->
-    <aside class="hourly-list">
-      <div class="container">
-        <h3 class="hourly-list__title">Hourly forecast</h3>
-        <div class="day__select">
-          <button class="btn__days" type="button" data-btn-days>
-            <h3 id="btn__text">Sunday</h3>
-            <img
-              src="./assets/images/icon-dropdown.svg"
-              alt="icon-dropdown"
-              class="btn__icon"
-            />
-          </button>
-
-          <div class="select__options hide" data-select-daily>
-            <div class="options__group">
-              <ul class="day__options"></ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="hours__container">
-          <ul class="list-items"></ul>
-        </div>
-      </div>
-    </aside>
-
     <!-- footer -->
     <footer class="footer">
       <h3 class="footer-text">&copy;&nbsp;CopyRight 2026 with</h3>
-      <a class="link" href="https://www.frontendmentor.io/profile/a-sayed123"
+      <a
+        rel="noopener"
+        class="link"
+        target="_blank"
+        href="https://www.frontendmentor.io/profile/a-sayed123"
         >Ahmed sayed</a
       >
     </footer>
+
     <script type="module" src="./src/Main.js"></script>
   </body>
 </html>

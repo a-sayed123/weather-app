@@ -68,11 +68,11 @@ The app provides real-time weather data with a clean UI and smooth user experien
 * **│   │   └── Validator.js**
 * **│   │**
 * **│   ├── styles/**
-* **│   │   ├── layout.css**
 * **│   │   ├── base.css**
+* **│   │   ├── layout.css**
 * **│   │   ├── components.css/**
 * **│   │   ├── utilities.css**
-* **│   │   └── media.css**
+* **│   │   └── state.css**
 * **│   │**
 * **│   │**
 * **│   └── main.js**

@@ -97,20 +97,12 @@
 /*  LOADING  */
 /* ///////// */
 
-/* ----------- */
-/* -->HEADER   */
-/* ----------- */
-
-body[data-state="loading"] .header {
-    pointer-events: none;
-}
 
 /* ----------- */
 /* -->Card     */
 /* ----------- */
 
 body[data-state="loading"] .card> :not(.loading) {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -152,7 +144,6 @@ body[data-state="loading"] .card::after {
 /* ----------- */
 
 body[data-state="loading"] .current-info .list-item .item__content {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -169,7 +160,6 @@ body[data-state="loading"] .current-info .list-item .item__content::after {
 /* --------------------- */
 
 body[data-state="loading"] .daily__list .list__item * {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -179,7 +169,6 @@ body[data-state="loading"] .daily__list .list__item * {
 /* -------------------- */
 
 body[data-state="loading"] .hours__container .list-item * {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -200,7 +189,6 @@ body[data-state="loading"] .btn__days::after {
 }
 
 body[data-state="loading"] .btn__days> :not(.btn__icon) {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -210,7 +198,6 @@ body[data-state="loading"] .btn__days> :not(.btn__icon) {
 /* ----------- */
 
 body[data-state="loading"] .footer {
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
@@ -226,17 +213,11 @@ body[data-state="loading"] .footer {
 /* ----------- */
 
 body[data-state="error"] .header__title {
-    pointer-events: none;
     display: none;
 }
 
 body[data-state="error"] .header__search {
-    pointer-events: none;
     display: none;
-}
-
-body[data-state="error"] .header .topbar {
-    pointer-events: none;
 }
 
 /* ----------- */
@@ -244,17 +225,14 @@ body[data-state="error"] .header .topbar {
 /* ----------- */
 
 body[data-state="error"] .card {
-    pointer-events: none;
     display: none;
 }
-
 
 /* ----------- */
 /* -->MAIN     */
 /* ----------- */
 
 body[data-state="error"] .main {
-    pointer-events: none;
     display: none;
 }
 
@@ -262,18 +240,15 @@ body[data-state="error"] .main {
 /* -->DAYILY FORECAST    */
 /* --------------------- */
 
-body[data-state="error"] .daily-forecast {
-    pointer-events: none;
+body[data-state="error"] .hourly-list {
     display: none;
 }
-
 
 /* -------------------- */
 /* -->HOURLY FORECAST   */
 /* -------------------- */
 
 body[data-state="error"] aside {
-    pointer-events: none;
     display: none;
 }
 
@@ -282,7 +257,6 @@ body[data-state="error"] aside {
 /* ----------- */
 
 body[data-state="error"] .footer {
-    pointer-events: none;
     display: none;
 }
 
@@ -335,21 +309,11 @@ body[data-state="error"] .error {
 /*  NO RESULT  */
 /* /////////// */
 
-
-/* ----------- */
-/* -->HEADER   */
-/* ----------- */
-
-body[data-state="noResult"] .topbar {
-    pointer-events: none;
-}
-
 /* ----------- */
 /* -->Card     */
 /* ----------- */
 
 body[data-state="noResult"] .card {
-    pointer-events: none;
     display: none;
 }
 
@@ -358,7 +322,6 @@ body[data-state="noResult"] .card {
 /* ----------- */
 
 body[data-state="noResult"] .main {
-    pointer-events: none;
     display: none;
 }
 
@@ -367,7 +330,6 @@ body[data-state="noResult"] .main {
 /* --------------------- */
 
 body[data-state="noResult"] .daily-forecast {
-    pointer-events: none;
     display: none;
 }
 
@@ -376,7 +338,6 @@ body[data-state="noResult"] .daily-forecast {
 /* -------------------- */
 
 body[data-state="noResult"] aside {
-    pointer-events: none;
     display: none;
 }
 
@@ -385,7 +346,6 @@ body[data-state="noResult"] aside {
 /* ----------- */
 
 body[data-state="noResult"] .footer {
-    pointer-events: none;
     display: none;
 }
 

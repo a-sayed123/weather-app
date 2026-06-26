@@ -59,6 +59,12 @@ const WEATHER_RANGES = [
   {min: 95, max: 99, type: "storm"},
 ]
 
+// Toggle aria attributes
+
+export function toggleAria(element, attribute){
+  const isActivated = element.getAttribute(attribute) === "true"
+  element.setAttribute(attribute, String(!isActivated))
+}
 
 // Units converting function
 const conversions = {
@@ -103,7 +109,6 @@ export function getDayData(day){
   }
 }
 
-
 const cashe = {}
 export function getWeatherType(code){
   if(cashe[code]) return cashe[code]
@@ -113,12 +118,10 @@ export function getWeatherType(code){
   return type
 }
 
-
 export function getIcon(code){
   const type = getWeatherType(code)
   return ICON_SRC[type]
 }
-
 
 export function findCurrentHourIndex(date, hoursArray) {
   const currentTime = date.toISOString().slice(0, 13)
@@ -139,13 +142,13 @@ export function getHourlyByDay(data, selectedDay, units) {
     }}).filter(Boolean)
 }
 
-
 // current
 export function getCurrentWeather(data, units){
   return {
     time: data.current_weather.time,
     temp: unitsConverter( "C", data.current_weather.temperature, units.temperature),
-    iconCode: data.current_weather.weathercode,
+    iconImg: getIcon(data.current_weather.weathercode),
+    iconState: getWeatherType(data.current_weather.weathercode),
   }
 }
 // main
