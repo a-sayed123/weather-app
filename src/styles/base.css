@@ -87,6 +87,7 @@ a,
 img,
 data,
 span,
+time,
 input,
 button,
 select,
@@ -153,7 +154,6 @@ body {
   font-weight: 600;
 }
 
-body[data-state="loading"] {
+[inert] {
   cursor: wait;
-  pointer-events: none;
 }

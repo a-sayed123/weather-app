@@ -95,6 +95,7 @@ export const APPcontroller = {
             onLocationAllow: this.handleLocationAllow.bind(this),
             onSearchBtnClick: this.handleSearch.bind(this),
             onClickRetry: this.handleRetry.bind(this),
+            onSelectSuggestion: this.handleSelectSuggestion.bind(this),
         })
     },
 
@@ -104,7 +105,12 @@ export const APPcontroller = {
         item.remove()
         await this.handleInitialState()
     },
-
+    handleSelectSuggestion(item, items){
+        items.forEach(item => {
+            item.setAttribute("aria-selected","false")
+        })
+        item.setAttribute("aria-selected","true")
+    },
     handleChangeUnits(type, newUnit) {
         const oldUnit = this.state.units[type]
         if (oldUnit === newUnit) return
@@ -174,6 +180,7 @@ export const APPcontroller = {
         UI.init({
             weatherData: this.pureData.weatherData,
             placeData: this.pureData.placeData,
+            date: this.state.selectedDay,
             state: this.state.status,
             units: this.state.units,
         })

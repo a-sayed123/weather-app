@@ -12,32 +12,17 @@
 /* ////////// ///// */
 
 /* normal state*/
+
 body {
-    display: grid;
-    min-height: 100vh;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-        "header"
-        "main"
-        "aside"
-        "footer";
+    display: flex;
+    flex-flow: column;
 }
+
 
 /* error state */
-body[data-state="error"] {
-    grid-template-areas:
-        "header"
-        "error"
-    ;
-}
+
 
 /* no result */
-body[data-state="noResult"] {
-    grid-template-areas:
-        "header"
-        "noResult"
-    ;
-}
 
 
 /* /////// */
@@ -66,66 +51,26 @@ body[data-state="noResult"] {
     /* normal state */
 
     /* Base */
-    body {
-        height: 105vh;
-        grid-template-rows: auto auto auto;
+    .main {
+        display: grid;
+
         grid-template-columns:
             minmax(0, 1fr) minmax(320px, 450px);
+
         grid-template-areas:
-            "header header"
-            "main  aside"
-            "footer footer"
-        ;
+            "card    hourly"
+            "current hourly"
+            "daily   daily";
     }
 
     /* error state */
-    body[data-state="error"] {
-        grid-template-areas:
-            "header header"
-            "error error"
-        ;
-    }
+
 
     /* no result state */
-    body[data-state="noResult"] {
-        grid-template-areas:
-            "header header"
-            "noResult noResult"
-        ;
-    }
-
-    /* Card */
-    .card {
-        margin-inline: 0;
-        margin-inline-start: 60px;
-    }
-
-    .main {
-        margin-inline: 0;
-        margin-inline-start: 45px;
-    }
-
-    /* Daily Forecast */
-    .daily-forecast {
-        margin-inline: 0;
-        margin-inline-start: 60px;
-    }
-
-    /* Hourly Forecast */
-    .hourly-list {
-        margin: 0;
-    }
 
 }
 
 @media (min-width: 1200px) {
-
-    /* Base Style */
-    body {
-        grid-template-columns: 1fr 1fr;
-        min-height: 100vh;
-        height: auto;
-    }
 
     /* Header */
     .header .container {
@@ -138,11 +83,7 @@ body[data-state="noResult"] {
         margin-inline-end: 7rem;
     }
 
-    /* Main */
-    .main {
-        margin-inline-start: 15rem;
-    }
-
+    /* current */
     .current-info .list-items {
         margin-inline: auto;
         margin-inline-end: 7rem;
@@ -172,32 +113,17 @@ body[data-state="noResult"] {
 ---> specify area pices
 */
 
-/* header */
-.header {
-    grid-area: header;
+/* weather panel */
+.weather-panel{
+    grid-area: current;
 }
 
-/* main */
-.main {
-    grid-area: main;
+/* daily */
+.daily-forecast {
+    grid-area: daily;
 }
 
-/* aside */
+/* hourly */
 .hourly-list {
-    grid-area: aside;
-}
-
-/* error */
-.error {
-    grid-area: error;
-}
-
-/* no result */
-.no-result {
-    grid-area: noResult;
-}
-
-/* footer */
-.footer {
-    grid-area: footer;
+    grid-area: hourly;
 }
