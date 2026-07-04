@@ -64,6 +64,8 @@ const WEATHER_RANGES = [
 export function toggleAria(element, attribute){
   const isActivated = element.getAttribute(attribute) === "true"
   element.setAttribute(attribute, String(!isActivated))
+  console.log(isActivated)
+  return isActivated
 }
 
 // Units converting function

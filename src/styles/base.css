@@ -91,6 +91,7 @@ time,
 input,
 button,
 select,
+fieldset,
 textarea {
   display: block;
   border: none;

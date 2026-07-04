@@ -18,6 +18,7 @@ export const UIcontroller = {
     // --------------------
     elements: {},
     docHandlers: [],
+    dropdownElements: [],
 
     // -------------------
     // ---> INIT
@@ -42,12 +43,14 @@ export const UIcontroller = {
             // Units
             unitsBtn: document.querySelector("[data-units-btn]"),
             unitsList: document.querySelector("[data-units-list]"),
-            unitsListItem: document.querySelectorAll("[data-unit]"),
-            // suggestions
-            searchBtn: document.getElementById("search-btn"),
-            searchInput: document.querySelector("[data-search-input]"),
+            unitsListItem: document.querySelectorAll('.list-item input[type="radio"]'),
+            // suggestions 
             suggestionList: document.querySelector("[data-suggestion-select]"),
             suggestionListItems: document.querySelectorAll("[data-suggest-item]"),
+            // form
+            searchBtn: document.getElementById("search-btn"),
+            searchInput: document.querySelector("[data-search-input]"),
+            form: document.getElementById("search_form"),
             // hourly forecast
             hourlyDaysBtn: document.querySelector("[data-btn-days]"),
             hourlyDaysBtnText: document.getElementById("btn__text"),
@@ -69,7 +72,21 @@ export const UIcontroller = {
             this.handleOutsideClickUnits.bind(this),
             this.handleOutsideClickSuggestion.bind(this),
             this.handleOutsideClickHourly.bind(this),
+        ],
+
+        this.dropdownElements = [
+            { list: this.elements.unitsList, btn: this.elements.unitsBtn},
+            { list: this.elements.hourlyDaysList, btn: this.elements.hourlyDaysBtn},
+            { list: this.elements.suggestionList, btn: this.elements.searchInput},
         ]
+        // glopal events
+
+        // esc even
+        this.dropdownElements.forEach(el => {
+            el.list.addEventListener("keydown", this.handleEsc.bind(this, el))
+        })
+
+        // hide dropdowns in click outside it
         document.addEventListener("click", this.handleMainOutsideClick.bind(this))
 
         // intial state
@@ -89,8 +106,9 @@ export const UIcontroller = {
 
         // Units
         this.elements.unitsBtn.addEventListener("click", this.handleUnitsBtn.bind(this))
-        this.elements.unitsListItem.forEach(item => {
-            item.addEventListener("click", this.handleUnitsListItem.bind(this))
+        this.elements.unitsList.addEventListener("focusout", this.hsndleFocusOut.bind(this))
+        this.elements.unitsListItem.forEach(input => {
+            input.addEventListener("change", this.handleUnitsListItem.bind(this))
         })
 
         // suggestion
@@ -99,8 +117,8 @@ export const UIcontroller = {
             suggestion.addEventListener("click", this.handleSuggestionListItem.bind(this, suggestion)
             )
         })
+        this.elements.form.addEventListener("submit", this.handleForm.bind(this))
         this.elements.searchBtn.addEventListener("click", this.handleSearchBtn.bind(this))
-
         // Hourl Days
         this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDaysBtn.bind(this))
         this.elements.hourlyDaysListGroup.addEventListener("click", (e) => {
@@ -142,14 +160,17 @@ export const UIcontroller = {
     },
     // Units
     handleUnitsBtn() { this.toggleUnitsBtn() },
+    hsndleFocusOut(e) {
+        const next = e.relatedTarget
+
+        if (!this.elements.unitsList.contains(next))
+            this.hideUnitsList()
+    },
     handleUnitsListItem(e) {
-        const item = e.target.closest(".list-item")
-        const group = item.closest(".option__group")
-        const unit = item?.dataset.unit
-        const type = item?.dataset.type
-        this.clearGroup(group)
-        this.ariaSelectItem(item)
-        this.hideUnitsList()
+        const input = e.target
+        if (!input instanceof HTMLInputElement) return
+        const unit = input.value
+        const type = input.name
         this.app.onChangeUnit(type, unit)
     },
     // suggestions
@@ -159,6 +180,11 @@ export const UIcontroller = {
         this.getSuggestion(item)
         const items = this.elements.suggestionListItems
         this.app.onSelectSuggestion(item, items)
+    },
+    // form
+    handleForm(e) {
+        e.preventDefault()
+        this.handleSearchBtn()
     },
     handleSearchBtn() {
         const cityName = this.elements.searchInput.value
@@ -190,9 +216,20 @@ export const UIcontroller = {
         if (this.elements.hourlyDaysList.contains(e.target)) return
         this.hideHourlyDaysList()
     },
+
+    // error handler
     async handleRetryBtn(e) {
         this.elements.errorBtn.setAttribute("aria-pressed", "true")
         this.handleInitialState()
+    },
+
+    // esc handler
+    handleEsc(el, e){
+        if (e.key !== "Escape") return
+        this.hideUnitsList()
+        this.hideSuggestionList()
+        this.hideHourlyDaysList()
+        el.btn.focus()
     },
 
     // ------------------------------------------
@@ -208,9 +245,12 @@ export const UIcontroller = {
     showOverlay() { this.elements.Overlay.classList.remove("hide") },
     hideOverlay() { this.elements.Overlay.classList.add("hide") },
     // Units
-    toggleUnitsBtn() { 
-        const element = this.elements.unitsBtn 
+    toggleUnitsBtn() {
+        const element = this.elements.unitsBtn
         toggleAria(element, "aria-expanded")
+        const isActivated = element.getAttribute("aria-expanded")
+        if (!isActivated) this.elements.unitsList.setAttribute("inert","")
+        this.elements.unitsList.removeAttribute("inert")
     },
     clearGroup(group) {
         const items = group.querySelectorAll(".list-item")
@@ -218,15 +258,18 @@ export const UIcontroller = {
             item.setAttribute("aria-selected", "false")
         })
     },
-    ariaSelectItem(item){
-        item.setAttribute("aria-selected", "true")
+    hideUnitsList() {
+        this.elements.unitsBtn.setAttribute("aria-expanded", "false")
+        setTimeout(() => { this.elements.unitsList.setAttribute("inert", "") }, 300);
     },
-    hideUnitsList() { this.elements.unitsBtn.setAttribute("aria-expanded", "false") },
     // suggestions
-    toggleSuggestionList() { 
+    toggleSuggestionList() {
         const el = this.elements.suggestionList
-        toggleAria(el,"aria-expanded")
-     },
+        const isActive = toggleAria(el, "aria-expanded")
+        if (isActive) {this.elements.suggestionList.removeAttribute("inert", ""); return;}
+        this.elements.suggestionList.setAttribute("inert", "")
+        console.log(isActive)
+    },
     hideSuggestionList() { this.elements.suggestionList.setAttribute("aria-expanded", "false") },
     getSuggestion(item) { this.elements.searchInput.value = item.textContent.trim() },
     // hourly forecast
@@ -240,5 +283,4 @@ export const UIcontroller = {
     ChangeDayBtnText(item) {
         this.elements.hourlyDaysBtnText.textContent = item.textContent
     },
-
 }

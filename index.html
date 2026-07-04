@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <!-- <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; img-src 'self' data: https://*.tile.openstreetmap.org;"
-    /> -->
-    <meta
-      http-equiv="Content-Security-Policy"
       content="
       default-src 'none'; 
       script-src 'self'; 
@@ -16,7 +12,7 @@
       connect-src 'self' https://nominatim.openstreetmap.org https://api.open-meteo.com/; 
       img-src 'self';
       "
-    />
+    /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="icon"
@@ -70,208 +66,212 @@
 
     <!-- header -->
     <header class="header">
-      <form action="" method="post" role="search">
-        <div class="topbar">
-          <div class="container">
-            <div class="header__icon">
-              <img
-                src="./assets/images/logo.svg"
-                alt="Weather App logo"
-                class="img-cover"
-              />
-            </div>
+      <div class="topbar">
+        <div class="container">
+          <div class="header__icon">
+            <img
+              src="./assets/images/logo.svg"
+              alt="Weather App logo"
+              class="img-cover"
+            />
+          </div>
 
-            <div class="custom__select">
-              <button
-                class="select__btn select__btn--focus"
-                type="button"
-                aria-haspopup="menu"
-                aria-expanded="false"
-                aria-controls="Units"
-                data-units-btn
-              >
-                <div class="icon__units">
-                  <img
-                    src="./assets/images/icon-units.svg"
-                    alt=""
-                    class="img-cover"
-                  />
-                </div>
-                <span class="select__text">Units</span>
-                <div class="icon-units">
-                  <img
-                    src="./assets/images/icon-dropdown.svg"
-                    alt=""
-                    class="img-cover"
-                  />
-                </div>
-              </button>
+          <div class="custom__select">
+            <button
+              class="select__btn select__btn--focus"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="Units"
+              data-units-btn
+            >
+              <div class="icon__units">
+                <img
+                  src="./assets/images/icon-units.svg"
+                  alt=""
+                  class="img-cover"
+                />
+              </div>
+              <span class="select__text">Units</span>
+              <div class="icon-units">
+                <img
+                  src="./assets/images/icon-dropdown.svg"
+                  alt=""
+                  class="img-cover"
+                />
+              </div>
+            </button>
 
-              <div class="select__options" id="Units" data-units-list>
-                <p class="options-title">Switch to imperial</p>
-
-                <div class="option__group">
-                  <p class="group__title">Temperature</p>
-                  <ul class="list-items" role="listbox">
-                    <li
-                      class="list-item"
+            <div class="select__options" id="Units" data-units-list inert>
+              <p class="options-title">Switch to imperial</p>
+              <div class="option__group">
+                <fieldset class="list-items">
+                  <legend class="group__title">Temperature</legend>
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="temperature"
+                      value="C"
                       id="celsius"
-                      role="option"
-                      data-unit="C"
-                      aria-selected="true"
-                      data-type="temperature"
-                    >
-                      Celsius (°C)
-                    </li>
-                    <li
-                      class="list-item"
+                      checked
+                    />
+                    <span class="title">Celsius (°C)</span>
+                  </label>
+
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="temperature"
+                      value="F"
                       id="fahrenheit"
-                      aria-selected="false"
-                      role="option"
-                      data-unit="F"
-                      data-type="temperature"
-                    >
-                      Fahrenheit (°F)
-                    </li>
-                  </ul>
-                </div>
+                    />
+                    <span class="title">Fahrenheit (°F)</span>
+                  </label>
+                </fieldset>
+              </div>
 
-                <div class="option__group">
-                  <p class="group__title">Wind Speed</p>
-                  <ul class="list-items" role="listbox">
-                    <li
-                      class="list-item"
+              <div class="option__group">
+                <fieldset class="list-items">
+                  <legend class="group__title">Wind Speed</legend>
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="wind"
                       id="kilometerPerHour"
-                      role="option"
-                      data-unit="KMH"
-                      aria-selected="true"
-                      data-type="wind"
-                    >
-                      Km/h
-                    </li>
-                    <li
-                      class="list-item"
-                      id="milesPerHour"
-                      data-unit="MPH"
-                      role="option"
-                      aria-selected="false"
-                      data-type="wind"
-                    >
-                      mph
-                    </li>
-                  </ul>
-                </div>
+                      value="KMH"
+                      checked
+                    />
+                    <span class="title">Km/h</span>
+                  </label>
 
-                <div class="option__group">
-                  <p class="group__title">Precipitation</p>
-                  <ul class="list-items" role="listbox">
-                    <li
-                      class="list-item"
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="wind"
+                      id="milesPerHour"
+                      value="MPH"
+                    />
+                    <span class="title">mph</span>
+                  </label>
+                </fieldset>
+              </div>
+
+              <div class="option__group">
+                <fieldset class="list-items">
+                  <legend class="group__title">Precipitation</legend>
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="precipition"
+                      value="MM"
                       id="milliMeter"
-                      role="option"
-                      aria-selected="true"
-                      data-unit="MM"
-                      data-type="precipition"
-                    >
-                      Millimeters (mm)
-                    </li>
-                    <li
-                      class="list-item"
+                      checked
+                    />
+                    <span class="title">Millimeters (mm)</span>
+                  </label>
+                  <label class="list-item">
+                    <input
+                      type="radio"
+                      name="precipition"
+                      value="IN"
                       id="inch"
-                      data-unit="IN"
-                      role="option"
-                      aria-selected="false"
-                      data-type="precipition"
-                    >
-                      Iunches (in)
-                    </li>
-                  </ul>
-                </div>
+                    />
+                    <span class="title">Iunches (in)</span>
+                    </label>
+                </fieldset>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <h1 class="header__title">How's the sky looking today?</h1>
+      <form
+        action=""
+        role="search"
+        id="search_form"
+        name="weatherSearchForm"
+        class="header__search"
+      >
+        <div class="search-box">
+          <img
+            src="./assets/images/icon-search.svg"
+            alt="icon-search"
+            class="img-cover"
+            aria-hidden="true"
+          />
 
-        <h1 class="header__title">How's the sky looking today?</h1>
+          <label for="search_city" class="sr-only">Search City</label>
+          <input
+            name="search-input"
+            type="text"
+            id="search_city"
+            placeholder=" Search for a place..."
+            aria-activedescendant=""
+            autocomplete="off"
+            data-search-input
+          />
 
-        <div class="header__search">
-          <div class="search-box">
+          <!-- search in progress -->
+          <div class="search-progress hide">
             <img
-              src="./assets/images/icon-search.svg"
-              alt="icon-search"
+              src="./assets/images/icon-loading.svg"
+              alt="progress icon"
               class="img-cover"
-              aria-hidden="true"
             />
-            <input
-              name="search-input"
-              type="text"
-              placeholder=" Search for a place..."
-              aria-activedescendant=""
-              data-search-input
-            />
-
-            <!-- search in progress -->
-            <div class="search-progress hide">
-              <img
-                src="./assets/images/icon-loading.svg"
-                alt="progress icon"
-                class="img-cover"
-              />
-              <h4 class="progrss-text">Search in progress</h4>
-            </div>
+            <h4 class="progrss-text">Search in progress</h4>
           </div>
-
-          <button type="button" id="search-btn">
-            <span class="text text-1">Search</span>
-
-            <span class="text text-2" aria-hidden="true">Search</span>
-          </button>
-          <!-- Suggestions section -->
-          <section class="suggestions hide" data-suggestion-select>
-            <h2 class="sr-only" id="suggestions_title">Suggestions List</h2>
-            <ul
-              class="list__items"
-              role="listbox"
-              aria-labelledby="suggestions_title"
-            >
-              <li
-                class="list__item selected"
-                id="suggest1"
-                role="option"
-                data-suggest-item
-              >
-                <p class="text-content">Alexandria</p>
-              </li>
-              <li
-                class="list__item"
-                id="suggest2"
-                role="option"
-                data-suggest-item
-              >
-                <p class="text-content">Giza</p>
-              </li>
-              <li
-                class="list__item"
-                id="suggest3"
-                role="option"
-                data-suggest-item
-              >
-                <p class="text-content">Minia</p>
-              </li>
-              <li
-                class="list__item"
-                id="suggest4"
-                role="option"
-                data-suggest-item
-              >
-                <p class="text-content">Khartoum</p>
-              </li>
-            </ul>
-          </section>
         </div>
-      </form>
-    </header>
 
+        <button type="button" id="search-btn">
+          <span class="text text-1">Search</span>
+
+          <span class="text text-2" aria-hidden="true">Search</span>
+        </button>
+        <!-- Suggestions section -->
+        <section class="suggestions" data-suggestion-select>
+          <h2 class="sr-only" id="suggestions_title">Suggestions List</h2>
+          <ul
+            class="list__items"
+            role="listbox"
+            aria-labelledby="suggestions_title"
+          >
+            <li
+              class="list__item selected"
+              id="suggest1"
+              role="option"
+              data-suggest-item
+            >
+              <p class="text-content">Alexandria</p>
+            </li>
+            <li
+              class="list__item"
+              id="suggest2"
+              role="option"
+              data-suggest-item
+            >
+              <p class="text-content">Giza</p>
+            </li>
+            <li
+              class="list__item"
+              id="suggest3"
+              role="option"
+              data-suggest-item
+            >
+              <p class="text-content">Minia</p>
+            </li>
+            <li
+              class="list__item"
+              id="suggest4"
+              role="option"
+              data-suggest-item
+            >
+              <p class="text-content">Khartoum</p>
+            </li>
+          </ul>
+        </section>
+      </form>
+    </header> 
+    
     <!-- special states elements -->
     <section class="error">
       <header>
