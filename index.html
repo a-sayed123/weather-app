@@ -177,7 +177,7 @@
                       id="inch"
                     />
                     <span class="title">Iunches (in)</span>
-                    </label>
+                  </label>
                 </fieldset>
               </div>
             </div>
@@ -202,13 +202,16 @@
 
           <label for="search_city" class="sr-only">Search City</label>
           <input
-            name="search-input"
-            type="text"
-            id="search_city"
             placeholder=" Search for a place..."
-            aria-activedescendant=""
+            aria-activedescendant="suggest1"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            name="search-input"
             autocomplete="off"
             data-search-input
+            id="search_city"
+            role="combobox"
+            type="text"
           />
 
           <!-- search in progress -->
@@ -227,51 +230,24 @@
 
           <span class="text text-2" aria-hidden="true">Search</span>
         </button>
+
         <!-- Suggestions section -->
-        <section class="suggestions" data-suggestion-select>
-          <h2 class="sr-only" id="suggestions_title">Suggestions List</h2>
-          <ul
-            class="list__items"
-            role="listbox"
-            aria-labelledby="suggestions_title"
-          >
-            <li
-              class="list__item selected"
-              id="suggest1"
-              role="option"
-              data-suggest-item
-            >
-              <p class="text-content">Alexandria</p>
-            </li>
+        <div class="suggestions" data-suggestion-select>
+          <ul class="list__items" role="listbox">
             <li
               class="list__item"
+              aria-selected="true"
               id="suggest2"
               role="option"
-              data-suggest-item
+              data-suggestion-item
             >
-              <p class="text-content">Giza</p>
-            </li>
-            <li
-              class="list__item"
-              id="suggest3"
-              role="option"
-              data-suggest-item
-            >
-              <p class="text-content">Minia</p>
-            </li>
-            <li
-              class="list__item"
-              id="suggest4"
-              role="option"
-              data-suggest-item
-            >
-              <p class="text-content">Khartoum</p>
+              Alexandria
             </li>
           </ul>
-        </section>
+        </div>
       </form>
-    </header> 
-    
+    </header>
+
     <!-- special states elements -->
     <section class="error">
       <header>
@@ -376,7 +352,7 @@
                 type="button"
                 aria-haspopup="listbox"
                 aria-expanded="false"
-                aria-controls="hours_day_option"
+                aria-controls="hours__day"
                 data-btn-days
               >
                 <span id="btn__text">Sunday</span>
@@ -388,9 +364,9 @@
               </button>
 
               <div
-                class="select__options hide"
+                class="select__options"
+                id="hours__day"
                 data-select-daily
-                id="hours_day_option"
               >
                 <div class="options__group">
                   <ul class="day__options" role="listbox"></ul>

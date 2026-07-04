@@ -64,8 +64,6 @@ const WEATHER_RANGES = [
 export function toggleAria(element, attribute){
   const isActivated = element.getAttribute(attribute) === "true"
   element.setAttribute(attribute, String(!isActivated))
-  console.log(isActivated)
-  return isActivated
 }
 
 // Units converting function
@@ -193,4 +191,21 @@ export function getPureData(data, selectedDate, units){
     cardData: getCurrentWeather(data, units),
   }
   return pureData
+}
+
+// suggestion system
+
+const cities = [
+  "Cairo",
+  "Cape Town",
+  "Casablanca",
+  "Chicago",
+  "Cologne",
+  "Copenhagen",
+  "Canberra",
+  "Cardiff",
+]
+
+export function filterSuggestions(query){
+  return cities.filter(city => city.toLowerCase().startsWith(query.toLowerCase()))
 }

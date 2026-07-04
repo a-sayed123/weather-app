@@ -66,7 +66,8 @@ const UI = {
             // progress search
             searchInProgress: document.querySelector(".search-progress"),
             // suggestion
-            suggestionList: document.querySelector("[data-suggestion-select]"),
+            suggestionList: document.querySelector(".suggestions .list__items"),
+
             // API error
             apiError: document.querySelector(".error"),
             // main
@@ -201,6 +202,12 @@ const UI = {
     // Data Rendering Functions //
     // //////////////////////// //
 
+    // render suggestion
+    RenderSuggestion(matchesCities, query){
+        const html = matchesCities.map((city, index) => this.createSuggestionMarkup(index, city, query)).join("")
+        this.elements.stateElements.suggestionList.innerHTML= html
+    },
+
     // render card
     RenderCard(weatherData, placeData) {
         const date = new Date()
@@ -288,6 +295,26 @@ const UI = {
         let isSelected = false
         if (day.day === today) isSelected = true
         return `<li class="day__option" data-day=${day.day} role="option" aria-selected="${isSelected}">${getDayName(day.day)}</li> `
+    },
+
+    createSuggestionMarkup(index, city, query){
+        const suggestion = `
+        <li
+              class="list__item"
+              aria-selected="false"
+              id="suggest-${index}"
+              role="option"
+              data-suggestion-item
+            >
+              ${this.prepareCityName(city, query)}
+        </li>
+        `
+        return suggestion
+    },
+
+    prepareCityName(city, query){
+        const match = city.slice(query.length)
+        return `<span class="matches">${query}</span>${match}`
     },
 
     // /////////////////////// //
