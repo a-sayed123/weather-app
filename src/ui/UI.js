@@ -158,6 +158,7 @@ const UI = {
     RenderLoading() {
         this.clearBody()
         this.getBodyLoading()
+        document.body.focus()
     },
 
     // -----------------
@@ -302,19 +303,20 @@ const UI = {
         <li
               class="list__item"
               aria-selected="false"
-              id="suggest-${index}"
+              id="suggestion-${index}"
               role="option"
               data-suggestion-item
             >
-              ${this.prepareCityName(city, query)}
+              ${this.prepareCityName(city.city, query)}
         </li>
         `
         return suggestion
     },
 
     prepareCityName(city, query){
-        const match = city.slice(query.length)
-        return `<span class="matches">${query}</span>${match}`
+        const matchedPart = city.slice(query.length)
+        const remainingPart = city.slice(0, query.length)
+        return `<span class="matches">${remainingPart}</span>${matchedPart}`
     },
 
     // /////////////////////// //
@@ -329,6 +331,7 @@ const UI = {
     getBodyLoading() {
         document.body.setAttribute("inert", "")
         document.body.setAttribute("data-state", "loading")
+        document.body.focus()
     },
 
     // ---------
@@ -340,6 +343,7 @@ const UI = {
         document.body.setAttribute("data-state", "error")
         this.elements.stateElements.unitsBtn.setAttribute("inert", "")
         document.querySelectorAll(".hide").forEach(item => {item.setAttribute("inert", "") })
+        document.body.focus()
     },
 
     // -----------
@@ -348,8 +352,8 @@ const UI = {
 
     getBodyNoResult() {
         document.body.setAttribute("data-state", "noResult")
-        this.elements.unitsBtn.setAttribute("disabled")
-
+        this.elements.stateElements.unitsBtn.setAttribute("disabled", "")
+        document.body.focus()
     },
 
     // /////////////// //

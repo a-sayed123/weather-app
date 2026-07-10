@@ -175,14 +175,26 @@ export function getDailyForecast(data, units){
   }))
 }
 // place 
-export function getPlace(data){
+const strategies = {
+  local: (data) => filterLocalPlaceData(data),
+  fallback: (data) => filterRemotePlaceData(data),
+}
+export function getPlace(data, strategy){
+  if(!data || !strategies[strategy]) return
+  if(!data) return
+  return strategies[strategy]?.(data)
+}
+function filterLocalPlaceData(data){
+  return {city: data?.city, country: data?.country}
+}
+function filterRemotePlaceData(data){
   return {
-    city: data.address.city || data.address.town || data.address.village || data.address.state,
-    country: data.address.country,
+    city: data.address?.city || data.address?.town || data.address?.village || data.address?.state,
+    country: data.address?.country,
   }
 }
-// all pure data to view 
 
+// all pure data to view 
 export function getPureData(data, selectedDate, units){
   const pureData = {
     hourly: getHourlyByDay(data, selectedDate, units),

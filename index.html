@@ -203,7 +203,8 @@
           <label for="search_city" class="sr-only">Search City</label>
           <input
             placeholder=" Search for a place..."
-            aria-activedescendant="suggest1"
+            aria-controls="suggestion_select"
+            aria-activedescendant=""
             aria-autocomplete="list"
             aria-expanded="false"
             name="search-input"
@@ -233,30 +234,18 @@
 
         <!-- Suggestions section -->
         <div class="suggestions" data-suggestion-select>
-          <ul class="list__items" role="listbox">
-            <li
-              class="list__item"
-              aria-selected="true"
-              id="suggest2"
-              role="option"
-              data-suggestion-item
-            >
-              Alexandria
-            </li>
-          </ul>
+          <ul class="list__items" role="listbox"id="suggestion_select"></ul>
         </div>
       </form>
     </header>
 
     <!-- special states elements -->
+
+    <!-- error -->
     <section class="error">
       <header>
         <div class="error__icon">
-          <img
-            src="./assets/images/icon-error.svg"
-            alt="Error Icon"
-            class="icon"
-          />
+          <img src="./assets/images/icon-error.svg" alt="" class="img-cover" />
         </div>
         <h2 class="error__title">something went wrong</h2>
       </header>
@@ -283,6 +272,7 @@
       </footer>
     </section>
 
+    <!-- no result -->
     <section class="no-result">
       <h3 class="no-result__title">No search result Found!</h3>
     </section>
@@ -363,11 +353,7 @@
                 />
               </button>
 
-              <div
-                class="select__options"
-                id="hours__day"
-                data-select-daily
-              >
+              <div class="select__options" id="hours__day" data-select-daily>
                 <div class="options__group">
                   <ul class="day__options" role="listbox"></ul>
                 </div>

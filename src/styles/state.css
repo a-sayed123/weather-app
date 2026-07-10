@@ -33,13 +33,9 @@
 
 .error__icon {
     position: relative;
-    width: 3rem;
-    height: 3rem;
-}
-
-.error__icon .icon {
     width: 5rem;
     height: 5rem;
+    margin-inline: auto;
 }
 
 .error__title {
@@ -308,6 +304,10 @@ body[data-state="error"] .error {
 /* /////////// */
 /*  NO RESULT  */
 /* /////////// */
+
+/* ------------------ */
+/* -->Suggestions     */
+/* ------------------ */
 
 /* ----------- */
 /* -->Card     */

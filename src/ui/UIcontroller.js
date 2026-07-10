@@ -2,6 +2,8 @@
 
 import { getDayName, toggleAria, filterSuggestions } from "../logic/Logic.js"
 import UI from "./UI.js"
+import Cities from "../data/Cities.js"
+import validator from "../tools/validator.js"
 
 // // // ---------------- \\ \\ \\
 // -------- EVENTS HERE -------- \\
@@ -17,8 +19,14 @@ export const UIcontroller = {
     // --------------------
     // ---> Glopal OBJECT
     // --------------------
+
+    state: {
+        activeIndex: -1,
+        suggestions: [],
+    },
     elements: {},
     docHandlers: [],
+    keyDownActions: {},
     dropdownElements: [],
 
     // -------------------
@@ -46,13 +54,16 @@ export const UIcontroller = {
             unitsList: document.querySelector("[data-units-list]"),
             unitsListItem: document.querySelectorAll('.list-item input[type="radio"]'),
             // suggestions 
-            suggestionList: document.querySelector("[data-suggestion-select]"),
+            suggestions: document.querySelector(".suggestions"),
+            suggestionList: document.querySelector(".suggestions .list__items"),
             suggestionListItems: document.querySelectorAll("[data-suggestion-item]"),
+
             // form
             searchBtn: document.getElementById("search-btn"),
             searchInput: document.querySelector("[data-search-input]"),
             form: document.getElementById("search_form"),
             // hourly forecast
+            hourly: document.querySelector(".hourly-list"),
             hourlyDaysBtn: document.querySelector("[data-btn-days]"),
             hourlyDaysBtnText: document.getElementById("btn__text"),
             hourlyDaysList: document.querySelector("[data-select-daily]"),
@@ -75,11 +86,20 @@ export const UIcontroller = {
             this.handleOutsideClickHourly.bind(this),
         ],
 
-            this.dropdownElements = [
-                { list: this.elements.unitsList, btn: this.elements.unitsBtn },
-                { list: this.elements.hourlyDaysList, btn: this.elements.hourlyDaysBtn },
-                { list: this.elements.suggestionList, btn: this.elements.searchInput },
-            ]
+        this.dropdownElements = [
+            { list: this.elements.unitsList, btn: this.elements.unitsBtn },
+            { list: this.elements.hourlyDaysList, btn: this.elements.hourlyDaysBtn },
+            { list: this.elements.suggestionList, btn: this.elements.searchInput },
+        ]
+
+        this.keyDownActions = {
+            ArrowDown: () => this.handleInputArrowDown(),
+            ArrowUp: () => this.handleInputArrowUp(),
+            Escape: () => this.handleInputEscape(),
+            Enter: () => this.handleInputEnter(),
+            Tab: () => this.handleInputTap(),
+        }
+
         // glopal events
 
         // esc even
@@ -115,24 +135,25 @@ export const UIcontroller = {
         // Search Input
         this.elements.searchInput.addEventListener("input", this.handleSearchInput.bind(this))
         this.elements.searchInput.addEventListener("focus", this.handleSearchFocus.bind(this))
-        this.elements.searchInput.addEventListener("focusout", this.handleSearchFocusOut.bind(this))
-
-        this.elements.suggestionListItems.forEach(suggestion => {
-            suggestion.addEventListener("click", this.handleSuggestionListItem.bind(this, suggestion)
-            )
-        })
+        this.elements.searchInput.addEventListener("keydown", this.handleInputKeyDownAction.bind(this))
+        this.elements.suggestionList.addEventListener("click", this.handleSuggestionListItem.bind(this))
         this.elements.form.addEventListener("submit", this.handleForm.bind(this))
         this.elements.searchBtn.addEventListener("click", this.handleSearchBtn.bind(this))
+
+
         // Hourl Days
         this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDays.bind(this))
         this.elements.hourlyDaysBtn.addEventListener("focusout", this.handleHourlyDaysfocusOut.bind(this))
-        this.elements.hourlyDaysListGroup.addEventListener("click", (e) => {
-            const item = e.target.closest("[data-day]")
-            if (!item) return
-            const items = document.querySelectorAll("[data-day]")
-            this.handleHourlyDaysListItem(item, items)
+        this.elements.hourly.addEventListener("click", this.handleHourlyDayslist.bind(this))
+        this.elements.hourly.addEventListener("click", (e) => {
+            console.log(this.elements.hourly, e.target)
+            console.log(e.target.closest(".day__option"))
+            console.count("i am clicked")
         })
-
+        // this.elements.hourlyDaysList.addEventListener("click", (e) => {
+        //     console.log("i am here")
+        // })
+        // console.log(this.elements.hourly)
         // Error 
         this.elements.errorBtn.addEventListener("click", async (e) => { await this.handleRetryBtn(e) })
     },
@@ -143,14 +164,18 @@ export const UIcontroller = {
 
     // Inital state
     async handleInitialState() {
+        await Cities.init({ refresh: true })
         try {
-            const isReady = await this.app.initializeApp()
+            // const isReady = this.handelInitializingApp()
             if (!isReady) { this.hidePreloader(); return; }
             this.showOverlay()
             this.showConfirm()
             this.hidePreloader()
             this.elements.hourlyDaysBtnText.textContent = getDayName(new Date())
         } catch (error) { this.hidePreloader(); console.log("handlePreloader error...", error) }
+    },
+    async handelInitializingApp() {
+        return await this.app.initializeApp()
     },
     // confirm
     handleAllow() {
@@ -178,6 +203,7 @@ export const UIcontroller = {
         const type = input.name
         this.app.onChangeUnit(type, unit)
     },
+
     // Search Input
     handleSearchFocus(e) {
         const query = e.target.value.trim()
@@ -189,18 +215,32 @@ export const UIcontroller = {
         if (this.elements.suggestionList.contains(next)) return
         this.hideSuggestionsList()
     },
-    handleSearchInput(e) {
+    async handleSearchInput(e) {
         const query = e.target.value.trim()
-        if (!query) { this.hideSuggestionsList(); return }
-        const matchesCities = filterSuggestions(query)
-        UI.RenderSuggestion(matchesCities, query)
+        if (!query || !validator.isValidForLocalSearch(query)) {
+            this.state.suggestions = []
+            this.hideSuggestionsList()
+            this.clearActiveSuggestion()
+            return false
+        }
+        this.state.suggestions = await Cities.init({ query: query })
+        UI.RenderSuggestion(this.state.suggestions, query)
         this.showSuggestionsList()
     },
-    handleSuggestionListItem(item) {
+    handleSuggestionListItem(e) {
+        const suggestion = e.target.closest(".list__item")
+        if (!suggestion) return
+        this.elements.searchInput.value = suggestion.textContent.trim()
+        this.clearActiveSuggestion()
+        this.state.suggestions = []
         this.hideSuggestionsList()
-        this.getSuggestion(item)
-        const items = this.elements.suggestionListItems
-        this.app.onSelectSuggestion(item, items)
+    },
+    handleInputKeyDownAction(e) {
+        if (!Object.hasOwn(this.keyDownActions, e.key)) { return; }
+        if ((this.elements.searchInput.getAttribute("aria-expanded") === "true") && (e.key === "ArrowDown" || e.key === "ArrowUp"))
+            e.preventDefault()
+        const action = this.keyDownActions[e.key]
+        action?.()
     },
 
     // form
@@ -215,16 +255,22 @@ export const UIcontroller = {
     },
     // hourly forecast
     handleHourlyDays() { this.toggleHourlyList() },
-    handleHourlyDaysfocusOut(e){
+    handleHourlyDaysfocusOut(e) {
         const next = e.relatedTarget
-        if(!this.elements.hourlyDaysList.contains(next)) 
+        if (!this.elements.hourlyDaysList.contains(next))
             this.hideHourlyDaysList()
+    },
+    handleHourlyDayslist(e) {
+        const item = e.target.closest("[data-day]")
+        if (!item) return
+        const items = hourlyDaysList.querySelectorAll("[data-day]")
+        this.handleHourlyDaysListItem(item, items)
     },
     handleHourlyDaysListItem(item, items) {
         this.clearHourlyDaysList(items)
         this.ChangeDayBtnText(item)
-        this.hideHourlyDaysList()
         this.app.onChangeDay(item)
+        // this.hideHourlyDaysList()
     },
     // Dom events
     handleMainOutsideClick(e) { this.docHandlers.forEach(fn => { fn(e) }) },
@@ -234,8 +280,7 @@ export const UIcontroller = {
         this.hideUnitsList()
     },
     handleOutsideClickSuggestion(e) {
-        if (this.elements.searchInput.contains(e.target)) return
-        if (this.elements.suggestionList.contains(e.target)) return
+        if (this.elements.suggestions.contains(e.target) || this.elements.searchInput.contains(e.target)) return
         this.hideSuggestionsList()
     },
     handleOutsideClickHourly(e) {
@@ -247,7 +292,7 @@ export const UIcontroller = {
     // error handler
     async handleRetryBtn(e) {
         this.elements.errorBtn.setAttribute("aria-pressed", "true")
-        this.handleInitialState()
+        this.handelInitializingApp()
     },
 
     // esc handler
@@ -268,11 +313,11 @@ export const UIcontroller = {
     // confirm
     showConfirm() { this.elements.Confirm.classList.remove("hide") },
     hideConfirm() { this.elements.Confirm.classList.add("hide") },
-    
+
     // overlay
     showOverlay() { this.elements.Overlay.classList.remove("hide") },
     hideOverlay() { this.elements.Overlay.classList.add("hide") },
-    
+
     // Units
     toggleUnitsBtn() {
         const element = this.elements.unitsBtn
@@ -280,12 +325,6 @@ export const UIcontroller = {
         const isActivated = Boolean(element.getAttribute("aria-expanded"))
         if (!isActivated) this.elements.unitsList.setAttribute("inert", "")
         this.elements.unitsList.removeAttribute("inert")
-    },
-    clearGroup(group) {
-        const items = group.querySelectorAll(".list-item")
-        items.forEach(item => {
-            item.setAttribute("aria-selected", "false")
-        })
     },
     hideUnitsList() {
         this.elements.unitsBtn.setAttribute("aria-expanded", "false")
@@ -298,10 +337,50 @@ export const UIcontroller = {
     },
     hideSuggestionsList() {
         this.elements.searchInput.setAttribute("aria-expanded", "false")
-        this.elements.suggestionList.setAttribute("inert", "")
     },
-    getSuggestion(item) { 
-        this.elements.searchInput.value = item.textContent.trim() 
+    handleInputArrowDown() {
+        if (this.state.suggestions.length === 0) return
+        if (this.state.activeIndex >= this.state.suggestions.length - 1) return
+        this.state.activeIndex++
+        if (this.state.activeIndex < 0) { this.elements.searchInput.removeAttribute("aria-activedescendant"); return; }
+        this.updateActiveSuggestion()
+    },
+    handleInputArrowUp() {
+        if (this.state.suggestions.length === 0) return
+        if (this.state.activeIndex === -1) return
+        this.state.activeIndex--
+        if (this.state.activeIndex < 0) { this.elements.searchInput.removeAttribute("aria-activedescendant"); return; }
+        this.updateActiveSuggestion()
+    },
+    handleInputEscape() {
+        this.hideSuggestionsList()
+        this.clearActiveSuggestion()
+    },
+    handleInputEnter() {
+        if (this.state.activeIndex < 0) return
+        this.elements.searchInput.value = this.state.suggestions[this.state.activeIndex].city
+        this.hideSuggestionsList()
+        this.clearActiveSuggestion()
+    },
+    handleInputTap() {
+        this.hideSuggestionsList()
+    },
+    updateActiveSuggestion() {
+        const suggestionID = `suggestion-${this.state.activeIndex}`
+        const activeElement = this.elements.suggestionList.querySelector(`#${suggestionID}`)
+        this.elements.searchInput.setAttribute("aria-activedescendant", suggestionID)
+        this.state.suggestions.forEach((suggestion, index) => {
+            this.elements.suggestionList.querySelector(`#suggestion-${index}`).setAttribute("aria-selected", "false")
+        })
+        activeElement?.setAttribute("aria-selected", "true")
+        activeElement?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
+    },
+    clearActiveSuggestion() {
+        this.elements.searchInput.removeAttribute("aria-activedescendant")
+        this.elements.suggestionListItems.forEach(suggestion => {
+            suggestion.setAttribute("aria-selected", "false")
+        })
+        this.state.activeIndex = -1
     },
 
     // hourly forecast
