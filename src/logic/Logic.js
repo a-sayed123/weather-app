@@ -47,38 +47,38 @@ export const ICON_CODES = {
 }
 
 const WEATHER_RANGES = [
-  {min: 0, max: 1, type: "sunny"},
-  {min: 2, max: 2, type: "partly-cloudy"},
-  {min: 3, max: 3, type: "overcast"},
-  {min: 45, max: 48, type: "fog"},
-  {min: 51, max: 57, type: "drizzle"},
-  {min: 61, max: 67, type: "rain"},
-  {min: 71, max: 77, type: "snow"},
-  {min: 80, max: 82, type: "rain"},
-  {min: 85, max: 86, type: "snow"},
-  {min: 95, max: 99, type: "storm"},
+  { min: 0, max: 1, type: "sunny" },
+  { min: 2, max: 2, type: "partly-cloudy" },
+  { min: 3, max: 3, type: "overcast" },
+  { min: 45, max: 48, type: "fog" },
+  { min: 51, max: 57, type: "drizzle" },
+  { min: 61, max: 67, type: "rain" },
+  { min: 71, max: 77, type: "snow" },
+  { min: 80, max: 82, type: "rain" },
+  { min: 85, max: 86, type: "snow" },
+  { min: 95, max: 99, type: "storm" },
 ]
 
 // Toggle aria attributes
 
-export function toggleAria(element, attribute){
+export function toggleAria(element, attribute) {
   const isActivated = element.getAttribute(attribute) === "true"
   element.setAttribute(attribute, String(!isActivated))
 }
 
 // Units converting function
 const conversions = {
-  C:    { F:   (c) =>   Math.round((c * 9/5) + 32)  },
-  F:    { C:   (f) =>   Math.round((f - 32) * 5/9)  },
-  KMH:  { MPH: (kmh) => Math.round(kmh * 0.621371)  },
-  MPH:  { KMH: (mph) => Math.round(mph / 0.621371)  },
-  MM:   { IN:  (mm) =>  Math.round(mm / 25.4)       },
-  IN:   { MM:  (In) =>  Math.round(In * 25.4)       },
+  C: { F: (c) => Math.round((c * 9 / 5) + 32) },
+  F: { C: (f) => Math.round((f - 32) * 5 / 9) },
+  KMH: { MPH: (kmh) => Math.round(kmh * 0.621371) },
+  MPH: { KMH: (mph) => Math.round(mph / 0.621371) },
+  MM: { IN: (mm) => Math.round(mm / 25.4) },
+  IN: { MM: (In) => Math.round(In * 25.4) },
 }
 
 export function unitsConverter(from, value, to) {
-  if(value == null)return null
-  if (from === to)return value
+  if (value == null) return null
+  if (from === to) return value
   return conversions[from]?.[to]?.(value)
 }
 
@@ -100,25 +100,25 @@ export function getMonthName(date, type = "long") {
   return Month
 }
 
-export function getDayData(day){
+export function getDayData(day) {
   return {
-      day: getDayName(day),
-      month: getMonthName(day),
-      year: day.getFullYear(),
-      date: day.getDate(),
+    day: getDayName(day),
+    month: getMonthName(day),
+    year: day.getFullYear(),
+    date: day.getDate(),
   }
 }
 
 const cashe = {}
-export function getWeatherType(code){
-  if(cashe[code]) return cashe[code]
+export function getWeatherType(code) {
+  if (cashe[code]) return cashe[code]
   const range = WEATHER_RANGES.find(r => code >= r.min && code <= r.max)
   const type = range ? range.type : "unknown"
   cashe[code] = type
   return type
 }
 
-export function getIcon(code){
+export function getIcon(code) {
   const type = getWeatherType(code)
   return ICON_SRC[type]
 }
@@ -136,37 +136,39 @@ export function getHourlyByDay(data, selectedDay, units) {
   const selectedDayString = selectedDay.toISOString().slice(0, 10)
   return data.hourly.time.map((time, index) => {
     if (!time.startsWith(selectedDayString)) return null
-    return {  time: time.slice(0, 13),
-              temp: unitsConverter("C", data.hourly.temperature_2m?.[index], units.temperature),
-              icon: data.hourly.weathercode?.[index],
-    }}).filter(Boolean)
+    return {
+      time: time.slice(0, 13),
+      temp: unitsConverter("C", data.hourly.temperature_2m?.[index], units.temperature),
+      icon: data.hourly.weathercode?.[index],
+    }
+  }).filter(Boolean)
 }
 
 // current
-export function getCurrentWeather(data, units){
+export function getCurrentWeather(data, units) {
   return {
     time: data.current_weather.time,
-    temp: unitsConverter( "C", data.current_weather.temperature, units.temperature),
+    temp: unitsConverter("C", data.current_weather.temperature, units.temperature),
     iconImg: getIcon(data.current_weather.weathercode),
     iconState: getWeatherType(data.current_weather.weathercode),
   }
 }
 // main
-export function getMainTagData(data, units){
+export function getMainTagData(data, units) {
   const hours = data.hourly.time
   const date = new Date()
   const index = findCurrentHourIndex(date, hours)
-  if(index === -1)return null
+  if (index === -1) return null
   return {
-    temp: unitsConverter("C", data.hourly.apparent_temperature[index] ,units.temperature),
-    prec: unitsConverter("MM", data.hourly.precipitation[index] ,units.precipition), 
-    humidity: data.hourly.relative_humidity_2m[index], 
+    temp: unitsConverter("C", data.hourly.apparent_temperature[index], units.temperature),
+    prec: unitsConverter("MM", data.hourly.precipitation[index], units.precipition),
+    humidity: data.hourly.relative_humidity_2m[index],
     wind: unitsConverter("KMH", data.hourly.wind_direction_10m[index], units.wind),
     units: { wind: units.wind, prec: units.precipition, },
   }
 }
 // daily
-export function getDailyForecast(data, units){
+export function getDailyForecast(data, units) {
   return data.daily.time.map((day, index) => ({
     day,
     highTemp: unitsConverter("C", data.daily.temperature_2m_max[index], units.temperature),
@@ -175,19 +177,18 @@ export function getDailyForecast(data, units){
   }))
 }
 // place 
-const strategies = {
-  local: (data) => filterLocalPlaceData(data),
-  fallback: (data) => filterRemotePlaceData(data),
+const placeSources  = {
+  local: (data) => normalizeLocalPlace(data),
+  fallback: (data) => normalizeRemotePlace(data),
 }
-export function getPlace(data, strategy){
-  if(!data || !strategies[strategy]) return
-  if(!data) return
-  return strategies[strategy]?.(data)
+export function getPlace({data, source}) {
+  if (!data || !placeSources[source]) return
+  return placeSources[source]?.(data)
 }
-function filterLocalPlaceData(data){
-  return {city: data?.city, country: data?.country}
+function normalizeLocalPlace(data) {
+  return { city: data?.city, country: data?.country }
 }
-function filterRemotePlaceData(data){
+function normalizeRemotePlace(data) {
   return {
     city: data.address?.city || data.address?.town || data.address?.village || data.address?.state,
     country: data.address?.country,
@@ -195,7 +196,7 @@ function filterRemotePlaceData(data){
 }
 
 // all pure data to view 
-export function getPureData(data, selectedDate, units){
+export function getPureData({data, selectedDate, units}) {
   const pureData = {
     hourly: getHourlyByDay(data, selectedDate, units),
     daily: getDailyForecast(data, units),
@@ -205,19 +206,13 @@ export function getPureData(data, selectedDate, units){
   return pureData
 }
 
-// suggestion system
-
-const cities = [
-  "Cairo",
-  "Cape Town",
-  "Casablanca",
-  "Chicago",
-  "Cologne",
-  "Copenhagen",
-  "Canberra",
-  "Cardiff",
-]
-
-export function filterSuggestions(query){
-  return cities.filter(city => city.toLowerCase().startsWith(query.toLowerCase()))
+// providers loop 
+export async function searchInProviders(value, providers) {
+  // providers as an array
+  for (const provider of providers) {
+    const result = await provider(value)
+    // every provider return null when it didn´t find anything
+    if (!result) return result;
+  }
+  return null
 }

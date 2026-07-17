@@ -1,10 +1,10 @@
 'use strict'
 
-import { getDayName, toggleAria, filterSuggestions } from "../logic/Logic.js"
+import { getDayName, toggleAria } from "../logic/Logic.js"
 import UI from "./UI.js"
 import Cities from "../data/Cities.js"
 import validator from "../tools/validator.js"
-
+import Cache from "../tools/Cache.js"
 // // // ---------------- \\ \\ \\
 // -------- EVENTS HERE -------- \\
 // ------------------------------ \\
@@ -23,6 +23,7 @@ export const UIcontroller = {
     state: {
         activeIndex: -1,
         suggestions: [],
+        CacheObj: new Cache(3, 5000),
     },
     elements: {},
     docHandlers: [],
@@ -150,11 +151,6 @@ export const UIcontroller = {
             console.log(e.target.closest(".day__option"))
             console.count("i am clicked")
         })
-        // this.elements.hourlyDaysList.addEventListener("click", (e) => {
-        //     console.log("i am here")
-        // })
-        // console.log(this.elements.hourly)
-        // Error 
         this.elements.errorBtn.addEventListener("click", async (e) => { await this.handleRetryBtn(e) })
     },
 
@@ -166,7 +162,7 @@ export const UIcontroller = {
     async handleInitialState() {
         await Cities.init({ refresh: true })
         try {
-            // const isReady = this.handelInitializingApp()
+            const isReady = await this.handelInitializingApp()
             if (!isReady) { this.hidePreloader(); return; }
             this.showOverlay()
             this.showConfirm()
@@ -175,7 +171,7 @@ export const UIcontroller = {
         } catch (error) { this.hidePreloader(); console.log("handlePreloader error...", error) }
     },
     async handelInitializingApp() {
-        return await this.app.initializeApp()
+        return await this.app.onAppInit()
     },
     // confirm
     handleAllow() {
@@ -201,7 +197,7 @@ export const UIcontroller = {
         if (!input instanceof HTMLInputElement) return
         const unit = input.value
         const type = input.name
-        this.app.onChangeUnit(type, unit)
+        this.app.onUnitChange(type, unit)
     },
 
     // Search Input
@@ -251,7 +247,7 @@ export const UIcontroller = {
     handleSearchBtn() {
         const cityName = this.elements.searchInput.value
         this.elements.searchInput.value = ""
-        this.app.onSearchBtnClick(cityName)
+        this.app.onSearchRequested(cityName)
     },
     // hourly forecast
     handleHourlyDays() { this.toggleHourlyList() },
@@ -269,7 +265,7 @@ export const UIcontroller = {
     handleHourlyDaysListItem(item, items) {
         this.clearHourlyDaysList(items)
         this.ChangeDayBtnText(item)
-        this.app.onChangeDay(item)
+        this.app.onDayChange(item)
         // this.hideHourlyDaysList()
     },
     // Dom events

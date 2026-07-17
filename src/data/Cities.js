@@ -13,11 +13,9 @@ const Cities = {
 
     // main method
     async init({ query = "", refresh = false }) {
-        // console.log("init start", query)
         if (refresh || this.tools.RawData.length === 0) { await this.loadData(); }
         this.tools.query = query
         this.CitiesDataController()
-        // console.log("init running", this.tools.pureData)
         return this.tools.pureData
     },
 

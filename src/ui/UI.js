@@ -365,6 +365,10 @@ const UI = {
         document.body.removeAttribute("inert")
     },
 
+    // clearError(){
+
+    // },
+
 }
 
 
