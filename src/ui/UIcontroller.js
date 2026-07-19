@@ -350,6 +350,8 @@ export const UIcontroller = {
         items[this.state.activeDayIndex].focus()
     },
     handleDaysBtnEnter(e) {
+        if (!this.isHourlyDaysListOpen()) return
+        e.preventDefault()
         const item = e.target.closest("[data-day]")
         const items = this.getHourlyDaysItems()
         if (!this.elements.hourlyDaysList.contains(e.target)) return
