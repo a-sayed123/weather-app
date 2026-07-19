@@ -6,7 +6,7 @@ import * as Logic from "../logic/Logic.js"
 import * as API from "../data/API.js"
 import validator from "../tools/validator.js"
 import { UIcontroller } from "../ui/UIcontroller.js"
-import Cities from "../data/cities.js"
+import Cities from "../data/Cities.js"
 import Cache from "../tools/Cache.js"
 import LANGUAGE_CITY_MAP from "../config/langugeCityMap.js"
 
