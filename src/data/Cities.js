@@ -25,7 +25,7 @@ const Cities = {
     },
 
     async loadData() {
-        const response = await fetch("../../assets/data/Cities.json")
+        const response = await fetch("../../assets/data/cities.json")
         if (!response.ok)
             throw new Error("Failed to load cities dataset")
 
