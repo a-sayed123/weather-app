@@ -305,7 +305,7 @@ const APP = {
         return true
     },
     reprocessData() {
-        this.state.processedData.weather = Logic.getPureData({
+        this.state.processedData.weather = Logic.buildWeatherView({
             data: this.state.rawData.weatherData,
             selectedDate: this.state.selectedDay,
             units: this.state.units,
