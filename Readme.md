@@ -3,6 +3,10 @@
 *A modern, responsive Weather Application built with HTML, CSS, and JavaScript.
 The app provides real-time weather data with a clean UI and smooth user experience across all devices .*
 
+## Version
+
+Current release: **v1.0.0**
+
 ## Live Demo 🚀
 👉 https://weather-app-virid-six-92.vercel.app/
 
