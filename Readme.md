@@ -6,6 +6,9 @@ The app provides real-time weather data with a clean UI and smooth user experien
 ## Live Demo 🚀
 👉 https://weather-app-virid-six-92.vercel.app/
 
+## Version
+
+Current release: **v1.0.0**
 
 ## Features ✨
 * 🌍 Real-time weather data . <br/>
