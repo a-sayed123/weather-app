@@ -1055,7 +1055,6 @@
 .day__select:has(.btn__days[aria-expanded="false"]) .select__options {
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
   transition:
     opacity 300ms,
     visibility 300ms;
@@ -1070,7 +1069,7 @@
 .day__options {
   display: flex;
   flex-flow: column;
-  gap: 15px;
+  gap: 1.3rem;
   margin-block-start: 5px;
   letter-spacing: 0.5px;
 }

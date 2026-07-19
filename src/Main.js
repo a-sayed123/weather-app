@@ -10,6 +10,6 @@
 //------ UI IMPORTING SECTION ------\\
 //----------------------------------\\
 
-import APP from "./controllers/APP.js"
+import APP from "./app/APP.js"
 
 APP.init()

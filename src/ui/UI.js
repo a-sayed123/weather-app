@@ -295,7 +295,7 @@ const UI = {
         const today = this.tools.selectedDay.toISOString().slice(0,10)
         let isSelected = false
         if (day.day === today) isSelected = true
-        return `<li class="day__option" data-day=${day.day} role="option" aria-selected="${isSelected}">${getDayName(day.day)}</li> `
+        return `<li class="day__option" data-day=${day.day} role="option" tabindex="-1" aria-selected="${isSelected}">${getDayName(day.day)}</li> `
     },
 
     createSuggestionMarkup(index, city, query){

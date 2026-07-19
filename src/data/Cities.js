@@ -1,27 +1,27 @@
 'use strict'
 
 const Cities = {
-    // object tools
-    tools: {
+    // object state
+    state: {
         query: "",
         previousQuery: "",
-        previousResult: [],
-        pureData: [],
-        RawData: [],
-        isDublicated: false,
+        cachedResults: [],
+        filteredCities: [],
+        rawData: [],
+        // isDublicated: false,
     },
 
     // main method
     async init({ query = "", refresh = false }) {
-        if (refresh || this.tools.RawData.length === 0) { await this.loadData(); }
-        this.tools.query = query
-        this.CitiesDataController()
-        return this.tools.pureData
+        if (refresh || this.state.rawData.length === 0) { await this.loadData(); }
+        this.state.query = query
+        this.updateResults()
+        return this.state.filteredCities
     },
 
     // Data Controller
-    CitiesDataController() {
-        this.tools.pureData = this.filterCities()
+    updateResults() {
+        this.state.filteredCities = this.filterCities()
     },
 
     async loadData() {
@@ -29,21 +29,21 @@ const Cities = {
         if (!response.ok)
             throw new Error("Failed to load cities dataset")
 
-        this.tools.RawData = await response.json()
+        this.state.rawData = await response.json()
     },
 
     filterCities() {
-        const normalized = this.tools.query.trim().toLowerCase()
-        let source = this.tools.RawData
+        const normalized = this.state.query.trim().toLowerCase()
+        let source = this.state.rawData
         if (!normalized) {
-            this.tools.previousQuery = ""
-            this.tools.previousResult = []
+            this.state.previousQuery = ""
+            this.state.cachedResults = []
             return []
         }
-        if (this.tools.previousQuery && normalized.startsWith(this.tools.previousQuery)) { source = this.tools.previousResult }
+        if (this.state.previousQuery && normalized.startsWith(this.state.previousQuery)) { source = this.state.cachedResults }
         const result = source.filter(cityObj => cityObj.city?.toLowerCase().startsWith(normalized))
-        this.tools.previousQuery = normalized
-        this.tools.previousResult = result
+        this.state.previousQuery = normalized
+        this.state.cachedResults = result
         return result
     },
 

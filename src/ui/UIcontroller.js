@@ -22,12 +22,13 @@ export const UIcontroller = {
 
     state: {
         activeIndex: -1,
+        activeDayIndex: -1,
         suggestions: [],
-        CacheObj: new Cache(3, 5000),
     },
     elements: {},
     docHandlers: [],
-    keyDownActions: {},
+    suggestionskeyDownActions: {},
+    daysBtnkeyDownActions: {},
     dropdownElements: [],
 
     // -------------------
@@ -85,7 +86,7 @@ export const UIcontroller = {
             this.handleOutsideClickUnits.bind(this),
             this.handleOutsideClickSuggestion.bind(this),
             this.handleOutsideClickHourly.bind(this),
-        ],
+        ]
 
         this.dropdownElements = [
             { list: this.elements.unitsList, btn: this.elements.unitsBtn },
@@ -93,19 +94,29 @@ export const UIcontroller = {
             { list: this.elements.suggestionList, btn: this.elements.searchInput },
         ]
 
-        this.keyDownActions = {
+        this.suggestionskeyDownActions = {
             ArrowDown: () => this.handleInputArrowDown(),
             ArrowUp: () => this.handleInputArrowUp(),
             Escape: () => this.handleInputEscape(),
             Enter: () => this.handleInputEnter(),
             Tab: () => this.handleInputTap(),
         }
+        this.daysBtnkeyDownActions = {
+            ArrowDown: (e) => this.handleDaysBtnArrowDown(e),
+            ArrowUp: (e) => this.handleDaysBtntArrowUp(e),
+            Escape: () => this.handleDaysBtnEscape(),
+            Enter: (e) => this.handleDaysBtnEnter(e),
+            Home: (e) => this.handleDaysBtnHome(e),
+            End: (e) => this.handleDaysBtnEnd(e),
+            " ": (e) => this.handleDaysBtnEnter(e),
+            Tab: () => this.handleDaysBtnTap(),
+        }
 
         // glopal events
 
-        // esc even
-        this.dropdownElements.forEach(el => {
-            el.list.addEventListener("keydown", this.handleEsc.bind(this, el))
+        // transtion End event
+        this.dropdownElements.forEach(dropdown => {
+            dropdown.list.addEventListener("transitionend", () => { this.inertDropdowns(dropdown) })
         })
 
         // hide dropdowns in click outside it
@@ -136,7 +147,7 @@ export const UIcontroller = {
         // Search Input
         this.elements.searchInput.addEventListener("input", this.handleSearchInput.bind(this))
         this.elements.searchInput.addEventListener("focus", this.handleSearchFocus.bind(this))
-        this.elements.searchInput.addEventListener("keydown", this.handleInputKeyDownAction.bind(this))
+        this.elements.searchInput.addEventListener("keydown", this.handleInputKeyDownActions.bind(this))
         this.elements.suggestionList.addEventListener("click", this.handleSuggestionListItem.bind(this))
         this.elements.form.addEventListener("submit", this.handleForm.bind(this))
         this.elements.searchBtn.addEventListener("click", this.handleSearchBtn.bind(this))
@@ -144,13 +155,8 @@ export const UIcontroller = {
 
         // Hourl Days
         this.elements.hourlyDaysBtn.addEventListener("click", this.handleHourlyDays.bind(this))
-        this.elements.hourlyDaysBtn.addEventListener("focusout", this.handleHourlyDaysfocusOut.bind(this))
+        this.elements.hourly.addEventListener("keydown", this.handleDaysBtnActions.bind(this))
         this.elements.hourly.addEventListener("click", this.handleHourlyDayslist.bind(this))
-        this.elements.hourly.addEventListener("click", (e) => {
-            console.log(this.elements.hourly, e.target)
-            console.log(e.target.closest(".day__option"))
-            console.count("i am clicked")
-        })
         this.elements.errorBtn.addEventListener("click", async (e) => { await this.handleRetryBtn(e) })
     },
 
@@ -231,108 +237,12 @@ export const UIcontroller = {
         this.state.suggestions = []
         this.hideSuggestionsList()
     },
-    handleInputKeyDownAction(e) {
-        if (!Object.hasOwn(this.keyDownActions, e.key)) { return; }
+    handleInputKeyDownActions(e) {
+        if (!Object.hasOwn(this.suggestionskeyDownActions, e.key)) { return; }
         if ((this.elements.searchInput.getAttribute("aria-expanded") === "true") && (e.key === "ArrowDown" || e.key === "ArrowUp"))
             e.preventDefault()
-        const action = this.keyDownActions[e.key]
+        const action = this.suggestionskeyDownActions[e.key]
         action?.()
-    },
-
-    // form
-    handleForm(e) {
-        e.preventDefault()
-        this.handleSearchBtn()
-    },
-    handleSearchBtn() {
-        const cityName = this.elements.searchInput.value
-        this.elements.searchInput.value = ""
-        this.app.onSearchRequested(cityName)
-    },
-    // hourly forecast
-    handleHourlyDays() { this.toggleHourlyList() },
-    handleHourlyDaysfocusOut(e) {
-        const next = e.relatedTarget
-        if (!this.elements.hourlyDaysList.contains(next))
-            this.hideHourlyDaysList()
-    },
-    handleHourlyDayslist(e) {
-        const item = e.target.closest("[data-day]")
-        if (!item) return
-        const items = hourlyDaysList.querySelectorAll("[data-day]")
-        this.handleHourlyDaysListItem(item, items)
-    },
-    handleHourlyDaysListItem(item, items) {
-        this.clearHourlyDaysList(items)
-        this.ChangeDayBtnText(item)
-        this.app.onDayChange(item)
-        // this.hideHourlyDaysList()
-    },
-    // Dom events
-    handleMainOutsideClick(e) { this.docHandlers.forEach(fn => { fn(e) }) },
-    handleOutsideClickUnits(e) {
-        if (this.elements.unitsBtn.contains(e.target)) return
-        if (this.elements.unitsList.contains(e.target)) return
-        this.hideUnitsList()
-    },
-    handleOutsideClickSuggestion(e) {
-        if (this.elements.suggestions.contains(e.target) || this.elements.searchInput.contains(e.target)) return
-        this.hideSuggestionsList()
-    },
-    handleOutsideClickHourly(e) {
-        if (this.elements.hourlyDaysBtn.contains(e.target)) return
-        if (this.elements.hourlyDaysList.contains(e.target)) return
-        this.hideHourlyDaysList()
-    },
-
-    // error handler
-    async handleRetryBtn(e) {
-        this.elements.errorBtn.setAttribute("aria-pressed", "true")
-        this.handelInitializingApp()
-    },
-
-    // esc handler
-    handleEsc(el, e) {
-        if (e.key !== "Escape") return
-        this.hideUnitsList()
-        this.hideSuggestionList()
-        this.hideHourlyDaysList()
-        el.btn.focus()
-    },
-
-    // ------------------------------------------
-    // ---> UI METHODS  ( ONLy DOM MANIPULATION )
-    // ------------------------------------------
-
-    // preloader
-    hidePreloader() { this.elements.Preloader.classList.add("hide") },
-    // confirm
-    showConfirm() { this.elements.Confirm.classList.remove("hide") },
-    hideConfirm() { this.elements.Confirm.classList.add("hide") },
-
-    // overlay
-    showOverlay() { this.elements.Overlay.classList.remove("hide") },
-    hideOverlay() { this.elements.Overlay.classList.add("hide") },
-
-    // Units
-    toggleUnitsBtn() {
-        const element = this.elements.unitsBtn
-        toggleAria(element, "aria-expanded")
-        const isActivated = Boolean(element.getAttribute("aria-expanded"))
-        if (!isActivated) this.elements.unitsList.setAttribute("inert", "")
-        this.elements.unitsList.removeAttribute("inert")
-    },
-    hideUnitsList() {
-        this.elements.unitsBtn.setAttribute("aria-expanded", "false")
-        setTimeout(() => { this.elements.unitsList.setAttribute("inert", "") }, 300);
-    },
-
-    // search Input
-    showSuggestionsList() {
-        this.elements.searchInput.setAttribute("aria-expanded", "true")
-    },
-    hideSuggestionsList() {
-        this.elements.searchInput.setAttribute("aria-expanded", "false")
     },
     handleInputArrowDown() {
         if (this.state.suggestions.length === 0) return
@@ -379,24 +289,214 @@ export const UIcontroller = {
         this.state.activeIndex = -1
     },
 
+    // form
+    handleForm(e) {
+        e.preventDefault()
+        this.handleSearchBtn()
+    },
+    handleSearchBtn() {
+        const cityName = this.elements.searchInput.value
+        this.elements.searchInput.value = ""
+        this.app.onSearchRequested(cityName)
+    },
+    // hourly forecast
+    handleHourlyDays() { this.toggleHourlyList() },
+    handleHourlyDayslist(e) {
+        const item = e.target.closest("[data-day]")
+        if (!item) return
+        const items = this.elements.hourlyDaysList.querySelectorAll("[data-day]")
+        console.log(items)
+        this.handleHourlyDaysListItem(item, items)
+    },
+    handleHourlyDaysListItem(item, items) {
+        this.clearHourlyDaysList(items)
+        this.ChangeDayBtnText(item)
+        this.app.onDayChange(item)
+        selectDay(item)
+        this.hideHourlyDaysList()
+    },
+
+    // Dispatcher
+    handleDaysBtnActions(e) {
+        if (!Object.hasOwn(this.daysBtnkeyDownActions, e.key)) { return; }
+        const action = this.daysBtnkeyDownActions[e.key]
+        action?.(e)
+    },
+
+    handleDaysBtnArrowDown(e) {
+        if (!this.isHourlyDaysListOpen()) return
+        e.preventDefault()
+        const items = this.getHourlyDaysItems()
+        items.forEach(item => { item.tabIndex = -1 })
+        if (this.state.activeDayIndex === -1) {
+            this.state.activeDayIndex = 0
+            items[0].tabIndex = 0
+            items[0].focus()
+            return
+        }
+        if (this.state.activeDayIndex === items.length - 1) { this.state.activeDayIndex = -1 }
+        this.state.activeDayIndex++
+        items[this.state.activeDayIndex].tabIndex = 0
+        items[this.state.activeDayIndex].focus()
+    },
+    handleDaysBtntArrowUp(e) {
+        if (!this.isHourlyDaysListOpen()) return
+        e.preventDefault()
+        const items = this.getHourlyDaysItems()
+        items.forEach(item => { item.tabIndex = -1 })
+        items[this.state.activeDayIndex].tabIndex = -1
+        if (this.state.activeDayIndex === 0) { this.state.activeDayIndex = items.length }
+        this.state.activeDayIndex--
+        items[this.state.activeDayIndex].tabIndex = 0
+        items[this.state.activeDayIndex].focus()
+    },
+    handleDaysBtnEnter(e) {
+        const item = e.target.closest("[data-day]")
+        const items = this.getHourlyDaysItems()
+        if (!this.elements.hourlyDaysList.contains(e.target)) return
+        this.clearHourlyDaysList(items)
+        this.ChangeDayBtnText(item)
+        this.app.onDayChange(item)
+        this.hideHourlyDaysList()
+        this.elements.hourlyDaysBtn.focus()
+    },
+    handleDaysBtnEscape() {
+        if (!this.isHourlyDaysListOpen()) return
+        this.hideHourlyDaysList()
+        this.elements.hourlyDaysBtn.focus()
+    },
+    handleDaysBtnHome(e) {
+        if (!this.isHourlyDaysListOpen()) return
+        e.preventDefault()
+        if (!this.elements.hourlyDaysList.contains(document.activeElement)) return
+        const items = this.getHourlyDaysItems()
+        items.forEach(item => { item.tabIndex = -1 })
+        this.state.activeDayIndex = 0
+        items[0].tabIndex = 0
+        items[0].focus()
+    },
+    handleDaysBtnEnd(e) {
+        if (!this.isHourlyDaysListOpen()) return
+        e.preventDefault()
+        if (!this.elements.hourlyDaysList.contains(document.activeElement)) return
+        const items = this.getHourlyDaysItems()
+        items.forEach(item => { item.tabIndex = -1 })
+        const index = items.length - 1
+        this.state.activeDayIndex = index
+        items[index].tabIndex = 0
+        items[index].focus()
+    },
+    handleDaysBtnTap() {
+        this.hideHourlyDaysList()
+    },
+
+    // Dom events
+    handleMainOutsideClick(e) { this.docHandlers.forEach(fn => { fn(e) }) },
+    handleOutsideClickUnits(e) {
+        if (this.elements.unitsBtn.contains(e.target)) return
+        if (this.elements.unitsList.contains(e.target)) return
+        this.hideUnitsList()
+    },
+    handleOutsideClickSuggestion(e) {
+        if (this.elements.suggestions.contains(e.target) || this.elements.searchInput.contains(e.target)) return
+        this.hideSuggestionsList()
+    },
+    handleOutsideClickHourly(e) {
+        if (this.elements.hourlyDaysBtn.contains(e.target)) return
+        if (this.elements.hourlyDaysList.contains(e.target)) return
+        this.hideHourlyDaysList()
+    },
+    inertDropdowns(dropdown) {
+        const isExpanded = dropdown.btn.getAttribute("aria-expanded") === "true"
+        if (!isExpanded) { dropdown.list.setAttribute("inert", "") }
+    },
+
+    // error handler
+    async handleRetryBtn(e) {
+        this.elements.errorBtn.setAttribute("aria-pressed", "true")
+        this.handelInitializingApp()
+    },
+    // ------------------------------------------
+    // ---> UI METHODS  ( ONLy DOM MANIPULATION )
+    // ------------------------------------------
+
+    // preloader
+    hidePreloader() {
+        this.elements.Preloader.classList.add("hide")
+        this.elements.Preloader.setAttribute("inert", "")
+    },
+    // confirm
+    showConfirm() {
+        this.elements.Confirm.classList.remove("hide")
+        this.elements.Confirm.removeAttribute("inert")
+    },
+    hideConfirm() {
+        this.elements.Confirm.classList.add("hide")
+        // this.elements.Confirm.setAttribute("inert", "")
+    },
+
+    // overlay
+    showOverlay() {
+        this.elements.Overlay.classList.remove("hide")
+        this.elements.Overlay.removeAttribute("inert")
+    },
+    hideOverlay() {
+        this.elements.Overlay.classList.add("hide")
+        // this.elements.Overlay.setAttribute("inert", "")
+    },
+
+    // Units
+    toggleUnitsBtn() {
+        const element = this.elements.unitsBtn
+        toggleAria(element, "aria-expanded")
+        const isActivated = Boolean(element.getAttribute("aria-expanded"))
+        if (!isActivated) this.elements.unitsList.setAttribute("inert", "")
+        this.elements.unitsList.removeAttribute("inert")
+    },
+    hideUnitsList() {
+        this.elements.unitsBtn.setAttribute("aria-expanded", "false")
+    },
+
+    // search Input
+    showSuggestionsList() {
+        this.elements.searchInput.setAttribute("aria-expanded", "true")
+    },
+    hideSuggestionsList() {
+        this.elements.searchInput.setAttribute("aria-expanded", "false")
+    },
+
     // hourly forecast
     toggleHourlyList() {
         const element = this.elements.hourlyDaysBtn
         toggleAria(element, "aria-expanded")
-        const isActivated = Boolean(element.getAttribute("aria-expanded"))
+        const isActivated = element.getAttribute("aria-expanded") === "true"
         if (!isActivated) this.elements.hourlyDaysList.setAttribute("inert", "")
         this.elements.hourlyDaysList.removeAttribute("inert")
     },
     clearHourlyDaysList(items) {
         items.forEach(item => {
-            item.classList.remove("selected")
+            item.setAttribute("aria-selected", "false")
         })
     },
     hideHourlyDaysList() {
         this.elements.hourlyDaysBtn.setAttribute("aria-expanded", "false")
-        this.elements.hourlyDaysList.setAttribute("inert", "")
+        this.state.activeDayIndex = -1
+        const items = this.getHourlyDaysItems()
+        items.forEach(item => {
+            item.tabIndex = -1
+        })
     },
     ChangeDayBtnText(item) {
         this.elements.hourlyDaysBtnText.textContent = item.textContent
     },
+    getHourlyDaysItems() {
+        return [...this.elements.hourlyDaysList.querySelectorAll("[data-day]")]
+    },
+    selectDay(item) {
+        item.setAttribute("aria-selected", "true")
+    },
+    isHourlyDaysListOpen() {
+        return this.elements.hourlyDaysBtn.getAttribute("aria-expanded") === "true"
+    },
 }
+console.log(UIcontroller.state.activeDayIndex)

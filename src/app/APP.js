@@ -67,18 +67,18 @@ const APP = {
         this.services.cache = new Cache(maxSize, ttlMinutes * 60 * 1000)
         this.bindEvents()
         this.services.locationStrategies = [
-            this.CachePipline.bind(this),
-            this.LocalPipline.bind(this),
-            this.APIPipline.bind(this),
+            this.cachePipeline.bind(this),
+            this.localPipeline.bind(this),
+            this.apiPipeline.bind(this),
         ]
         this.services.resultStrategies = {
-            cache: this.useCacheresult.bind(this),
-            local: this.useLocalresult.bind(this),
-            fallback: this.useAPIresult.bind(this),
+            cache: this.useCacheResult.bind(this),
+            local: this.useLocalResult.bind(this),
+            fallback: this.useAPIResult.bind(this),
         }
         this.services.extractors = {
-            fallback: this.extractDatafromAPI.bind(this),
-            local: this.extractDatafromLocal.bind(this),
+            fallback: this.extractDataFromAPI.bind(this),
+            local: this.extractDataFromLocal.bind(this),
         }
     },
 
@@ -88,7 +88,7 @@ const APP = {
 
     bindEvents() {
         UIcontroller.init({
-            onAppInit: this.handleInitialState.bind(this),
+            onAppInit: this.handleAppInit.bind(this),
             onSearchRequested: this.handleSearch.bind(this),
             onLocationAllow: this.handleGeolocationAccepted.bind(this),
             onUnitChange: this.handleChangeUnits.bind(this),
@@ -101,14 +101,15 @@ const APP = {
     // 4. Event Handlers
     // ==================================================
 
-    async handleInitialState() {
+    async handleAppInit() {
         await this.initializeWorkflow()
+        return true
     },
     async handleSearch(cityName) {
         if (!validator.isValidCityName(cityName)) return false
-        this.stateManager(this.config.STATUS.LOADING)
+        this.transitionToState(this.config.STATUS.LOADING)
         await this.searchWorkflow(cityName)
-        this.stateManager(this.config.STATUS.SUCCESS)
+        this.transitionToState(this.config.STATUS.SUCCESS)
     },
     handleGeolocationAccepted() {
         this.geolocationWorkflow()
@@ -131,15 +132,15 @@ const APP = {
     async initializeWorkflow() {
         const city = this.getInitialCity()
         if (!validator.isValidCityName(city)) {
-            this.stateManager(this.config.STATUS.ERROR)
+            this.transitionToState(this.config.STATUS.ERROR)
             return
         }
         const result = await this.searchWorkflow(city)
         if (!result) {
-            this.stateManager(this.config.STATUS.NO_RESULT)
+            this.transitionToState(this.config.STATUS.NO_RESULT)
             return
         }
-        this.stateManager(this.config.STATUS.INITIIAL)
+        this.transitionToState(this.config.STATUS.INITIIAL)
     },
     async searchWorkflow(cityName) {
         const result = await this.searchProviders(cityName)
@@ -148,13 +149,13 @@ const APP = {
         this.state.locationSource = source
         this.applySearchResult(source, data)
         if (source !== "cache") { await this.fetchAndProcessData(); }
-        this.stateManager(this.config.STATUS.SUCCESS)
+        this.transitionToState(this.config.STATUS.SUCCESS)
         this.renderUI()
         return true
     },
     changeUnitWorkflow(type, unit) {
         this.state.units[type] = unit
-        this.processesData()
+        this.reprocessData()
         this.renderUI()
     },
     geolocationWorkflow() {
@@ -163,15 +164,16 @@ const APP = {
                 this.geolocationSuccessWorkflow.bind(this),
                 this.geolocationErrorWorkflow.bind(this)
             )
-        } catch { this.stateManager(STATUS.ERROR); return; }
+        } catch { this.transitionToState(STATUS.ERROR); return; }
     },
     async geolocationSuccessWorkflow(position) {
         const { latitude, longitude } = position.coords
-        if (!validator.hasCoords({ latitude, longitude })) { this.stateManager(STATUS.NO_RESULT); return; }
+        const coords = { lat: latitude, lon: longitude }
+        if (!validator.hasCoords(coords)) { this.transitionToState(this.config.STATUS.NO_RESULT); return; }
         this.state.coords = { lat: latitude, lon: longitude }
-        this.state.locationSource = "geolocation"
+        this.state.locationSource = "fallback"
         await this.fetchAndProcessData()
-        this.stateManager(STATUS.SUCCESS)
+        this.transitionToState(this.config.STATUS.SUCCESS)
         this.renderUI()
     },
     async geolocationErrorWorkflow() {
@@ -180,7 +182,7 @@ const APP = {
     },
     changeDayWorkflow(dayDate) {
         this.state.selectedDay = new Date(dayDate)
-        this.processesData()
+        this.reprocessData()
         this.renderUI()
     },
 
@@ -190,7 +192,7 @@ const APP = {
     // 6. State Transitions
     // ==================================================
 
-    async stateManager(state) {
+    async transitionToState(state) {
         const states = {
             initial: async () => {
                 this.setState(this.config.STATUS.INITIIAL)
@@ -238,37 +240,37 @@ const APP = {
         }
         return result
     },
-    CachePipline(cityName) {
+    cachePipeline(cityName) {
         const cityInCache = this.services.cache.get(cityName)
         if (!cityInCache) return null
         this.runtime.metrics.cacheHit++
         return { source: "cache", data: cityInCache }
     },
-    async LocalPipline(cityName) {
+    async localPipeline(cityName) {
         const citydetails = await Cities.init({ query: cityName })
         if (!citydetails?.length) return null
         this.runtime.metrics.cacheMiss++
         return { source: "local", data: citydetails[0] }
     },
-    async APIPipline(cityName) {
+    async apiPipeline(cityName) {
         try {
             const { lat, lon } = await API.searchByCityName(cityName)
             this.state.coords = { lat, lon }
-        } catch (error) { this.stateManager(STATUS.ERROR); console.log(error); return null; }
+        } catch (error) { this.transitionToState(STATUS.ERROR); console.log(error); return null; }
         this.runtime.metrics.cacheMiss++
         return { source: "fallback", data: { lat, lon } }
     },
     applySearchResult(source, data) {
         this.services.resultStrategies[source](data)
     },
-    useCacheresult(result) {
+    useCacheResult(result) {
         this.state.processedData = result
     },
-    useLocalresult(result) {
+    useLocalResult(result) {
         this.state.location = result
         this.state.coords = { lat: result.lat, lon: result.lon }
     },
-    useAPIresult(result) {
+    useAPIResult(result) {
         this.state.coords = result
     },
     renderUI() {
@@ -290,7 +292,7 @@ const APP = {
             source: this.state.locationSource,
         })
         // filtering data
-        this.state.processedData.weather = Logic.getPureData({
+        this.state.processedData.weather = Logic.buildWeatherView({
             data: this.state.rawData.weatherData,
             selectedDate: this.state.selectedDay,
             units: this.state.units,
@@ -302,7 +304,7 @@ const APP = {
         this.services.cache.set(this.state.processedData.place.city, this.state.processedData)
         return true
     },
-    processesData() {
+    reprocessData() {
         this.state.processedData.weather = Logic.getPureData({
             data: this.state.rawData.weatherData,
             selectedDate: this.state.selectedDay,
@@ -324,10 +326,10 @@ const APP = {
         } catch (error) { return false; }
         return null
     },
-    extractDatafromLocal(coords) {
+    extractDataFromLocal(coords) {
         return this.state.location
     },
-    async extractDatafromAPI(coords) {
+    async extractDataFromAPI(coords) {
         return await API.getPlaceName(coords)
     },
 

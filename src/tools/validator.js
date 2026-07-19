@@ -14,8 +14,8 @@ export const validator = {
     },
     isReadyForRender(rawData) { return Boolean(rawData?.weatherData && rawData?.placeData) },
     isValidCityName(city) {
+        if (typeof city !== "string") return false
         const cityName = city.trim()
-        if (typeof cityName !== "string") return false
         if (cityName.length < 2) return false;
         if (!/^[\p{L}\s]+$/u.test(cityName)) return false
         return true

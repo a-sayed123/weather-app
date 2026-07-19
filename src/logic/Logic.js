@@ -109,12 +109,12 @@ export function getDayData(day) {
   }
 }
 
-const cashe = {}
+const cache = {}
 export function getWeatherType(code) {
-  if (cashe[code]) return cashe[code]
+  if (cache[code]) return cache[code]
   const range = WEATHER_RANGES.find(r => code >= r.min && code <= r.max)
   const type = range ? range.type : "unknown"
-  cashe[code] = type
+  cache[code] = type
   return type
 }
 
@@ -196,7 +196,7 @@ function normalizeRemotePlace(data) {
 }
 
 // all pure data to view 
-export function getPureData({data, selectedDate, units}) {
+export function buildWeatherView({data, selectedDate, units}) {
   const pureData = {
     hourly: getHourlyByDay(data, selectedDate, units),
     daily: getDailyForecast(data, units),
