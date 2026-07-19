@@ -174,7 +174,7 @@ export const UIcontroller = {
             this.showConfirm()
             this.hidePreloader()
             this.elements.hourlyDaysBtnText.textContent = getDayName(new Date())
-        } catch (error) { this.hidePreloader(); console.log("handlePreloader error...", error) }
+        } catch (error) { this.hidePreloader(); console.log("handleInitialState error...", error) }
     },
     async handelInitializingApp() {
         return await this.app.onAppInit()
@@ -305,7 +305,6 @@ export const UIcontroller = {
         const item = e.target.closest("[data-day]")
         if (!item) return
         const items = this.elements.hourlyDaysList.querySelectorAll("[data-day]")
-        console.log(items)
         this.handleHourlyDaysListItem(item, items)
     },
     handleHourlyDaysListItem(item, items) {
@@ -499,4 +498,3 @@ export const UIcontroller = {
         return this.elements.hourlyDaysBtn.getAttribute("aria-expanded") === "true"
     },
 }
-console.log(UIcontroller.state.activeDayIndex)

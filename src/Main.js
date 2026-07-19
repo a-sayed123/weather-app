@@ -11,5 +11,4 @@
 //----------------------------------\\
 
 import APP from "./app/APP.js"
-
 APP.init()
